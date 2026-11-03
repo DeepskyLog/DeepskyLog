@@ -2,7 +2,7 @@
     <!-- View Dropdown (converted to inline button-driven menu) -->
 <div class="hidden lg:ml-1 lg:flex lg:items-center">
     <div class="relative mr-0 text-sm">
-        <x-menu.dropdown :width="72">
+        <x-menu.dropdown :width="60" :columns="2">
             <x-slot name="trigger">
                 <button x-ref="trigger" @click="open = !open" aria-haspopup="true" :aria-expanded="open.toString()" class="inline-flex items-center rounded px-3 py-2 text-sm font-medium text-gray-200 hover:bg-gray-800">
                     {{ __('View') }}
@@ -22,6 +22,8 @@
 
             <x-menu.item icon="globe-alt" href="{{ route('planet-moons.show') }}">{{ __('Jupiter and Saturn tonight') }}</x-menu.item>
 
+            <x-menu.item icon="globe-europe-africa" href="{{ route('mars-venus.show') }}">{{ __('Mars and Venus tonight') }}</x-menu.item>
+
             @if (!Auth::guest() && Auth::user()->isObserver())
                 <x-menu.item href="{{ route('session.all') }}">
                     <x-slot:svg><x-outline.session-icon class="h-4 w-4" /></x-slot:svg>{{ __('All sessions') }}
@@ -35,6 +37,8 @@
 
             <x-menu.item icon="calendar-days" href="{{ route('star-parties.index') }}">{{ __('Starparties') }}</x-menu.item>
 
+            <x-menu.item icon="user-group" href="{{ route('clubs.index') }}">{{ __('Clubs') }}</x-menu.item>
+
             <x-menu.item separator icon="user-group" href="{{ route('observers.index') }}">{{ __('Observers') }}</x-menu.item>
 
             <x-menu.item href="{{ route('objects.popular') }}">
@@ -47,6 +51,10 @@
             <x-menu.item href="/popular-sessions">
                 <x-slot:svg><x-outline.session-icon class="h-4 w-4" /></x-slot:svg>{{ __('Popular sessions') }}
             </x-menu.item>
+
+            <x-menu.item icon="trophy" href="{{ route('records.aperture') }}">{{ __('Aperture records') }}</x-menu.item>
+
+            <x-menu.item icon="map" href="{{ route('sky-brightness-map') }}">{{ __('Sky brightness map') }}</x-menu.item>
 
             <x-menu.item icon="chart-bar-square" href="{{ route('statistics.index') }}">{{ __('Statistics') }}</x-menu.item>
 

@@ -1,7 +1,7 @@
 <!-- Settings Dropdown -->
 <div class="relative ml-3">
     @if (Auth::user())
-        <x-menu.dropdown align="right" :width="56">
+        <x-menu.dropdown align="right" :width="56" :columns="2">
             <x-slot name="trigger">
                 @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                     <button x-ref="trigger" @click="open = !open" aria-haspopup="true" :aria-expanded="open.toString()" class="inline-flex items-center rounded px-2 py-1 text-sm text-gray-200 hover:bg-gray-800">
@@ -50,6 +50,8 @@
 
                 <x-menu.item icon="pencil-square" href="/drawings/{{ Auth::user()->slug }}">{{ __('My drawings') }}</x-menu.item>
 
+                <x-menu.item icon="exclamation-triangle" href="{{ route('observations.suspect') }}">{{ __('Observations to check') }}</x-menu.item>
+
                 @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
                 <x-menu.item href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}">
                     <x-slot:svg><x-outline.session-icon class="h-4 w-4" /></x-slot:svg>{{ __('My sessions') }}
@@ -66,6 +68,14 @@
                 </x-menu.item>
 
                 <x-menu.item icon="globe-europe-africa" href="/location">{{ __('My locations') }}</x-menu.item>
+
+                <x-menu.item icon="cloud" href="{{ route('location.best-site') }}">{{ __('Which of my sites tonight?') }}</x-menu.item>
+
+                <x-menu.item icon="user-group" href="{{ route('observing-partners') }}">{{ __('Observing partners nearby') }}</x-menu.item>
+
+                <x-menu.item icon="hand-raised" href="{{ route('observing-requests') }}">{{ __('Observing requests') }}</x-menu.item>
+
+                <x-menu.item icon="star" href="{{ route('sky-quality.star-count') }}">{{ __('Measure your sky') }}</x-menu.item>
 
                 <x-menu.item href="/eyepiece">
                     <x-slot:svg><x-outline.eyepiece-icon class="h-4 w-4" /></x-slot:svg>{{ __('My eyepieces') }}

@@ -50,6 +50,12 @@
             />
 
             <x-dropdown.item
+                icon="globe-europe-africa"
+                href="{{ route('mars-venus.show') }}"
+                label="{{ __('Mars and Venus tonight') }}"
+            />
+
+            <x-dropdown.item
                 icon="bars-3-center-left"
                 href="/observations"
                 label="{{ __('All observations') }}"
@@ -63,6 +69,11 @@
                 icon="calendar-days"
                 href="{{ route('star-parties.index') }}"
                 label="{{ __('Starparties') }}"
+            />
+            <x-dropdown.item
+                icon="user-group"
+                href="{{ route('clubs.index') }}"
+                label="{{ __('Clubs') }}"
             />
 
             <x-dropdown.item
@@ -86,6 +97,18 @@
                 <x-outline.session-icon class="h-4 w-4 mr-2 ml-0 text-gray-300" />
                 {{ __('Popular sessions') }}
             </x-dropdown.item>
+
+            <x-dropdown.item
+                icon="trophy"
+                href="{{ route('records.aperture') }}"
+                label="{{ __('Aperture records') }}"
+            />
+
+            <x-dropdown.item
+                icon="map"
+                href="{{ route('sky-brightness-map') }}"
+                label="{{ __('Sky brightness map') }}"
+            />
 
             <x-dropdown.item
                 icon="chart-bar-square"

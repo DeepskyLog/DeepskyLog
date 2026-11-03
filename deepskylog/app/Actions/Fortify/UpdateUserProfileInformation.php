@@ -25,6 +25,10 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'country' => ['string'],
             'about' => ['nullable', 'string', 'max:1000'],
             'fstOffset' => ['numeric', 'min:-5.0', 'max:5.0'],
+            // The ICQ/COBS observer code: three letters and up to two digits (KAR02).
+            'icqname' => ['nullable', 'string', 'regex:/^\s*[A-Za-z]{3}\d{0,2}\s*$/'],
+            // The AAVSO observer code: a few letters (and digits), for the export of variable star estimates.
+            'aavso_code' => ['nullable', 'string', 'regex:/^\s*[A-Za-z0-9]{1,8}\s*$/'],
         ])->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
@@ -45,6 +49,8 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'fstOffset' => $input['fstOffset'],
             'copyright' => $copyright,
             'copyrightSelection' => $input['copyrightSelection'],
+            'icqname' => strtoupper(trim((string) ($input['icqname'] ?? ''))) ?: null,
+            'aavso_code' => strtoupper(trim((string) ($input['aavso_code'] ?? ''))) ?: null,
         ]);
 
         if ($input['email'] !== $user->email) {

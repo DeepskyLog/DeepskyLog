@@ -6,7 +6,13 @@
         $buttonClass = "inline-flex items-center rounded-md px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase";
     @endphp
     <div class="mx-auto max-w-screen-lg bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
-        <p class="mb-2 text-sm"><a href="{{ route("challenges.index") }}" class="text-blue-400 hover:underline">&larr; {{ __("All challenges") }}</a></p>
+        <p class="mb-2 text-sm">
+            @if ($challenge->club)
+                <a href="{{ route("clubs.show", $challenge->club) }}" class="text-blue-400 hover:underline">&larr; {{ $challenge->club->name }}</a>
+            @else
+                <a href="{{ route("challenges.index") }}" class="text-blue-400 hover:underline">&larr; {{ __("All challenges") }}</a>
+            @endif
+        </p>
 
         <div class="rounded-lg bg-gray-800 p-4">
             <div class="flex flex-wrap items-baseline justify-between gap-x-3">
@@ -32,10 +38,15 @@
                         @php $daysLeft = (int) \Carbon\Carbon::today()->diffInDays($challenge->ends_on) + 1; @endphp
                         {{ trans_choice(":count day left|:count days left", $daysLeft, ["count" => $daysLeft]) }}
                 @endswitch
-                @if ($challenge->hidden)
+                @if ($challenge->isHidden())
                     &middot; <span class="text-yellow-400">{{ __("Hidden") }}</span>
                 @endif
             </p>
+            @if ($challenge->club)
+                <p class="mt-1 text-sm text-gray-400">
+                    {{ __("A challenge of the club :club, for its members.", ["club" => $challenge->club->name]) }}
+                </p>
+            @endif
 
             @if ($challenge->description)
                 <div class="prose prose-invert mt-3 max-w-none text-sm text-gray-300">
@@ -53,11 +64,13 @@
                                 {{ __("Leave the challenge") }}
                             </button>
                         </form>
-                    @elseif ($challenge->canBeJoined())
+                    @elseif ($canJoin)
                         <form method="POST" action="{{ route("challenges.join", $challenge) }}">
                             @csrf
                             <button type="submit" class="{{ $buttonClass }} bg-green-700 hover:bg-green-600">{{ __("Join the challenge") }}</button>
                         </form>
+                    @elseif ($challenge->club && $challenge->canBeJoined())
+                        <a href="{{ route("clubs.show", $challenge->club) }}" class="{{ $buttonClass }} bg-green-700 hover:bg-green-600">{{ __("Join the club to take part") }}</a>
                     @endif
                     @can ("create", \App\Models\ObservingList::class)
                         @if ($status !== "ended" && $challenge->source() !== null)
@@ -68,13 +81,13 @@
                         @endif
                     @endcan
                 @else
-                    @if ($challenge->canBeJoined())
+                    @if ($challenge->canBeJoined() && ! $challenge->club)
                         <a href="{{ route("login") }}" class="{{ $buttonClass }} bg-green-700 hover:bg-green-600">{{ __("Log in to join the challenge") }}</a>
                     @endif
                 @endauth
-                @can ("manage_challenges", \App\Models\User::class)
-                    <a href="{{ route("admin.challenges.edit", $challenge) }}" class="{{ $buttonClass }} bg-gray-700 hover:bg-gray-600">{{ __("Edit") }}</a>
-                @endcan
+                @if ($editUrl)
+                    <a href="{{ $editUrl }}" class="{{ $buttonClass }} bg-gray-700 hover:bg-gray-600">{{ __("Edit") }}</a>
+                @endif
             </div>
         </div>
 

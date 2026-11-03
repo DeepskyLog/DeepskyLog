@@ -16,12 +16,16 @@ use App\Models\Constellation;
 use App\Models\DeepskyObject;
 use App\Models\SketchOfTheWeek;
 use App\Models\SketchOfTheMonth;
+use App\Models\VariableStarEstimate;
 use App\Models\ObservationLike;
 use App\Models\ObservationComment;
 use App\Models\ObservationTranslation;
+use App\Services\AavsoVariableStars;
 use App\Services\ObservationSearchQuery;
 use App\Services\Observations\ObservationCardData;
+use App\Services\Observations\ObserverDrawings;
 use App\Services\Observations\SameFieldObjects;
+use App\Services\Observations\SketchOverlay;
 use App\Services\Observations\TargetAltitude;
 use App\Support\Html;
 use Carbon\Carbon;
@@ -171,7 +175,26 @@ class ObservationsController extends Controller
             'objectAltitude' => $objectAltitude,
             // The observations of the other objects seen in the same field
             'sameFieldObservations' => $selectedUnified->seenInSameField(),
+            'variableStarEstimate' => $obsType === 'deepsky' ? VariableStarEstimate::find($selectedUnified->id) : null,
+            // The drawing laid over the DSS image
+            'sketchOverlay' => $obsType === 'deepsky' ? SketchOverlay::for($selectedUnified) : null,
+            // The observer's drawings of the object over time, when they drew it more than once
+            'observerDrawingsUrl' => $this->observerDrawingsUrl($selectedUnified, $observerUser),
         ], $preloadedData, $socialData));
+    }
+
+    /** The page of the observer's drawings of the object over time, when the drawing is one of several. */
+    private function observerDrawingsUrl(Observation $observation, User $observer): ?string
+    {
+        if (! $observation->has_drawing || $observation->target_type !== Observation::TYPE_DEEPSKY || ! $observer->slug) {
+            return null;
+        }
+        $objectSlug = DB::table('objects')->where('name', $observation->target_key)->value('slug');
+        if (! $objectSlug || app(ObserverDrawings::class)->count((string) $observation->target_key, $observer->username) < 2) {
+            return null;
+        }
+
+        return route('object.drawings.observer', ['slug' => $objectSlug, 'observer' => $observer->slug]);
     }
 
     /**
@@ -330,7 +353,7 @@ class ObservationsController extends Controller
 
         $sort = request()->query('sort', 'observed');
 
-        // ?following=1: only the observers the logged-in user follows
+        // ?following=1: only the observers and objects the logged-in user follows
         $following = request()->boolean('following');
         if ($following && !auth()->check()) {
             return redirect()->guest(route('login'));
@@ -362,7 +385,7 @@ class ObservationsController extends Controller
             'mode' => 'deepsky',
             'obsType' => $obsType,
             'following' => $following,
-            'followingCount' => $following ? auth()->user()->following()->count() : null,
+            'followingCount' => $following ? auth()->user()->following()->count() + auth()->user()->followedObjects()->count() : null,
         ]);
     }
 
@@ -2240,8 +2263,19 @@ class ObservationsController extends Controller
                 }
             }
 
+            // A variable star, nova or supernova gets a magnitude estimate,
+            // with its star in the AAVSO (for the link to its chart) when known
+            $variableStar = null;
+            if ($resolved['type'] === 'deepsky' && !empty($objectName)) {
+                $variableObject = DeepskyObject::where('name', $objectName)->first();
+                if ($variableObject && VariableStarEstimate::appliesTo($variableObject->type)) {
+                    $variableStar = ['star' => AavsoVariableStars::starOf($variableObject, fetch: false)];
+                }
+            }
+
             return view('observations.create', [
                 'resolved' => $resolved,
+                'variableStar' => $variableStar,
                 'slug' => $slug,
                 // Editing an observation of an object that is not in the
                 // database: the objects it may have been split into
@@ -2411,6 +2445,14 @@ class ObservationsController extends Controller
             'comet_coma' => 'nullable|integer',
             'comet_tail_length' => 'nullable|integer',
             'comet_position_angle' => 'nullable|integer|between:0,360',
+            // The magnitude estimate of a variable star, nova or supernova
+            'variable_magnitude' => 'nullable|numeric|between:-2,25',
+            'variable_fainter' => 'nullable',
+            'variable_comparison1' => 'nullable|string|max:20',
+            'variable_comparison2' => 'nullable|string|max:20',
+            'variable_chart' => 'nullable|string|max:20',
+            'variable_comment_codes' => 'nullable|array',
+            'variable_comment_codes.*' => ['string', Rule::in(VariableStarEstimate::COMMENT_CODES)],
             // The other objects seen in the same field (#831): the suggested ones
             // ticked, and those chosen in the multiselect (a JSON list)
             'also_seen' => 'nullable|array|max:' . SameFieldObjects::MAX,
@@ -2616,6 +2658,20 @@ class ObservationsController extends Controller
                     ['observation_id' => $obs->id],
                     $detailValues
                 );
+
+                // The magnitude estimate, for a variable star, nova or supernova
+                if (VariableStarEstimate::appliesTo(DB::table('objects')->where('name', $obs->target_key)->value('type'))) {
+                    VariableStarEstimate::saveFor((int) $obs->id, [
+                        'magnitude' => $validated['variable_magnitude'] ?? null,
+                        'fainter' => $validated['variable_fainter'] ?? null,
+                        'comparison1' => $validated['variable_comparison1'] ?? null,
+                        'comparison2' => $validated['variable_comparison2'] ?? null,
+                        'chart' => $validated['variable_chart'] ?? null,
+                        'comment_codes' => $validated['variable_comment_codes'] ?? null,
+                    ]);
+                } else {
+                    VariableStarEstimate::whereKey($obs->id)->delete();
+                }
             }
         } catch (\Throwable $e) {
             try {
@@ -2856,6 +2912,17 @@ class ObservationsController extends Controller
                     if (!empty($details->component2))
                         $prefill['component2'] = (int) $details->component2;
                 }
+
+                $estimate = VariableStarEstimate::find($selectedUnified->id);
+                if ($estimate) {
+                    $prefill['variable_magnitude'] = $estimate->magnitude;
+                    if ($estimate->fainter)
+                        $prefill['variable_fainter'] = 1;
+                    $prefill['variable_comparison1'] = $estimate->comparison1;
+                    $prefill['variable_comparison2'] = $estimate->comparison2;
+                    $prefill['variable_chart'] = $estimate->chart;
+                    $prefill['variable_comment_codes'] = str_split((string) $estimate->comment_codes);
+                }
             }
         } catch (\Throwable $_) {
             // ignore prefill failures
@@ -3075,12 +3142,13 @@ class ObservationsController extends Controller
 
     /**
      * The page to return to after saving (the form's return_to): only the
-     * page at the eyepiece of an observing list on this site.
+     * page at the eyepiece of an observing list on this site, or the
+     * beginner path.
      */
     public static function returnUrl(?string $value): ?string
     {
         $value = (string) $value;
 
-        return preg_match('#^/observing-list/[^/?\#\\\\]+/eyepiece(\?item=\d+)?$#', $value) ? $value : null;
+        return preg_match('#^/observing-list/[^/?\#\\\\]+/eyepiece(\?item=\d+)?$#', $value) || $value === '/beginner-path' ? $value : null;
     }
 }

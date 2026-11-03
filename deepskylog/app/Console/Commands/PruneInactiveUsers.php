@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\InactiveAccountWarning;
+use App\Models\ClubMember;
 use App\Models\StarPartyParticipant;
 use App\Models\Team;
 use App\Models\User;
@@ -22,7 +23,7 @@ use Throwable;
  * An account is kept as soon as it has one row of its own in any of the
  * tables below: observations, sessions (also as a co-observer of somebody
  * else's session), equipment, locations, observing lists and their items,
- * comments, likes and subscriptions, followed observers, sketches of the
+ * comments, likes and subscriptions, followed observers and objects, sketches of the
  * week/month, sent messages, saved searches or report layouts. Rows the site makes for the
  * user (achievements, experience, streaks, object metrics, table settings,
  * teams, tokens, connected accounts) don't count.
@@ -54,15 +55,19 @@ class PruneInactiveUsers extends Command
         'observing_list_likes' => 'user_id',
         'observing_list_subscriptions' => 'user_id',
         'user_follows' => 'follower_id',
+        'object_follows' => 'user_id',
         'observing_goals' => 'user_id',
         'observation_comments' => 'user_id',
         'observation_likes' => 'user_id',
+        'object_finding_notes' => 'user_id',
+        'object_finding_note_likes' => 'user_id',
         'sketch_of_the_week' => 'user_id',
         'sketch_of_the_month' => 'user_id',
         'saved_object_searches' => 'user_id',
         'saved_observation_searches' => 'user_id',
         'report_layouts' => 'user_id',
         'star_parties' => 'user_id',
+        'clubs' => 'user_id',
         'sessions' => 'user_id',
     ];
 
@@ -214,6 +219,10 @@ class PruneInactiveUsers extends Command
         $query->whereNotExists(fn ($q) => $q->from('star_party_participants')
             ->whereColumn('star_party_participants.user_id', 'users.id')
             ->where('star_party_participants.status', '<>', StarPartyParticipant::INVITED));
+        // Membership of a club, or asking to join one, not an invitation the observer did not answer.
+        $query->whereNotExists(fn ($q) => $q->from('club_members')
+            ->whereColumn('club_members.user_id', 'users.id')
+            ->where('club_members.status', '<>', ClubMember::INVITED));
 
         return $query;
     }

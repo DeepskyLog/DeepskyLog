@@ -13,6 +13,27 @@ class StarPartyCalendar
 {
     public static function ics(StarParty $party): string
     {
+        $lines = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//DeepskyLog//Starparties//EN',
+            'CALSCALE:GREGORIAN',
+            'METHOD:PUBLISH',
+            ...self::event($party),
+            'END:VCALENDAR',
+        ];
+
+        return implode("\r\n", array_map([self::class, 'fold'], $lines))."\r\n";
+    }
+
+    /**
+     * The lines of the starparty's VEVENT, also used by the personal sky
+     * calendar (App\Services\SkyCalendar).
+     *
+     * @return list<string>
+     */
+    public static function event(StarParty $party): array
+    {
         $url         = route('star-parties.show', $party);
         $description = trim($party->excerpt(1000)."\n\n".$url);
         $location    = $party->location_name.($party->country ? ', '.$party->country : '');
@@ -20,14 +41,9 @@ class StarPartyCalendar
             $location .= ' - '.$party->venue;
         }
 
-        $lines = [
-            'BEGIN:VCALENDAR',
-            'VERSION:2.0',
-            'PRODID:-//DeepskyLog//Starparties//EN',
-            'CALSCALE:GREGORIAN',
-            'METHOD:PUBLISH',
+        return [
             'BEGIN:VEVENT',
-            'UID:starparty-'.$party->id.'@'.(parse_url((string) config('app.url'), PHP_URL_HOST) ?: 'deepskylog.org'),
+            'UID:starparty-'.$party->id.'@'.self::host(),
             'DTSTAMP:'.now()->utc()->format('Ymd\THis\Z'),
             'LAST-MODIFIED:'.($party->updated_at ?? now())->copy()->utc()->format('Ymd\THis\Z'),
             'DTSTART;VALUE=DATE:'.$party->start_date->format('Ymd'),
@@ -41,10 +57,13 @@ class StarPartyCalendar
             'STATUS:'.($party->isCancelled() ? 'CANCELLED' : 'CONFIRMED'),
             'TRANSP:TRANSPARENT',
             'END:VEVENT',
-            'END:VCALENDAR',
         ];
+    }
 
-        return implode("\r\n", array_map([self::class, 'fold'], $lines))."\r\n";
+    /** The host name in the UIDs of the events. */
+    public static function host(): string
+    {
+        return parse_url((string) config('app.url'), PHP_URL_HOST) ?: 'deepskylog.org';
     }
 
     /** Escape a text value: backslash, semicolon, comma and new lines. */

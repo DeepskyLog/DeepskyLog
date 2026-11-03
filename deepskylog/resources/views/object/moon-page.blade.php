@@ -14,19 +14,22 @@
                         $canonicalSlug ??
                         ($session->slug ?? \Illuminate\Support\Str::slug($session->name ?? ""));
                 @endphp
-                <h1 class="text-3xl font-extrabold">
-                    <a
-                        href="{{ route('object.show', ['slug' => $objSlugTop]) }}"
-                        class="hover:underline"
-                        >{{
-                            html_entity_decode(
-                                $session->name ?? __("Moon"),
-                                ENT_QUOTES | ENT_HTML5,
-                                "UTF-8",
-                            )
-                        }}</a
-                    >
-                </h1>
+                <div class="flex items-center gap-4">
+                    <h1 class="text-3xl font-extrabold">
+                        <a
+                            href="{{ route('object.show', ['slug' => $objSlugTop]) }}"
+                            class="hover:underline"
+                            >{{
+                                html_entity_decode(
+                                    $session->name ?? __("Moon"),
+                                    ENT_QUOTES | ENT_HTML5,
+                                    "UTF-8",
+                                )
+                            }}</a
+                        >
+                    </h1>
+                    <x-follow-object :target="$followTarget ?? null" />
+                </div>
             </header>
 
             @include ("object._summary")

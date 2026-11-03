@@ -1,5 +1,7 @@
 @props(['icon' => null, 'href' => '#', 'separator' => false, 'label' => null])
 
+{{-- Kept in one piece in a menu with columns, so a separator never ends a column --}}
+<div style="break-inside: avoid;">
 @if ($separator)
     <div class="border-t border-gray-700 my-1"></div>
 @endif
@@ -19,3 +21,4 @@
         <span class="truncate">{{ $slot }}</span>
     @endif
 </a>
+</div>

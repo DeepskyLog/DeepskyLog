@@ -13,6 +13,7 @@ use App\Services\AtmosphericExtinction;
 use App\Services\ContrastReserveCalculator;
 use App\Services\DoubleStarResolvability;
 use App\Services\FilterAdvice;
+use App\Services\LocalHorizon;
 use App\Services\TelescopicLimitingMagnitude;
 use App\Support\EphemerisDate;
 use Carbon\Carbon;
@@ -123,10 +124,11 @@ class FieldViewBuilder
         $raDeg  = (float) $object->ra * 15.0;
         $decDeg = (float) $object->decl;
 
-        $lst      = null;
-        $latitude = null;
-        $altitude = null;
-        $azimuth  = null;
+        $lst          = null;
+        $latitude     = null;
+        $altitude     = null;
+        $azimuth      = null;
+        $localHorizon = $hasPlace ? LocalHorizon::forLocation($location) : null;
         if ($hasPlace) {
             $geo      = new GeographicalCoordinates((float) $location->longitude, (float) $location->latitude);
             $sidereal = Time::meanSiderialTime($moment->copy()->utc(), $geo);
@@ -140,6 +142,8 @@ class FieldViewBuilder
 
             if ($altitude < 0) {
                 $warnings[] = __(':object is below the horizon at this moment.', ['object' => $object->name]);
+            } elseif ($localHorizon && $altitude < $localHorizon->altitudeAt($azimuth)) {
+                $warnings[] = __(':object is behind the local horizon of the location at this moment.', ['object' => $object->name]);
             }
         }
 
@@ -202,6 +206,16 @@ class FieldViewBuilder
         $binocular = (bool) $instrument?->isBinocular();
         $title     = $binocular ? __('Binoculars') : __('Telescope');
 
+        $finderLimit = $finder && $finderFov
+            ? round(TelescopicLimitingMagnitude::forInstrument($nelm, $finder, (float) $finder->fixedMagnification) - $extinction, 1)
+            : null;
+
+        // The star-hop route: through the finder, else through the binoculars.
+        $hopScope = $finderLimit !== null ? $finder : ($binocular && $telescopeFov ? $instrument : null);
+        $hopField = $finderLimit !== null ? $finderFov : $telescopeFov;
+        $hopLimit = $finderLimit ?? ($hopScope ? TelescopicLimitingMagnitude::forInstrument($nelm, $hopScope, $magnification ? (float) $magnification : null) - $extinction : null);
+        $route    = $hopScope ? StarHopRoute::find($raDeg, $decDeg, $hopField / 2, $hopLimit, $nelm, (float) $object->diam1 / 7200.0) : null;
+
         $views = [];
 
         // With the naked eye
@@ -210,9 +224,11 @@ class FieldViewBuilder
             'star_limit'     => $nelm,
             'up'             => 'zenith',
             'horizon'        => true,
+            'local_horizon'  => $localHorizon?->altitudes,
             'extinction'     => true,
             'constellations' => true,
             'star_names'     => true,
+            'route'          => $route ? ['points' => array_map(fn (array $step) => ['ra' => $step['ra'], 'dec' => $step['dec'], 'label' => $step['kind'] === 'start' ? $step['label'] : null], $route)] : null,
             'overlays'       => array_values(array_filter([
                 $finderFov ? ['radius_deg' => $finderFov / 2, 'label' => __('Finder')] : null,
                 $binocular && $telescopeFov ? ['radius_deg' => $telescopeFov / 2, 'label' => __('Binoculars')] : null,
@@ -229,8 +245,7 @@ class FieldViewBuilder
         ];
 
         // In the finder
-        if ($finder && $finderFov) {
-            $finderLimit     = round(TelescopicLimitingMagnitude::forInstrument($nelm, $finder, (float) $finder->fixedMagnification) - $extinction, 1);
+        if ($finderLimit !== null) {
             $views['finder'] = [
                 'title'    => __('Finder'),
                 'subtitle' => html_entity_decode($finder->fullName()).($finder->fixedMagnification ? ' · '.(int) $finder->fixedMagnification.'x' : ''),
@@ -247,6 +262,7 @@ class FieldViewBuilder
                     'flop'          => $this->flips($finder, 'flop_image'),
                     'object_labels' => true,
                     'overlays'      => $telescopeFov ? [['radius_deg' => $telescopeFov / 2, 'label' => '']] : [],
+                    'route'         => $route ? ['points' => $this->routePoints($route)] : null,
                 ]),
             ];
         } elseif (! $binocular) {
@@ -300,6 +316,8 @@ class FieldViewBuilder
             ];
         }
 
+        $starHop = $hopScope ? $this->starHop($route, $base, $hopScope, $hopField, $hopLimit, $up) : null;
+
         return [
             'object'      => $object,
             'location'    => $location,
@@ -319,8 +337,107 @@ class FieldViewBuilder
             'orientation' => $up,
             'choices'     => $choices,
             'views'       => $views,
+            'star_hop'    => $starHop,
             'warnings'    => $warnings,
         ];
+    }
+
+    /**
+     * The star-hop route as a chart of its own, turned and mirrored as the
+     * finder (or binoculars) shows it, with the field around every star, and
+     * the steps, each with the hour on a clock face towards which the next
+     * star lies in that view; a message when there is no route.
+     *
+     * @param  list<array>|null  $route  StarHopRoute::find()
+     * @return array{title: string, subtitle?: string, fov?: string, limit?: float, field?: string, steps?: list<array>, svg?: string, message?: string}
+     */
+    private function starHop(?array $route, array $base, Instrument $scope, float $field, float $limit, string $up): array
+    {
+        $title = __('Star hop');
+        if ($route === null) {
+            return [
+                'title'   => $title,
+                'message' => __('There is no star-hop route to :object: no chain of stars within :distance° leads to it in steps that fit in the field of :instrument.', [
+                    'object'     => $base['target']['name'],
+                    'distance'   => (int) StarHopRoute::MAX_RADIUS_DEG,
+                    'instrument' => html_entity_decode($scope->fullName()),
+                ]),
+            ];
+        }
+
+        // The centre of the route and the radius that holds it with a field around each star.
+        $sum = [0.0, 0.0, 0.0];
+        foreach ($route as $step) {
+            $sum[0] += cos(deg2rad($step['dec'])) * cos(deg2rad($step['ra']));
+            $sum[1] += cos(deg2rad($step['dec'])) * sin(deg2rad($step['ra']));
+            $sum[2] += sin(deg2rad($step['dec']));
+        }
+        $ra     = fmod(rad2deg(atan2($sum[1], $sum[0])) + 360.0, 360.0);
+        $dec    = rad2deg(atan2($sum[2], hypot($sum[0], $sum[1])));
+        $extent = 0.0;
+        foreach ($route as $step) {
+            $extent = max($extent, rad2deg(acos(max(-1.0, min(1.0, sin(deg2rad($dec)) * sin(deg2rad($step['dec'])) + cos(deg2rad($dec)) * cos(deg2rad($step['dec'])) * cos(deg2rad($step['ra'] - $ra)))))));
+        }
+        $radius    = max($extent + $field / 2 * 1.1, $field * 0.75);
+        $starLimit = round(min(StarHopRoute::MAX_HOP_MAGNITUDE, $limit - StarHopRoute::HOP_MARGIN) + 0.5, 1);
+
+        $svg = $this->renderer->render(array_merge($base, [
+            'ra'             => $ra,
+            'dec'            => $dec,
+            'radius_deg'     => $radius,
+            'star_limit'     => $starLimit,
+            'up'             => $up,
+            'flip'           => $this->flips($scope, 'flip_image'),
+            'flop'           => $this->flips($scope, 'flop_image'),
+            'constellations' => true,
+            'route'          => ['points' => $this->routePoints($route), 'field_deg' => $field / 2],
+        ]));
+
+        // The direction of each hop in the chart just drawn, as an hour on a clock face.
+        $steps = [];
+        foreach ($route as $n => $step) {
+            $clock = null;
+            if ($n > 0) {
+                $from = $this->renderer->project($route[$n - 1]['ra'], $route[$n - 1]['dec']);
+                $to   = $this->renderer->project($step['ra'], $step['dec']);
+                if ($from && $to) {
+                    $hour  = (int) round(fmod(rad2deg(atan2($to[0] - $from[0], $from[1] - $to[1])) + 360.0, 360.0) / 30.0) % 12;
+                    $clock = $hour === 0 ? 12 : $hour;
+                }
+            }
+            $steps[] = $step + ['number' => $n + 1, 'clock' => $clock];
+        }
+
+        return [
+            'title'    => $title,
+            'subtitle' => html_entity_decode($scope->fullName()),
+            'fov'      => self::formatAngle(2 * $radius),
+            'limit'    => $starLimit,
+            'field'    => self::formatAngle($field),
+            'steps'    => $steps,
+            'svg'      => $svg,
+        ];
+    }
+
+    /**
+     * The points of a route for the renderer, the stars numbered from 1 and
+     * the start star with its name.
+     *
+     * @param  list<array>  $route
+     * @return list<array{ra: float, dec: float, label: ?string}>
+     */
+    private function routePoints(array $route): array
+    {
+        $points = [];
+        foreach ($route as $n => $step) {
+            $label = null;
+            if ($step['kind'] !== 'target') {
+                $label = ($n + 1).($step['label'] !== null ? ' '.$step['label'] : '');
+            }
+            $points[] = ['ra' => $step['ra'], 'dec' => $step['dec'], 'label' => $label];
+        }
+
+        return $points;
     }
 
     /**
@@ -535,19 +652,22 @@ class FieldViewBuilder
             $ra         = (float) $object->ra                                                   * 15.0;
             $dec        = (float) $object->decl;
             $altitudeAt = fn (int $timestamp) => FieldViewRenderer::altitude($ra, $dec, $lstStart + 360.98564736629 * ($timestamp - $start) / 86400.0, $latitude);
+            // A moment behind the local horizon only wins when the object is never above it
+            $horizon = LocalHorizon::forLocation($location);
+            $score   = $horizon === null ? $altitudeAt : fn (int $timestamp) => $altitudeAt($timestamp) - ($horizon->isClear($latitude, $lstStart + 360.98564736629 * ($timestamp - $start) / 86400.0 - $ra, $dec) ? 0.0 : 180.0);
 
             $best = $start;
             for ($t = $start; $t <= $end; $t += self::NIGHT_STEP_MINUTES * 60) {
-                if ($altitudeAt($t) > $altitudeAt($best)) {
+                if ($score($t) > $score($best)) {
                     $best = $t;
                 }
             }
-            if ($altitudeAt($end) > $altitudeAt($best)) {
+            if ($score($end) > $score($best)) {
                 $best = $end;
             }
             // Refine to the minute around the best step.
             for ($t = max($start, $best - self::NIGHT_STEP_MINUTES * 60); $t <= min($end, $best + self::NIGHT_STEP_MINUTES * 60); $t += 60) {
-                if ($altitudeAt($t) > $altitudeAt($best)) {
+                if ($score($t) > $score($best)) {
                     $best = $t;
                 }
             }

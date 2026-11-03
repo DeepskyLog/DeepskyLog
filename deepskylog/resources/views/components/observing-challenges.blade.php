@@ -14,6 +14,9 @@
             @endphp
             <li class="py-2">
                 <a href="{{ route("challenges.show", $challenge) }}" class="font-semibold text-white hover:underline">{{ $challenge->name }}</a>
+                @if ($challenge->club_id && $challenge->club)
+                    <span class="ml-1 rounded bg-gray-700 px-2 py-0.5 text-xs text-gray-300">{{ html_entity_decode($challenge->club->name, ENT_QUOTES | ENT_HTML5, "UTF-8") }}</span>
+                @endif
                 @if ($entry["goal"])
                     @php
                         $progress = $entry["goal"]->progress();

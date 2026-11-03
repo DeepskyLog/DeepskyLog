@@ -99,7 +99,7 @@ class DeepskyObjectCreator
             ? $values['review_status']
             : DeepskyObject::REVIEW_NEW;
         $objectData['review_note'] = isset($values['review_note']) && trim($values['review_note']) !== ''
-            ? mb_substr(trim($values['review_note']), 0, 255)
+            ? mb_substr(trim($values['review_note']), 0, DeepskyObject::REVIEW_NOTE_LENGTH)
             : null;
         $object = DeepskyObject::create($objectData);
 

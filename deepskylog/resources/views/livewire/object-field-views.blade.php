@@ -212,9 +212,29 @@
         @endforeach
     </div>
 
+    {{-- The star-hop route --}}
+    @if ($result['star_hop'])
+        @php $starHop = $result['star_hop']; @endphp
+        <section class="mt-4 rounded-lg border border-gray-700 bg-gray-800/50 p-3" wire:key="field-view-star-hop">
+            <h2 class="text-base font-semibold text-white">{{ $starHop['title'] }}</h2>
+            @isset($starHop['svg'])
+                <p class="text-gray-400">
+                    {{ $starHop['subtitle'] }} · {{ __('Field of view: :fov', ['fov' => $starHop['field']]) }} · {{ __('Stars to magnitude :mag', ['mag' => number_format($starHop['limit'], 1)]) }}
+                </p>
+                <div class="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    <div class="dsl-field-view">{!! $starHop['svg'] !!}</div>
+                    @include('partials.star-hop-steps', ['starHop' => $starHop, 'object' => $result['object']->name, 'class' => 'space-y-1 text-gray-300'])
+                </div>
+            @else
+                <p class="mt-2 text-gray-300">{{ $starHop['message'] }}</p>
+            @endisset
+        </section>
+    @endif
+
     <div class="mt-4 space-y-1 text-xs text-gray-400">
         <p>{{ __('The naked-eye view shows 90° of the sky around the object, with the zenith up and the ground below the horizon. The dashed circles show the field of the finder in the naked-eye view and the field of the telescope in the finder view.') }}</p>
         <p>{{ __('The finder and telescope views are turned as the mount turns them (zenith up for an alt-azimuth mount, north up for an equatorial one) and mirrored as set for the instrument. The arrows in the corner point north (N) and east (E).') }}</p>
+        <p>{{ __('The star hop starts at a star you see with the naked eye and hops from star to star to the object, each hop short enough that the next star, and at last the object, is in the field of the finder (or of the binoculars) while the star before is in its middle. The dashed circles show that field around each star. The chart is turned and mirrored as the finder shows it, and the hours of a clock face (12 o\'clock up) give the direction of each hop in it. The route is also drawn on the naked-eye and finder views.') }}</p>
         <p>{{ __('The contrast reserve is that of the object at the magnification of the view, under the sky of the location (its SQM, else its limiting magnitude), with the object dimmed by the extinction at its altitude.') }}</p>
         <p>{{ __('For an emission nebula, the telescope view also gives the contrast reserve with each of your nebula filters, with the difference without a filter between brackets. Every filter of a kind (broadband, UHC, O-III, H-beta) gets the typical passband of that kind, and the nebula the typical spectrum of its type.') }}</p>
         <p>{{ __('Each filter also gets the best magnification of the eyepieces of the instrument set with that filter. A filter darkens the image, so it often works best at a lower magnification (a larger exit pupil) than without one, up to the :pupil mm of the dark-adapted eye.', ['pupil' => (int) \App\Services\ContrastReserveCalculator::EYE_PUPIL_MM]) }}</p>

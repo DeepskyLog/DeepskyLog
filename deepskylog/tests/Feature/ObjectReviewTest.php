@@ -180,3 +180,88 @@ it('does not let observers mark objects as checked', function () {
 
     expect(DeepskyObject::find('M 65')->review_status)->toBe(DeepskyObject::REVIEW_NEW);
 });
+
+// Observers report errors from the object page: the object needs attention,
+// with the report in its review note.
+
+it('lets an observer report an error in an object', function () {
+    insertReviewTestObject('M 65', DeepskyObject::REVIEW_CHECKED, 'Checked against SIMBAD');
+    $observer = $this->createUserAndAssignToTeam('Observers');
+
+    $this->actingAs($observer)->post(route('object.report-error', ['slug' => 'm-65']), [
+        'kind' => 'magnitude',
+        'note' => "The magnitude  is\n10.3",
+    ])->assertRedirect()->assertSessionHas('success');
+
+    $object = DeepskyObject::where('name', 'M 65')->first();
+    expect($object->review_status)->toBe(DeepskyObject::REVIEW_ATTENTION)
+        ->and($object->review_note)->toBe('Magnitude ('.$observer->username.', '.now()->toDateString().'): The magnitude is 10.3')
+        ->and($object->reviewed_by)->toBe($observer->id);
+});
+
+it('keeps the earlier reports of an object that needs attention', function () {
+    insertReviewTestObject('M 65', DeepskyObject::REVIEW_ATTENTION, 'Position (someone, 2026-01-01): too far north');
+    $observer = $this->createUserAndAssignToTeam('Observers');
+
+    $this->actingAs($observer)->post(route('object.report-error', ['slug' => 'm-65']), [
+        'kind' => 'size',
+        'note' => 'Far too large',
+    ]);
+
+    expect(DeepskyObject::where('name', 'M 65')->value('review_note'))
+        ->toStartWith('Size (')
+        ->toEndWith("Far too large\nPosition (someone, 2026-01-01): too far north");
+});
+
+it('refuses an error report without a note or of an unknown kind', function () {
+    insertReviewTestObject('M 65');
+    $observer = $this->createUserAndAssignToTeam('Observers');
+
+    $this->actingAs($observer)->post(route('object.report-error', ['slug' => 'm-65']), ['kind' => 'magnitude', 'note' => ''])
+        ->assertSessionHasErrors('note');
+    $this->actingAs($observer)->post(route('object.report-error', ['slug' => 'm-65']), ['kind' => 'colour', 'note' => 'Blue'])
+        ->assertSessionHasErrors('kind');
+
+    expect(DeepskyObject::where('name', 'M 65')->value('review_status'))->toBeNull();
+});
+
+it('does not take error reports from guests', function () {
+    insertReviewTestObject('M 65');
+
+    $this->post(route('object.report-error', ['slug' => 'm-65']), ['kind' => 'magnitude', 'note' => 'Wrong'])
+        ->assertRedirect(route('login'));
+
+    expect(DeepskyObject::where('name', 'M 65')->value('review_status'))->toBeNull();
+});
+
+it('tells the administrators and database experts of an error report', function () {
+    insertReviewTestObject('M 65');
+    $observer = $this->createUserAndAssignToTeam('Observers');
+    $admin = \App\Models\User::factory()->create();
+    $admin->teams()->attach($this->getTeamFromString('Administrators'));
+    $expert = \App\Models\User::factory()->create();
+    $expert->teams()->attach($this->getTeamFromString('Database Experts'));
+
+    $this->actingAs($observer)->post(route('object.report-error', ['slug' => 'm-65']), [
+        'kind' => 'type',
+        'note' => 'This is a <b>planetary nebula</b>',
+    ]);
+
+    $messages = \App\Models\Message::where('subject', 'Error reported in M 65')->get();
+    expect($messages->pluck('receiver')->sort()->values()->all())
+        ->toBe(collect([$admin->username, $expert->username])->sort()->values()->all())
+        ->and($messages->first()->message)->toContain('This is a &lt;b&gt;planetary nebula&lt;/b&gt;')
+        ->and($messages->first()->message)->toContain(route('object.edit', ['slug' => 'm-65']));
+});
+
+it('does not tell a database expert of their own error report', function () {
+    insertReviewTestObject('M 65');
+    $expert = $this->createUserAndAssignToTeam('Database Experts');
+
+    $this->actingAs($expert)->post(route('object.report-error', ['slug' => 'm-65']), [
+        'kind' => 'size',
+        'note' => 'Too large',
+    ]);
+
+    expect(\App\Models\Message::where('receiver', $expert->username)->count())->toBe(0);
+});

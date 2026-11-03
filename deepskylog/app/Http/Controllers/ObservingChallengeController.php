@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Club;
 use App\Models\ObservingChallenge;
 use App\Models\ObservingList;
 use App\Models\User;
 use App\Services\ChallengeStandings;
+use App\Services\Clubs\ClubNotifier;
 use App\Services\ObjectSources;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Validator;
 use Illuminate\View\View;
 
@@ -19,6 +20,8 @@ use Illuminate\View\View;
  * The observing challenges: /challenges and the page of each challenge with
  * its leaderboard and shared progress, where observers join and leave, and
  * /admin/challenges, where the administrators and database experts set them.
+ * The administrators of a club set the club's challenges on
+ * /clubs/{club}/challenges.
  */
 class ObservingChallengeController extends Controller
 {
@@ -38,17 +41,17 @@ class ObservingChallengeController extends Controller
         $today = Carbon::today()->toDateString();
 
         return view('challenges.index', [
-            'running' => ObservingChallenge::visible()->where('starts_on', '<=', $today)->where('ends_on', '>=', $today)->withCount('goals')->orderBy('ends_on')->get(),
-            'upcoming' => ObservingChallenge::visible()->where('starts_on', '>', $today)->withCount('goals')->orderBy('starts_on')->get(),
-            'ended' => ObservingChallenge::visible()->where('ends_on', '<', $today)->withCount('goals')->orderByDesc('ends_on')->paginate(self::PER_PAGE),
+            'running' => ObservingChallenge::visible()->siteWide()->where('starts_on', '<=', $today)->where('ends_on', '>=', $today)->withCount('goals')->orderBy('ends_on')->get(),
+            'upcoming' => ObservingChallenge::visible()->siteWide()->where('starts_on', '>', $today)->withCount('goals')->orderBy('starts_on')->get(),
+            'ended' => ObservingChallenge::visible()->siteWide()->where('ends_on', '<', $today)->withCount('goals')->orderByDesc('ends_on')->paginate(self::PER_PAGE),
         ]);
     }
 
     public function show(Request $request, ObservingChallenge $challenge): View
     {
-        abort_if($challenge->hidden && ! Gate::allows('manage_challenges', User::class), 404);
+        $viewer = $request->user();
+        abort_if($challenge->isHidden() && ! $challenge->canBeManagedBy($viewer), 404);
 
-        $viewer    = $request->user();
         $standings = ChallengeStandings::for($challenge);
         $rows      = collect($standings['rows']);
         $viewerRow = $viewer !== null ? $rows->firstWhere('user_id', $viewer->id) : null;
@@ -63,12 +66,15 @@ class ObservingChallengeController extends Controller
             'goal' => $goal,
             'seenByViewer' => $goal?->firstObservationDates() ?? collect(),
             'showObjects' => $standings['total'] <= self::MAX_OBJECTS_SHOWN,
+            'canJoin' => $challenge->canBeJoinedBy($viewer),
+            'editUrl' => ! $challenge->canBeManagedBy($viewer) ? null
+                : ($challenge->club ? route('clubs.challenges.edit', [$challenge->club, $challenge]) : route('admin.challenges.edit', $challenge)),
         ]);
     }
 
     public function join(Request $request, ObservingChallenge $challenge): RedirectResponse
     {
-        abort_unless($challenge->canBeJoined(), 404);
+        abort_unless($challenge->canBeJoinedBy($request->user()), 404);
         $challenge->join($request->user());
 
         return redirect()->route('challenges.show', $challenge)
@@ -88,7 +94,7 @@ class ObservingChallengeController extends Controller
      */
     public function storeList(Request $request, ObservingChallenge $challenge): RedirectResponse
     {
-        abort_if($challenge->hidden || $challenge->source() === null, 404);
+        abort_if($challenge->isHidden() || $challenge->source() === null, 404);
         $this->authorize('create', ObservingList::class);
 
         $goal  = $challenge->goalFor($request->user());
@@ -111,21 +117,14 @@ class ObservingChallengeController extends Controller
 
     public function admin(): View
     {
-        $challenges = ObservingChallenge::withCount('goals')->orderByDesc('starts_on')->orderByDesc('id')->paginate(25);
+        $challenges = ObservingChallenge::siteWide()->withCount('goals')->orderByDesc('starts_on')->orderByDesc('id')->paginate(25);
 
         return view('admin.challenges.index', ['challenges' => $challenges]);
     }
 
     public function create(Request $request): View
     {
-        $start = Carbon::today()->addMonthNoOverflow()->startOfMonth();
-
-        return $this->form($request, new ObservingChallenge([
-            'catalog' => 'Hickson',
-            'mode' => 'observed',
-            'starts_on' => $start,
-            'ends_on' => $start->copy()->endOfMonth(),
-        ]));
+        return $this->form($request, $this->newChallenge());
     }
 
     public function store(Request $request): RedirectResponse
@@ -155,34 +154,128 @@ class ObservingChallengeController extends Controller
         return redirect()->route('admin.challenges')->with('success', __('The challenge is deleted.'));
     }
 
-    private function form(Request $request, ObservingChallenge $challenge): View
+    /** A new challenge of a club, set by its administrators. */
+    public function clubCreate(Request $request, Club $club): View
     {
-        $sources = $this->sources($request->user());
+        abort_unless($club->canBeManagedBy($request->user()), 403);
+
+        return $this->form($request, $this->newChallenge(), $club);
+    }
+
+    public function clubStore(Request $request, Club $club): RedirectResponse
+    {
+        abort_unless($club->canBeManagedBy($request->user()), 403);
+
+        $challenge = new ObservingChallenge(['user_id' => $request->user()->id, 'club_id' => $club->id]);
+        $this->save($request, $challenge, $club);
+        if (! $challenge->isHidden()) {
+            ClubNotifier::challenge($club, $challenge, $request->user());
+        }
+
+        return redirect()->route('clubs.show', $club)->with('success', __('The challenge is saved. The members of the club have been told.'));
+    }
+
+    public function clubEdit(Request $request, Club $club, ObservingChallenge $challenge): View
+    {
+        $this->authorizeClubChallenge($request, $club, $challenge);
+
+        return $this->form($request, $challenge, $club);
+    }
+
+    public function clubUpdate(Request $request, Club $club, ObservingChallenge $challenge): RedirectResponse
+    {
+        $this->authorizeClubChallenge($request, $club, $challenge);
+        $this->save($request, $challenge, $club);
+
+        return redirect()->route('challenges.show', $challenge)->with('success', __('The challenge is saved.'));
+    }
+
+    public function clubDestroy(Request $request, Club $club, ObservingChallenge $challenge): RedirectResponse
+    {
+        $this->authorizeClubChallenge($request, $club, $challenge);
+        $challenge->delete();
+
+        return redirect()->route('clubs.show', $club)->with('success', __('The challenge is deleted.'));
+    }
+
+    private function authorizeClubChallenge(Request $request, Club $club, ObservingChallenge $challenge): void
+    {
+        abort_unless((int) $challenge->club_id === (int) $club->id, 404);
+        abort_unless($club->canBeManagedBy($request->user()), 403);
+    }
+
+    private function newChallenge(): ObservingChallenge
+    {
+        $start = Carbon::today()->addMonthNoOverflow()->startOfMonth();
+
+        return new ObservingChallenge([
+            'catalog' => 'Hickson',
+            'mode' => 'observed',
+            'starts_on' => $start,
+            'ends_on' => $start->copy()->endOfMonth(),
+        ]);
+    }
+
+    private function form(Request $request, ObservingChallenge $challenge, ?Club $club = null): View
+    {
+        $sources = $this->sources($request->user(), $club);
         // The list of an edited challenge the editor does not follow
         if ($challenge->source() !== null && ! $sources->contains('key', $challenge->source()['key'])) {
             $sources->push($challenge->source() + ['label' => html_entity_decode($challenge->source_label, ENT_QUOTES | ENT_HTML5, 'UTF-8')]);
         }
 
-        return view('admin.challenges.form', ['challenge' => $challenge, 'sources' => $sources]);
+        if ($club !== null) {
+            $action = $challenge->exists ? route('clubs.challenges.update', [$club, $challenge]) : route('clubs.challenges.store', $club);
+            $cancel = route('clubs.show', $club);
+        } else {
+            $action = $challenge->exists ? route('admin.challenges.update', $challenge) : route('admin.challenges.store');
+            $cancel = route('admin.challenges');
+        }
+
+        return view('admin.challenges.form', [
+            'challenge' => $challenge,
+            'sources' => $sources,
+            'club' => $club,
+            'action' => $action,
+            'cancelUrl' => $cancel,
+        ]);
     }
 
     /**
      * The catalogs, and the public observing lists the editor owns or
-     * subscribed to: a challenge is for everybody.
+     * subscribed to: a challenge is for everybody. A challenge of a club can
+     * also use the lists shared with the club.
      */
-    private function sources(User $user): Collection
+    private function sources(User $user, ?Club $club = null): Collection
     {
-        $public = ObservingList::where('public', true)->pluck('id')->flip();
-
-        return ObjectSources::options($user)
+        $public  = ObservingList::where('public', true)->pluck('id')->flip();
+        $sources = ObjectSources::options($user)
             ->filter(fn (array $source) => $source['type'] === 'catalog' || $public->has($source['list_id']))
             ->values();
+
+        if ($club !== null) {
+            foreach ($club->sharedLists() as $list) {
+                if (! $sources->contains('key', 'list:' . $list->id)) {
+                    $name = html_entity_decode((string) $list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                    $sources->push([
+                        'key' => 'list:' . $list->id,
+                        'type' => 'list',
+                        'list_id' => (int) $list->id,
+                        'list_slug' => (string) $list->slug,
+                        'short_label' => $name,
+                        'label' => $name . ' (' . html_entity_decode((string) $list->owner?->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') . ')',
+                    ]);
+                }
+            }
+        }
+
+        return $sources;
     }
 
-    private function save(Request $request, ObservingChallenge $challenge): void
+    private function save(Request $request, ObservingChallenge $challenge, ?Club $club = null): void
     {
         $key    = (string) $request->input('source');
-        $source = $this->sources($request->user())->firstWhere('key', $key);
+        $source = $this->sources($request->user(), $club)->firstWhere('key', $key);
         if ($source === null && $challenge->exists && ($challenge->source()['key'] ?? null) === $key) {
             $source = $challenge->source() + ['short_label' => $challenge->source_label];
         }

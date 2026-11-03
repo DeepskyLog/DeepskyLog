@@ -355,10 +355,11 @@
                                         </select>
                                     </div>
                                     <div class="md:col-span-2">
-                                        <x-input name="review_note" label="{{ __('Review note') }}" type="text"
-                                                 class="mt-1 block w-full" maxlength="255" id="review_note"
-                                                 value="{{ old('review_note', $object->review_note) }}"
-                                                 placeholder="{{ __('What needs attention, or what was checked') }}" />
+                                        <label for="review_note" class="block text-sm font-medium text-gray-300 mb-1">{{ __('Review note') }}</label>
+                                        <textarea name="review_note" id="review_note" rows="3"
+                                                  maxlength="{{ \App\Models\DeepskyObject::REVIEW_NOTE_LENGTH }}"
+                                                  placeholder="{{ __('What needs attention, or what was checked') }}"
+                                                  class="mt-1 block w-full rounded-lg border-gray-600 bg-gray-800 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 focus:ring-2 px-4 py-2">{{ old('review_note', $object->review_note) }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -533,9 +534,8 @@
     </div>
 
     @push('scripts')
-    <link rel="stylesheet" href="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script defer src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js"></script>
+    @include('partials.aladin-assets')
     <script>
         document.addEventListener('alpine:init', () => {
             // New names whose catalog DeepskyLog does not have yet, from the name and
@@ -896,14 +896,12 @@
                 });
             });
 
-            // Aladin Lite is loaded with defer: wait for it before the first draw
-            (function start(attempts) {
-                if ((typeof A === 'undefined' || typeof A.aladin !== 'function') && attempts < 100) {
-                    setTimeout(function() { start(attempts + 1); }, 100);
-                    return;
-                }
-                update();
-            })(0);
+            // Aladin Lite loads asynchronously (partials.aladin-assets): draw the chart
+            // now and the Aladin view once it is there
+            update();
+            if (!window.__dslAladinReady) {
+                document.addEventListener('dsl:aladin-ready', update, { once: true });
+            }
         });
 
         // SIMBAD Data Fetching and Applying

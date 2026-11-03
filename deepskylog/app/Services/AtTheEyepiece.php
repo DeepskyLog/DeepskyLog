@@ -9,6 +9,7 @@ use App\Models\Filter;
 use App\Models\Instrument;
 use App\Models\Lens;
 use App\Models\Location;
+use App\Models\ObjectFindingNote;
 use App\Models\Observation;
 use App\Models\ObservationSession;
 use App\Models\ObservingList;
@@ -17,10 +18,14 @@ use App\Models\ObservingListSubscription;
 use App\Models\User;
 use App\Services\Import\CsvObservationImporter;
 use App\Services\Import\ImportResult;
+use App\Services\Observations\ApertureRecords;
 use App\Services\Observations\ObservationCardData;
+use App\Services\Observations\SketchOverlay;
+use App\Services\Planets\PlanetSketchTemplate;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -42,6 +47,13 @@ use Illuminate\Support\Str;
  * standard equipment). An observation logged on the page itself (offline,
  * kept by the page until the connection returns) is saved with the same
  * location and equipment through CsvObservationImporter::importOne().
+ *
+ * The sketch pad of the page draws light on black, as the eye sees the
+ * field, the field circle SKETCH_FIELD of the square with N and W outside
+ * it; drawingImage()
+ * reads such a sketch and saveDrawing() stores it as it is, white stars on
+ * black, as the observation's drawing. Of Venus, Mars, Jupiter and Saturn
+ * the pad offers the planet's disk as a drawing template (planetSketch()).
  */
 class AtTheEyepiece
 {
@@ -56,6 +68,26 @@ class AtTheEyepiece
 
     /** How long ago a planned night may be for its list to count as planned on the list of lists. */
     public const PLANNED_DAYS_BACK = 1;
+
+    /** The finding notes shown of the current object, the most liked. */
+    public const FINDING_NOTES = 3;
+
+    /** The observer's own earlier observations shown of the current object, the latest. */
+    public const EARLIER_OBSERVATIONS = 3;
+
+    /** The longest part of the description of an earlier observation shown, in characters. */
+    public const EARLIER_DESCRIPTION = 400;
+
+    /** The largest sketch accepted from the sketch pad, in bytes of the image and in pixels per side. */
+    public const MAX_DRAWING_BYTES = 4 * 1024 * 1024;
+
+    public const MAX_DRAWING_PIXELS = 2000;
+
+    /** The part of the width of a sketch the field circle spans: the rest holds N and W. */
+    public const SKETCH_FIELD = 0.88;
+
+    /** Where saveDrawing() stores the sketches, on the public disk. */
+    public const DRAWING_PREFIX = 'observations/eyepiece-';
 
     /**
      * The lists the observer can take to the telescope (/observing-lists/eyepiece,
@@ -257,6 +289,106 @@ class AtTheEyepiece
     }
 
     /**
+     * The most liked finding notes of a deep-sky object (FINDING_NOTES), with
+     * the number of all of them; none for another kind of object.
+     *
+     * @return array{notes: Collection<int, ObjectFindingNote>, total: int}
+     */
+    public static function findingNotes(?DeepskyObject $object, User $user): array
+    {
+        if ($object === null) {
+            return ['notes' => collect(), 'total' => 0];
+        }
+
+        $query = ObjectFindingNote::forObject((string) $object->name, $user);
+
+        return ['notes' => (clone $query)->limit(self::FINDING_NOTES)->get(), 'total' => $query->count()];
+    }
+
+    /**
+     * The observer's own latest observations of the current object made
+     * before tonight (EARLIER_OBSERVATIONS), to compare with at the telescope:
+     * the local date, instrument, whether it was seen, the description as
+     * plain text (at most EARLIER_DESCRIPTION characters) and the drawing.
+     * A deep-sky object is matched on its canonical name, another target
+     * (planet, comet) on the name in the list. With the number of all of them.
+     *
+     * @param  array<string, mixed>  $entry  an entry of page()
+     * @return array{observations: list<array<string, mixed>>, total: int}
+     */
+    public static function earlierObservations(array $entry, User $user, string $tonight, string $timezone): array
+    {
+        $object = $entry['object'];
+        $name = $object !== null ? (string) $object->name : (string) $entry['name'];
+        if ($name === '') {
+            return ['observations' => [], 'total' => 0];
+        }
+
+        $start = Carbon::parse($tonight.' 12:00', $timezone)->utc();
+        $query = Observation::where('observer_user_id', $user->id)
+            ->where(fn ($q) => $q->where('target_name', $name)
+                ->when($object !== null, fn ($q) => $q->orWhere(fn ($q) => $q->ofDeepskyObject($name))))
+            ->where(fn ($q) => $q->where('observed_on', '<', $start->toDateString())
+                ->orWhere(fn ($q) => $q->where('observed_on', $start->toDateString())
+                    ->where(fn ($q) => $q->whereNull('observed_time')->orWhere('observed_time', '<', $start->format('H:i:s')))));
+
+        $observations = (clone $query)->with('instrument')
+            ->selectRaw('observations.*, '.ApertureRecords::notSeenSql().' AS not_seen')
+            ->orderByDesc('observed_on')->orderByDesc('observed_time')->orderByDesc('id')
+            ->limit(self::EARLIER_OBSERVATIONS)
+            ->get();
+
+        $plain = fn (?string $text) => trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags(str_replace(['<br', '</p>'], [' <br', ' </p>'], (string) $text)), ENT_QUOTES | ENT_HTML5, 'UTF-8')) ?? '');
+
+        return [
+            'observations' => $observations->map(fn (Observation $observation) => [
+                'date' => $observation->localDate(),
+                'instrument' => $observation->instrument ? trim(html_entity_decode((string) $observation->instrument->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')) : null,
+                'not_seen' => (bool) $observation->not_seen,
+                'description' => Str::limit($plain($observation->description), self::EARLIER_DESCRIPTION),
+                'drawing' => $observation->drawingUrl(),
+                'url' => $observation->detailUrl(),
+            ])->all(),
+            'total' => $query->count(),
+        ];
+    }
+
+    /**
+     * The drawing template of the sketch pad for a planet of
+     * PlanetSketchTemplate::PLANETS (null for other objects) at the moment,
+     * with N and W of the telescope view: the zenith up unless the
+     * instrument the observation is saved with (equipment()) is on an
+     * equatorial mount, mirrored per its flip and flop (never binoculars).
+     *
+     * @param  array<string, mixed>  $entry  an entry of page()
+     * @return array{template: array<string, mixed>, compass: array{north: array{0: float, 1: float}, west: array{0: float, 1: float}}, orientation: string}|null
+     */
+    public static function planetSketch(User $user, ObservingList $list, array $entry, ?Location $location, Carbon $moment): ?array
+    {
+        $planet = $entry['object'] === null ? PlanetSketchTemplate::planetOf((string) $entry['name']) : null;
+        if ($planet === null) {
+            return null;
+        }
+
+        $template = PlanetSketchTemplate::for($planet, $moment->getTimestamp());
+        $equipment = self::equipment($user, $list, $moment);
+        $instrument = $equipment['instrument_id'] ? Instrument::find($equipment['instrument_id']) : null;
+        $location = ($equipment['location_id'] ? Location::find($equipment['location_id']) : null) ?? $location;
+
+        $rotation = null;
+        if ($instrument?->mount_type?->name !== 'Equatorial') {
+            $rotation = SketchOverlay::zenithRotationAt($location, $moment, $template['ra'], $template['dec']);
+        }
+        $mirrors = $instrument !== null && ! $instrument->isBinocular();
+
+        return [
+            'template' => $template,
+            'compass' => SketchOverlay::compass($rotation ?? 0.0, $mirrors && (bool) $instrument->flip_image, $mirrors && (bool) $instrument->flop_image),
+            'orientation' => $rotation === null ? 'north' : 'zenith',
+        ];
+    }
+
+    /**
      * The type, constellation, magnitude and size of a deep-sky object.
      *
      * @return array{type: ?string, constellation: ?string, magnitude: ?float, size: ?string}
@@ -288,6 +420,47 @@ class AtTheEyepiece
             'magnitude' => $magnitude,
             'size' => $size,
         ];
+    }
+
+    /**
+     * The lines the sketch pad can print beside the field, as on a finished
+     * drawing: the equipment and site the observation is saved with
+     * (equipment()), its sky, and the eyepiece, lens, magnification, true
+     * field and filter. The page puts the date, object and constellation
+     * above them; the observer can edit these lines before saving.
+     *
+     * @return list<string>
+     */
+    public static function sketchLabels(User $user, ObservingList $list, Carbon $moment): array
+    {
+        $equipment = self::equipment($user, $list, $moment);
+        $name = fn ($model) => $model ? trim(html_entity_decode((string) $model->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')) : '';
+
+        $instrument = $equipment['instrument_id'] ? Instrument::find($equipment['instrument_id']) : null;
+        $location = $equipment['location_id'] ? Location::find($equipment['location_id']) : null;
+        $eyepiece = $equipment['eyepiece_id'] ? Eyepiece::find($equipment['eyepiece_id']) : null;
+        $lens = $equipment['lens_id'] ? Lens::find($equipment['lens_id']) : null;
+        $filter = $equipment['filter_id'] ? Filter::find($equipment['filter_id']) : null;
+
+        $lines = [$name($instrument), $name($location)];
+        if ($location !== null && $location->skyBackground > 0) {
+            $lines[] = 'SQM '.number_format((float) $location->skyBackground, 2);
+        } elseif ($location !== null && $location->limitingMagnitude > 0) {
+            $lines[] = 'NELM '.number_format((float) $location->limitingMagnitude, 1);
+        }
+
+        // "6mm Ethos, Paracorr: 394x, 15′"
+        $optics = implode(', ', array_filter([$name($eyepiece), $name($lens)]));
+        $magnification = $instrument?->magnificationFor($eyepiece, $lens);
+        $field = $instrument?->trueFieldOfViewDeg($eyepiece, $lens);
+        $numbers = array_filter([
+            $magnification ? $magnification.'x' : null,
+            $field > 0 ? ($field >= 1 ? round($field, 1).'°' : round($field * 60).'′') : null,
+        ]);
+        $lines[] = $optics.($optics !== '' && $numbers ? ': ' : '').implode(', ', $numbers);
+        $lines[] = $name($filter);
+
+        return array_values(array_filter($lines, fn (string $line) => $line !== ''));
     }
 
     /**
@@ -448,6 +621,51 @@ class AtTheEyepiece
                 'language' => strtolower(substr((string) $language, 0, 10)),
                 'description' => $description,
             ]);
+    }
+
+    /**
+     * The image of a sketch sent by the page (a data: URL of a PNG or JPEG
+     * image), or null when it is none or too large.
+     */
+    public static function drawingImage(string $dataUrl): ?\GdImage
+    {
+        if (! preg_match('#^data:image/(png|jpeg);base64,#', $dataUrl, $match)) {
+            return null;
+        }
+        $bytes = base64_decode(substr($dataUrl, strlen($match[0])), true);
+        if ($bytes === false || $bytes === '' || strlen($bytes) > self::MAX_DRAWING_BYTES) {
+            return null;
+        }
+        $info = @getimagesizefromstring($bytes);
+        if ($info === false || ! in_array($info[2], [IMAGETYPE_PNG, IMAGETYPE_JPEG], true)
+            || $info[0] > self::MAX_DRAWING_PIXELS || $info[1] > self::MAX_DRAWING_PIXELS) {
+            return null;
+        }
+        $image = @imagecreatefromstring($bytes);
+
+        return $image === false ? null : $image;
+    }
+
+    /**
+     * Store a sketch of the sketch pad as the drawing of the observation,
+     * light on black as drawn. It replaces the drawing the observation
+     * had; a sketch of the pad it replaces (the page sent it again) is
+     * deleted.
+     */
+    public static function saveDrawing(Observation $observation, \GdImage $image): void
+    {
+        ob_start();
+        imagejpeg($image, null, 90);
+        $jpeg = (string) ob_get_clean();
+
+        $path = self::DRAWING_PREFIX.Str::random(32).'.jpg';
+        Storage::disk('public')->put($path, $jpeg);
+
+        $old = (string) $observation->drawing_filename;
+        $observation->forceFill(['has_drawing' => true, 'drawing_filename' => $path])->save();
+        if ($old !== '' && $old !== $path && str_starts_with($old, self::DRAWING_PREFIX)) {
+            Storage::disk('public')->delete($old);
+        }
     }
 
     /**

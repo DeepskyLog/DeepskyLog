@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 /**
@@ -23,6 +24,11 @@ use Illuminate\Support\Str;
  * observer page and in their blog, and follows the challenge when it is
  * edited; ChallengeStandings ranks the participants. The challenge is
  * announced by a news item (kind 'challenge', key 'challenge:{id}').
+ *
+ * A challenge of a club (club_id) is set by the club administrators, only
+ * its members join it, and it is not in the news or on /challenges: the
+ * members get a message instead, and it is on the club page and, for them,
+ * on the home page.
  */
 class ObservingChallenge extends Model
 {
@@ -37,7 +43,7 @@ class ObservingChallenge extends Model
 
     protected $fillable = [
         'name', 'description', 'catalog', 'observing_list_id', 'source_label', 'target_count',
-        'mode', 'new_only', 'starts_on', 'ends_on', 'hidden', 'user_id',
+        'mode', 'new_only', 'starts_on', 'ends_on', 'hidden', 'user_id', 'club_id',
     ];
 
     protected $attributes = [
@@ -78,6 +84,11 @@ class ObservingChallenge extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function club(): BelongsTo
+    {
+        return $this->belongsTo(Club::class);
+    }
+
     public function observingList(): BelongsTo
     {
         return $this->belongsTo(ObservingList::class);
@@ -92,6 +103,12 @@ class ObservingChallenge extends Model
     public function scopeVisible(Builder $query): Builder
     {
         return $query->where('hidden', false);
+    }
+
+    /** The challenges for everybody, not those of a club. */
+    public function scopeSiteWide(Builder $query): Builder
+    {
+        return $query->whereNull('club_id');
     }
 
     /** The column: $this->hidden is the model's list of attributes hidden from arrays. */
@@ -120,6 +137,28 @@ class ObservingChallenge extends Model
     public function canBeJoined(): bool
     {
         return ! $this->isHidden() && $this->status() !== 'ended' && $this->source() !== null;
+    }
+
+    /** Whether the observer may join: anybody, or the members for the challenge of a club. */
+    public function canBeJoinedBy(?User $observer): bool
+    {
+        return $observer !== null && $this->canBeJoined() && ($this->club_id === null || (bool) $this->club?->isMember($observer));
+    }
+
+    /**
+     * Who sets the challenge: the administrators and database experts, and
+     * for the challenge of a club its administrators.
+     */
+    public function canBeManagedBy(?User $user): bool
+    {
+        if ($user === null) {
+            return false;
+        }
+        if ($this->club_id !== null) {
+            return (bool) $this->club?->canBeManagedBy($user);
+        }
+
+        return Gate::forUser($user)->allows('manage_challenges', User::class);
     }
 
     /**
@@ -210,13 +249,17 @@ class ObservingChallenge extends Model
         $this->save();
         $this->goals()->update($this->goalAttributes());
         ChallengeStandings::forget($this);
-        $this->announce();
+        // The challenge of a club is not in the news
+        if ($this->club_id === null) {
+            $this->announce();
+        }
     }
 
     /**
      * The challenges for the home page: the running ones, and the coming ones
      * the viewer joined or that start within ANNOUNCE_DAYS_BEFORE (announced
-     * in the news). Those the viewer joined first, then the running ones,
+     * in the news), of everybody and of the viewer's clubs. Those the viewer
+     * joined first, then the running ones,
      * each with the viewer's goal and place on the leaderboard (null when
      * they did not join or it has not started).
      *
@@ -226,7 +269,10 @@ class ObservingChallenge extends Model
     {
         $today      = Carbon::today();
         $challenges = self::visible()
+            ->where(fn (Builder $query) => $query->whereNull('club_id')
+                ->when($viewer !== null, fn (Builder $query) => $query->orWhereIn('club_id', Club::ofMember($viewer)->select('id'))))
             ->where('ends_on', '>=', $today->toDateString())
+            ->with('club:id,name,slug')
             ->withCount('goals')
             ->orderBy('ends_on')
             ->get();

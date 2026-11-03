@@ -6,6 +6,7 @@ use App\Models\Location;
 use App\Models\StarParty;
 use App\Services\MoonlightSky;
 use App\Services\NightWindow;
+use App\Services\TwilightSky;
 use App\Support\EphemerisDate;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -16,7 +17,10 @@ use Illuminate\Support\Facades\Log;
  * The cloud forecast of the coming nights at a location: the hourly forecast
  * of Open-Meteo (free, without a key, CC BY 4.0) in the dark hours of each
  * night (NightWindow), with the Moon in them (MoonlightSky), and a verdict
- * per night.
+ * per night; with the seeing of SeeingForecast where it reaches. In a night
+ * that stays in nautical twilight (summer, away from the equator) the hours
+ * with the Sun above TwilightSky::ASTRONOMICAL are twilight: they are never
+ * clear and dark, and a clear night of them is clear_twilight.
  *
  * The forecast is cached per cell of GRID degrees for CACHE_SECONDS. Pages
  * pass $fetch = false: a forecast that is not cached yet is then fetched
@@ -39,7 +43,17 @@ class NightForecast
     /** An hour this humid (%) or more brings dew. */
     public const DEW_HUMIDITY = 90;
 
-    public const VERDICTS = ['clear_dark', 'clear_moon', 'partly', 'cloudy', 'no_dark', 'unknown'];
+    /**
+     * An hour whose air is at most this much (°C) above the dew point needs
+     * the dew heater: under a clear sky the optics radiate to a few degrees
+     * below the air, so they reach the dew point before the air does.
+     */
+    public const HEATER_SPREAD = 3.0;
+
+    /** The temperatures kept from this many hours before the dark hours, for CoolDownAdvice. */
+    public const EVENING_HOURS = 6;
+
+    public const VERDICTS = ['clear_dark', 'clear_twilight', 'clear_moon', 'partly', 'cloudy', 'no_dark', 'unknown'];
 
     private const FORECAST_DAYS = 7;
 
@@ -55,7 +69,7 @@ class NightForecast
 
     private const PAUSE_KEY = 'night_forecast:paused';
 
-    private const HOURLY = ['cloud_cover', 'cloud_cover_low', 'cloud_cover_mid', 'cloud_cover_high', 'relative_humidity_2m', 'wind_speed_10m'];
+    private const HOURLY = ['cloud_cover', 'cloud_cover_low', 'cloud_cover_mid', 'cloud_cover_high', 'relative_humidity_2m', 'wind_speed_10m', 'temperature_2m', 'dew_point_2m'];
 
     public static function enabled(): bool
     {
@@ -113,13 +127,14 @@ class NightForecast
         if ($hourly === null) {
             return null;
         }
+        $seeing = SeeingForecast::points($latitude, $longitude, $fetch);
 
-        $key = 'night_forecast:nights:'.md5(json_encode([round($latitude, 4), round($longitude, 4), round($elevation), $timezone, $nights, $hourly['fetched_at']]));
+        $key = 'night_forecast:nights:v5:'.md5(json_encode([round($latitude, 4), round($longitude, 4), round($elevation), $timezone, $nights, $hourly['fetched_at'], $seeing['fetched_at'] ?? null]));
 
-        return Cache::remember($key, self::CACHE_SECONDS, function () use ($hourly, $latitude, $longitude, $elevation, $timezone, $nights) {
+        return Cache::remember($key, self::CACHE_SECONDS, function () use ($hourly, $seeing, $latitude, $longitude, $elevation, $timezone, $nights) {
             $result = [];
             foreach ($nights as $night) {
-                $result[$night] = self::night($hourly, $latitude, $longitude, $elevation, $timezone, $night);
+                $result[$night] = self::night($hourly, $latitude, $longitude, $elevation, $timezone, $night, $seeing);
             }
 
             return $result;
@@ -158,12 +173,13 @@ class NightForecast
     public static function verdictLabel(string $verdict, ?string $locale = null): string
     {
         return match ($verdict) {
-            'clear_dark' => __('Clear and dark', [], $locale),
-            'clear_moon' => __('Clear, with Moon', [], $locale),
-            'partly'     => __('Partly cloudy', [], $locale),
-            'cloudy'     => __('Cloudy', [], $locale),
-            'no_dark'    => __('Not dark', [], $locale),
-            default      => __('No forecast yet', [], $locale),
+            'clear_dark'     => __('Clear and dark', [], $locale),
+            'clear_twilight' => __('Clear, in twilight', [], $locale),
+            'clear_moon'     => __('Clear, with Moon', [], $locale),
+            'partly'         => __('Partly cloudy', [], $locale),
+            'cloudy'         => __('Cloudy', [], $locale),
+            'no_dark'        => __('Not dark', [], $locale),
+            default          => __('No forecast yet', [], $locale),
         };
     }
 
@@ -173,17 +189,18 @@ class NightForecast
     public static function verdictClass(string $verdict): string
     {
         return match ($verdict) {
-            'clear_dark' => 'bg-green-700',
-            'clear_moon' => 'bg-yellow-700',
-            'partly'     => 'bg-blue-700',
-            'cloudy'     => 'bg-gray-600',
-            default      => 'bg-gray-700',
+            'clear_dark'     => 'bg-green-700',
+            'clear_twilight' => 'bg-teal-700',
+            'clear_moon'     => 'bg-yellow-700',
+            'partly'         => 'bg-blue-700',
+            'cloudy'         => 'bg-gray-600',
+            default          => 'bg-gray-700',
         };
     }
 
     /**
      * The forecast of a night in one line of text: the verdict, the clouds,
-     * the clear hours and the risk of dew.
+     * the clear hours, the seeing and from when the dew heater is needed.
      *
      * @param  array<string, mixed>  $night  as night() gives it
      */
@@ -198,11 +215,33 @@ class NightForecast
         } elseif (($night['clear']['minutes'] ?? 0) >= 60) {
             $parts[] = __('Clear :from–:until', $night['clear'], $locale);
         }
-        if ($night['dew']) {
-            $parts[] = __('Risk of dew', [], $locale);
+        if ($night['seeing'] ?? null) {
+            $parts[] = SeeingForecast::label($night['seeing']['class'], $locale).' ('.$night['seeing']['arcsec'].')';
+        }
+        if ($dew = self::dewLabel($night, $locale)) {
+            $parts[] = $dew;
         }
 
         return implode(' · ', $parts);
+    }
+
+    /**
+     * From when the night needs the dew heater and from when dew forms, in
+     * words; null when it stays dry.
+     *
+     * @param  array<string, mixed>  $night  as night() gives it
+     */
+    public static function dewLabel(array $night, ?string $locale = null): ?string
+    {
+        $heater = $night['heater_from'] ?? null;
+        $dew    = $night['dew_from']    ?? null;
+
+        return match (true) {
+            $heater !== null && $dew !== null && $heater !== $dew => __('Dew heater from :heater, dew from :dew', ['heater' => $heater, 'dew' => $dew], $locale),
+            $heater !== null                                      => __('Dew heater from :time', ['time' => $heater], $locale),
+            (bool) ($night['dew'] ?? false)                       => __('Risk of dew', [], $locale),
+            default                                               => null,
+        };
     }
 
     /**
@@ -219,18 +258,32 @@ class NightForecast
     }
 
     /**
-     * The forecast of one night: its dark hours, the Moon, the forecast hours
-     * in them, the average cloud cover, the longest clear stretch with and
-     * without a bright Moon, and the verdict.
+     * The forecast of one night: its dark hours (with the completely dark
+     * part of a nautical window), the Moon, the forecast hours in them, the
+     * average cloud cover, the longest clear stretch with and without a
+     * bright Moon or twilight and all clear minutes with and without them,
+     * the seeing of the dark hours (with $seeing, as
+     * SeeingForecast::between() gives it) and the verdict, which the seeing
+     * does not change. Each hour has its temperature and dew point, 'dew'
+     * (DEW_HUMIDITY) and 'heater' (HEATER_SPREAD, or dew); 'dew_from' and
+     * 'heater_from' are the first clear hours with them (clouds keep the
+     * optics at the air's temperature). 'start' is the timestamp the
+     * observing starts (the longest clear and dark stretch, else the longest
+     * clear one, else the dark hours), 'end' that of the end of the dark
+     * hours, and 'temperatures' the forecast temperatures from EVENING_HOURS
+     * before the dark hours to their end, as [timestamp, °C], for
+     * CoolDownAdvice, which formats its times in 'timezone'.
      *
      * @param  array<string, mixed>  $hourly  as hourly() gives it
+     * @param  array<string, mixed>|null  $seeing  as SeeingForecast::points() gives them
      * @return array<string, mixed>
      */
-    public static function night(array $hourly, float $latitude, float $longitude, float $elevation, string $timezone, string $night): array
+    public static function night(array $hourly, float $latitude, float $longitude, float $elevation, string $timezone, string $night, ?array $seeing = null): array
     {
         $result = [
-            'night' => $night, 'dark' => null, 'moon' => null, 'hours' => [], 'cloud' => null,
-            'clear' => null, 'clear_dark' => null, 'dew' => false, 'verdict' => 'no_dark',
+            'night' => $night, 'dark' => null, 'moon' => null, 'hours' => [], 'cloud' => null, 'clear_minutes' => 0,
+            'clear' => null, 'clear_dark' => null, 'clear_dark_minutes' => 0, 'dew' => false, 'dew_from' => null, 'heater_from' => null, 'seeing' => null, 'verdict' => 'no_dark',
+            'start' => null, 'end' => null, 'timezone' => $timezone, 'temperatures' => [],
         ];
 
         $window = NightWindow::for($latitude, $longitude, $night, $timezone);
@@ -240,6 +293,9 @@ class NightForecast
 
         $time           = fn (int $timestamp) => Carbon::createFromTimestamp($timestamp, $timezone)->format('H:i');
         $result['dark'] = ['from' => $time($window->start), 'until' => $time($window->end), 'twilight' => $window->twilight];
+        if ($window->astronomical) {
+            $result['dark'] += ['dark_from' => $time($window->astronomical[0]), 'dark_until' => $time($window->astronomical[1])];
+        }
 
         // Each forecast hour stands for the half hour before and after it,
         // clipped to the dark hours.
@@ -250,16 +306,28 @@ class NightForecast
                 continue;
             }
 
+            $temperature = isset($hourly['temperature_2m'][$i]) ? round((float) $hourly['temperature_2m'][$i], 1) : null;
+            $dewPoint    = isset($hourly['dew_point_2m'][$i]) ? round((float) $hourly['dew_point_2m'][$i], 1) : null;
+            $humidity    = (int) ($hourly['relative_humidity_2m'][$i] ?? 0);
+            $dew         = $humidity >= self::DEW_HUMIDITY;
+
             $result['hours'][] = [
-                'time'     => $time($timestamp),
-                'from'     => $from,
-                'until'    => $until,
-                'cloud'    => (int) $hourly['cloud_cover'][$i],
-                'low'      => (int) ($hourly['cloud_cover_low'][$i] ?? 0),
-                'mid'      => (int) ($hourly['cloud_cover_mid'][$i] ?? 0),
-                'high'     => (int) ($hourly['cloud_cover_high'][$i] ?? 0),
-                'humidity' => (int) ($hourly['relative_humidity_2m'][$i] ?? 0),
-                'wind'     => (int) round($hourly['wind_speed_10m'][$i] ?? 0),
+                'time'        => $time($timestamp),
+                'from'        => $from,
+                'until'       => $until,
+                'cloud'       => (int) $hourly['cloud_cover'][$i],
+                'low'         => (int) ($hourly['cloud_cover_low'][$i] ?? 0),
+                'mid'         => (int) ($hourly['cloud_cover_mid'][$i] ?? 0),
+                'high'        => (int) ($hourly['cloud_cover_high'][$i] ?? 0),
+                'humidity'    => $humidity,
+                'temperature' => $temperature,
+                'dew_point'   => $dewPoint,
+                'dew'         => $dew,
+                'heater'      => $dew || ($temperature !== null && $dewPoint !== null && $temperature - $dewPoint <= self::HEATER_SPREAD),
+                'wind'        => (int) round($hourly['wind_speed_10m'][$i] ?? 0),
+                'seeing'      => SeeingForecast::at($seeing, $timestamp),
+                'twilight'    => $window->twilight !== 'astronomical'
+                    && TwilightSky::sunAltitude(intdiv($from + $until, 2), $latitude, $longitude) > TwilightSky::ASTRONOMICAL,
             ];
         }
 
@@ -285,17 +353,36 @@ class NightForecast
         $seconds         = array_sum(array_map(fn (array $hour) => $hour['until'] - $hour['from'], $result['hours']));
         $result['cloud'] = (int) round(array_sum(array_map(fn (array $hour) => $hour['cloud'] * ($hour['until'] - $hour['from']), $result['hours'])) / $seconds);
 
-        $clear                = fn (array $hour) => $hour['cloud'] <= self::CLEAR_PERCENT;
-        $result['clear']      = self::longest($result['hours'], $clear, $time);
-        $result['clear_dark'] = self::longest($result['hours'], fn (array $hour) => $clear($hour) && ! $hour['moon'], $time);
-        $result['dew']        = collect($result['hours'])->contains(fn (array $hour) => $clear($hour) && $hour['humidity'] >= self::DEW_HUMIDITY);
+        $clear                 = fn (array $hour) => $hour['cloud'] <= self::CLEAR_PERCENT;
+        $result['clear']       = self::longest($result['hours'], $clear, $time);
+        $dark                  = fn (array $hour) => $clear($hour) && ! $hour['moon'] && ! $hour['twilight'];
+        $result['clear_dark']  = self::longest($result['hours'], $dark, $time);
+        $unlit                 = self::longest($result['hours'], fn (array $hour) => $clear($hour) && ! $hour['moon'], $time);
+        $result['dew']         = collect($result['hours'])->contains(fn (array $hour) => $clear($hour) && $hour['dew']);
+        $result['dew_from']    = collect($result['hours'])->first(fn (array $hour) => $clear($hour) && $hour['dew'])['time']    ?? null;
+        $result['heater_from'] = collect($result['hours'])->first(fn (array $hour) => $clear($hour) && $hour['heater'])['time'] ?? null;
+        $result['seeing']      = $seeing === null ? null : SeeingForecast::between($seeing, $window->start, $window->end);
+
+        // All clear minutes of the dark hours, not only the longest stretch (SiteComparison)
+        $minutes                      = fn (callable $test) => intdiv(array_sum(array_map(fn (array $hour) => $test($hour) ? $hour['until'] - $hour['from'] : 0, $result['hours'])), 60);
+        $result['clear_minutes']      = $minutes($clear);
+        $result['clear_dark_minutes'] = $minutes($dark);
 
         $result['verdict'] = match (true) {
             ($result['clear_dark']['minutes'] ?? 0) >= self::MIN_CLEAR_MINUTES     => 'clear_dark',
+            ($unlit['minutes'] ?? 0)                >= self::MIN_CLEAR_MINUTES     => 'clear_twilight',
             ($result['clear']['minutes'] ?? 0)      >= self::MIN_CLEAR_MINUTES     => 'clear_moon',
             ($result['clear']['minutes'] ?? 0)      >= 60 || $result['cloud'] < 60 => 'partly',
             default                                                                => 'cloudy',
         };
+
+        $result['start'] = $result['clear_dark']['start'] ?? $result['clear']['start'] ?? $window->start;
+        $result['end']   = $window->end;
+        foreach ($hourly['time'] as $i => $timestamp) {
+            if ($timestamp >= $window->start - self::EVENING_HOURS * 3600 && $timestamp <= $window->end + 3600 && isset($hourly['temperature_2m'][$i])) {
+                $result['temperatures'][] = [$timestamp, round((float) $hourly['temperature_2m'][$i], 1)];
+            }
+        }
 
         foreach ($result['hours'] as &$hour) {
             unset($hour['from'], $hour['until']);
@@ -318,7 +405,8 @@ class NightForecast
 
         $latitude  = round(round($latitude / self::GRID) * self::GRID, 2);
         $longitude = round(round($longitude / self::GRID) * self::GRID, 2);
-        $key       = 'night_forecast:hourly:'.$latitude.':'.$longitude;
+        // Keyed on the fields asked for, so a forecast cached without a new field is not used
+        $key = 'night_forecast:hourly:'.crc32(implode(',', self::HOURLY)).':'.$latitude.':'.$longitude;
 
         $cached = Cache::get($key);
         if ($cached !== null) {
@@ -381,11 +469,11 @@ class NightForecast
     }
 
     /**
-     * The longest run of hours that pass the test, as from/until (H:i) and
-     * minutes, or null when no hour does.
+     * The longest run of hours that pass the test, as from/until (H:i),
+     * minutes and the timestamp it starts, or null when no hour does.
      *
      * @param  list<array<string, mixed>>  $hours
-     * @return array{from: string, until: string, minutes: int}|null
+     * @return array{from: string, until: string, minutes: int, start: int}|null
      */
     private static function longest(array $hours, callable $test, callable $time): ?array
     {
@@ -403,6 +491,6 @@ class NightForecast
             }
         }
 
-        return $best === null ? null : ['from' => $time($best['from']), 'until' => $time($best['until']), 'minutes' => intdiv($best['until'] - $best['from'], 60)];
+        return $best === null ? null : ['from' => $time($best['from']), 'until' => $time($best['until']), 'minutes' => intdiv($best['until'] - $best['from'], 60), 'start' => $best['from']];
     }
 }

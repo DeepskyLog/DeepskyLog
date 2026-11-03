@@ -44,6 +44,7 @@ class EventTexts
                 'object' => $data['object']['name'] ?? '',
                 'date'   => $date,
             ]),
+            'lunar_occultation'   => __('The Moon covers :target on :date', ['target' => self::occultedTarget($data), 'date' => $date]),
             'opposition'          => __(':planet at opposition on :date', ['planet' => self::body($data['bodies'][0] ?? ''), 'date' => $date]),
             'greatest_elongation' => ($data['side'] ?? 'east') === 'east'
                 ? __(':planet at greatest eastern elongation on :date', ['planet' => self::body($data['bodies'][0] ?? ''), 'date' => $date])
@@ -80,7 +81,8 @@ class EventTexts
                 'distance' => self::number($data['separation'] ?? 0, 2),
                 'time'     => $item->event_at->format('H:i'),
             ]),
-            'opposition' => __(':planet is at its closest and brightest (magnitude :magnitude) and visible all night.', [
+            'lunar_occultation' => self::occultationSummary($item, $location),
+            'opposition'        => __(':planet is at its closest and brightest (magnitude :magnitude) and visible all night.', [
                 'planet'    => self::body($data['bodies'][0] ?? ''),
                 'magnitude' => self::number($data['magnitude'] ?? 0, 1),
             ]),
@@ -112,6 +114,33 @@ class EventTexts
             ]),
             default => '',
         };
+    }
+
+    /** The planet or star a lunar occultation covers. */
+    public static function occultedTarget(array $data): string
+    {
+        return ($data['target'] ?? 'star') === 'star' ? (string) ($data['star']['name'] ?? '') : self::body((string) $data['target']);
+    }
+
+    /**
+     * The local moments of a lunar occultation when the reader's location
+     * sees it, else where it is seen.
+     */
+    private static function occultationSummary(NewsItem $item, ?Location $location): string
+    {
+        $occultation = LocalCircumstances::for($item, $location)['occultation'] ?? null;
+        if ($occultation !== null && $occultation['visible'] && $occultation['disappears'] !== null && $occultation['reappears'] !== null) {
+            return __('Seen from :location, :target disappears at :begin and reappears at :end.', [
+                'location' => $location->name,
+                'target'   => self::occultedTarget($item->data ?? []),
+                'begin'    => self::localTime($occultation['disappears']['at'], $location),
+                'end'      => self::localTime($occultation['reappears']['at'], $location),
+            ]);
+        }
+
+        return __('Seen from parts of the Earth; the Moon is :illumination% illuminated.', [
+            'illumination' => (int) round(100 * ($item->data['moon_illumination'] ?? 0)),
+        ]);
     }
 
     /** What an observing challenge asks, and when. */

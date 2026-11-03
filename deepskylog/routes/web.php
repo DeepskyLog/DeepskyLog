@@ -73,6 +73,9 @@ Route::get('language/{locale}', function ($locale) {
     return redirect()->back();
 });
 
+// The documentation of the token API /api/v1/me (the OpenAPI description of App\Support\Api\MeApiSpec)
+Route::view('/api-documentation', 'api.documentation')->name('api.documentation');
+
 // Teams
 Route::get('/teams/{team}', 'App\Http\Controllers\DeepskyLogTeamController@show')->name('teams.show');
 
@@ -132,6 +135,9 @@ Route::post('/moon/observing-list', [App\Http\Controllers\MoonController::class,
 // The moons of Jupiter and Saturn in a night: transits, shadows, eclipses, the Great Red Spot, Titan's elongations
 Route::get('/jupiter-saturn', [App\Http\Controllers\PlanetMoonsController::class, 'show'])
     ->name('planet-moons.show')->middleware('doNotCacheResponse');
+// Mars and Venus in a night: the disks, the central meridian of Mars and its features, the phases of Venus
+Route::get('/mars-venus', [App\Http\Controllers\MarsVenusController::class, 'show'])
+    ->name('mars-venus.show')->middleware('doNotCacheResponse');
 
 // The objects of the month of Astroforum (astroforum:objects-of-the-month)
 Route::get('/admin/objects-of-the-month', [App\Http\Controllers\ObjectOfTheMonthController::class, 'admin'])
@@ -200,6 +206,10 @@ Route::post('/observers/{observer}/follow', [App\Http\Controllers\FollowControll
     ->name('observer.follow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 Route::post('/observers/{observer}/unfollow', [App\Http\Controllers\FollowController::class, 'unfollow'])
     ->name('observer.unfollow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::post('/object-follows', [App\Http\Controllers\ObjectFollowController::class, 'follow'])
+    ->name('object.follow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::post('/object-follows/unfollow', [App\Http\Controllers\ObjectFollowController::class, 'unfollow'])
+    ->name('object.unfollow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 
 // Push notifications of the alerts in this browser (profile page, public/sw.js)
 Route::middleware('doNotCacheResponse')->group(function () {
@@ -239,6 +249,36 @@ Route::middleware('doNotCacheResponse')->group(function () {
     Route::get('/star-parties/{starParty}', [App\Http\Controllers\StarPartyController::class, 'show'])->name('star-parties.show');
 });
 
+// Clubs and groups of observers: an observer can be a member of several
+Route::middleware('doNotCacheResponse')->group(function () {
+    Route::get('/clubs', [App\Http\Controllers\ClubController::class, 'index'])->name('clubs.index');
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/clubs/create', [App\Http\Controllers\ClubController::class, 'create'])->name('clubs.create');
+        Route::post('/clubs', [App\Http\Controllers\ClubController::class, 'store'])->name('clubs.store');
+        Route::get('/clubs/{club}/edit', [App\Http\Controllers\ClubController::class, 'edit'])->name('clubs.edit');
+        Route::put('/clubs/{club}', [App\Http\Controllers\ClubController::class, 'update'])->name('clubs.update');
+        Route::delete('/clubs/{club}', [App\Http\Controllers\ClubController::class, 'destroy'])->name('clubs.destroy');
+        Route::post('/clubs/{club}/join', [App\Http\Controllers\ClubController::class, 'join'])->name('clubs.join');
+        Route::delete('/clubs/{club}/join', [App\Http\Controllers\ClubController::class, 'leave'])->name('clubs.leave');
+        Route::post('/clubs/{club}/invite', [App\Http\Controllers\ClubController::class, 'invite'])
+            ->name('clubs.invite')->middleware('throttle:messages');
+        Route::post('/clubs/{club}/members/{member}/approve', [App\Http\Controllers\ClubController::class, 'approve'])->name('clubs.members.approve');
+        Route::put('/clubs/{club}/members/{member}/role', [App\Http\Controllers\ClubController::class, 'role'])->name('clubs.members.role');
+        Route::delete('/clubs/{club}/members/{member}', [App\Http\Controllers\ClubController::class, 'removeMember'])->name('clubs.members.destroy');
+        Route::post('/clubs/{club}/lists', [App\Http\Controllers\ClubController::class, 'shareList'])->name('clubs.lists.store');
+        Route::delete('/clubs/{club}/lists', [App\Http\Controllers\ClubController::class, 'unshareList'])->name('clubs.lists.destroy');
+        Route::put('/clubs/{club}/lists/{list}/editing', [App\Http\Controllers\ClubController::class, 'listEditing'])->name('clubs.lists.editing');
+        Route::get('/clubs/{club}/lists/{list}', [App\Http\Controllers\ClubController::class, 'listProgress'])->name('clubs.lists.progress');
+        // The challenges of a club, set by its administrators
+        Route::get('/clubs/{club}/challenges/create', [App\Http\Controllers\ObservingChallengeController::class, 'clubCreate'])->name('clubs.challenges.create');
+        Route::post('/clubs/{club}/challenges', [App\Http\Controllers\ObservingChallengeController::class, 'clubStore'])->name('clubs.challenges.store');
+        Route::get('/clubs/{club}/challenges/{challenge}/edit', [App\Http\Controllers\ObservingChallengeController::class, 'clubEdit'])->name('clubs.challenges.edit');
+        Route::put('/clubs/{club}/challenges/{challenge}', [App\Http\Controllers\ObservingChallengeController::class, 'clubUpdate'])->name('clubs.challenges.update');
+        Route::delete('/clubs/{club}/challenges/{challenge}', [App\Http\Controllers\ObservingChallengeController::class, 'clubDestroy'])->name('clubs.challenges.destroy');
+    });
+    Route::get('/clubs/{club}', [App\Http\Controllers\ClubController::class, 'show'])->name('clubs.show');
+});
+
 // RSS feeds
 Route::get('/feed/star-parties', [App\Http\Controllers\RssFeedController::class, 'starParties'])->name('feed.star-parties');
 Route::get('/feed/observations', [App\Http\Controllers\RssFeedController::class, 'observations'])->name('feed.observations');
@@ -251,6 +291,12 @@ Route::post('/feed/following/regenerate', [App\Http\Controllers\FollowController
     ->name('feed.following.regenerate')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 Route::get('/feed/following/{token}', [App\Http\Controllers\RssFeedController::class, 'following'])
     ->name('feed.following')->middleware('doNotCacheResponse');
+
+// The personal sky calendar (iCalendar) of an observer, by its secret token
+Route::post('/calendar/regenerate', [App\Http\Controllers\SkyCalendarController::class, 'regenerate'])
+    ->name('sky-calendar.regenerate')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/calendar/{token}.ics', [App\Http\Controllers\SkyCalendarController::class, 'show'])
+    ->name('sky-calendar.show')->middleware('doNotCacheResponse');
 
 // Drawings
 Route::get('/drawings', 'App\Http\Controllers\DrawingController@index')->name('drawings.index');
@@ -291,6 +337,26 @@ Route::get('/observations/search/export.apd', [App\Http\Controllers\ObservationS
 Route::get('/observations/search/export.oal.xml', [App\Http\Controllers\ObservationSearchExportController::class, 'oal'])
     ->name('observations.search.oal')
     ->middleware(['doNotCacheResponse', 'throttle:exports']);
+Route::get('/observations/search/export.icq', [App\Http\Controllers\ObservationSearchExportController::class, 'icq'])
+    ->name('observations.search.icq')
+    ->middleware(['doNotCacheResponse', 'throttle:exports']);
+Route::get('/observations/search/export.aavso.txt', [App\Http\Controllers\ObservationSearchExportController::class, 'aavso'])
+    ->name('observations.search.aavso')
+    ->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);
+// The observations that look wrong (App\Services\Observations\SuspectObservations):
+// the observer's own, everybody's for administrators and database experts.
+Route::get('/observations/suspect', [App\Http\Controllers\SuspectObservationController::class, 'index'])
+    ->name('observations.suspect')
+    ->middleware(['auth', 'doNotCacheResponse']);
+Route::get('/admin/suspect-observations', [App\Http\Controllers\SuspectObservationController::class, 'admin'])
+    ->name('admin.suspect-observations')
+    ->middleware(['auth', 'doNotCacheResponse']);
+Route::post('/suspect-observations/{suspect}/dismiss', [App\Http\Controllers\SuspectObservationController::class, 'dismiss'])
+    ->name('suspect-observations.dismiss')
+    ->middleware('auth');
+Route::post('/suspect-observations/{suspect}/restore', [App\Http\Controllers\SuspectObservationController::class, 'restore'])
+    ->name('suspect-observations.restore')
+    ->middleware('auth');
 // Zip files of observations with their drawings, made by a queue worker
 // (App\Jobs\GenerateObservationsZip).
 Route::get('/observations/zip', [App\Http\Controllers\ObservationZipController::class, 'index'])
@@ -298,6 +364,10 @@ Route::get('/observations/zip', [App\Http\Controllers\ObservationZipController::
     ->middleware(['auth', 'verified', 'doNotCacheResponse']);
 Route::get('/observations/zip/download/{token}', [App\Http\Controllers\ObservationZipController::class, 'download'])
     ->name('observations.zip.download')
+    ->middleware(['auth', 'doNotCacheResponse']);
+// "Download all my data" of the profile page (App\Jobs\GenerateAccountExport).
+Route::get('/user/my-data/download/{token}', [App\Http\Controllers\AccountExportController::class, 'download'])
+    ->name('account-export.download')
     ->middleware(['auth', 'doNotCacheResponse']);
 Route::get('/observation/{observer}/{date}/{object}/{index?}', [App\Http\Controllers\ObservationsController::class, 'detail'])
     ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
@@ -499,6 +569,10 @@ Route::post('admin/filter_make/destroy', 'App\Http\Controllers\FilterController@
 // Locations
 Route::resource('location', 'App\Http\Controllers\LocationController')
     ->middleware(['auth', 'verified'])->only(['index', 'create']);
+
+// Which of my sites tonight? The observer's locations compared for the coming nights
+Route::get('/location/best-site', [App\Http\Controllers\BestSiteController::class, 'index'])
+    ->name('location.best-site')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 
 Route::get('/location/{user}/{location}', 'App\Http\Controllers\LocationController@show')
     ->name('location.show');
@@ -758,6 +832,8 @@ Route::get('/observing-list/{list}/export/stxt.txt', [App\Http\Controllers\Obser
     ->name('observing-list.export.stxt')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/observing-list/{list}/export/apd.apd', [App\Http\Controllers\ObservingListExportController::class, 'apd'])
     ->name('observing-list.export.apd')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
+Route::get('/observing-list/{list}/export/stellarium.sol', [App\Http\Controllers\ObservingListExportController::class, 'stellarium'])
+    ->name('observing-list.export.stellarium')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/observing-list/{list}/export/oal.xml', [App\Http\Controllers\ObservingListExportController::class, 'oal'])
     ->name('observing-list.export.oal')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 
@@ -785,6 +861,10 @@ Route::post('/object/{slug}/update-from-simbad', [App\Http\Controllers\ObjectCon
 Route::delete('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'destroy'])
     ->name('object.destroy')->middleware(['auth', 'doNotCacheResponse']);
 
+// Report an error in an object (any logged-in observer)
+Route::post('/object/{slug}/report-error', [App\Http\Controllers\ObjectController::class, 'reportError'])
+    ->name('object.report-error')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:10,60']);
+
 // Nearby names PDF export (uses query params ra, dec, radius)
 Route::get('/object/{slug}/nearby-names.pdf', [App\Http\Controllers\NearbyExportController::class, 'namesPdf'])
     ->name('object.nearby.names.pdf')->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);
@@ -795,6 +875,11 @@ Route::get('/object/{slug}/nearby-table.pdf', [App\Http\Controllers\NearbyExport
 
 // The object with the naked eye, in the finder and in the telescope
 // (App\Livewire\ObjectFieldViews), and the same views as a PDF.
+// The drawings of an object side by side per aperture class, and those of one observer over time.
+Route::get('/object/{slug}/drawings/compare', [App\Http\Controllers\ObjectDrawingComparisonController::class, 'show'])
+    ->name('object.drawings.compare');
+Route::get('/object/{slug}/drawings/observer/{observer}', [App\Http\Controllers\ObjectDrawingComparisonController::class, 'observer'])
+    ->name('object.drawings.observer');
 Route::get('/object/{slug}/field-views', [App\Http\Controllers\ObjectFieldViewController::class, 'show'])
     ->name('object.field-views')->middleware(['auth', 'doNotCacheResponse']);
 Route::get('/object/{slug}/field-views.pdf', [App\Http\Controllers\ObjectFieldViewController::class, 'pdf'])
@@ -860,6 +945,12 @@ Route::delete('/observation/comments/{comment}', [App\Http\Controllers\Observati
 Route::get('/popular-observations', [App\Http\Controllers\PopularObservationController::class, 'index'])->name('observations.popular');
 
 Route::get('/popular-objects', [App\Http\Controllers\PopularObjectController::class, 'index'])->name('objects.popular');
+
+// The faintest objects seen with at most an aperture
+Route::get('/records/aperture', [App\Http\Controllers\ApertureRecordsController::class, 'index'])->name('records.aperture');
+
+// The SQM and NELM of the observations per cell of 0.25°, only cells with several observers
+Route::get('/sky-brightness-map', [App\Http\Controllers\SkyBrightnessMapController::class, 'index'])->name('sky-brightness-map');
 
 // Popular sessions
 Route::get('/popular-sessions', function () {
@@ -972,11 +1063,38 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('observing-list.night')->middleware('doNotCacheResponse');
     Route::view('/observing-lists/messier-marathon', 'observing-lists.messier-marathon')
         ->name('observing-list.messier-marathon')->middleware('doNotCacheResponse');
+    // Revisit with your telescope: seen objects the telescope shows much better
+    Route::view('/observing-lists/revisit', 'observing-lists.revisit')
+        ->name('observing-list.revisit')->middleware('doNotCacheResponse');
+    // The trip planner: what is new for the observer at a place picked on a map
+    Route::view('/observing-lists/trip', 'observing-lists.trip')
+        ->name('observing-list.trip')->middleware('doNotCacheResponse');
+    // Next for you: unseen objects the observers who saw the same objects saw too
+    Route::view('/observing-lists/next-for-you', 'observing-lists.next-for-you')
+        ->name('observing-list.next-for-you')->middleware('doNotCacheResponse');
+    // The beginner path: about 30 showpieces for a new observer's telescope and location
+    Route::view('/beginner-path', 'beginner-path')
+        ->name('beginner-path')->middleware('doNotCacheResponse');
+    // Observing partners nearby: observers who opted in, found by the cell of their standard location
+    Route::view('/observing-partners', 'observing-partners')
+        ->name('observing-partners')->middleware('doNotCacheResponse');
+    // Observing requests: objects observers ask the others to observe
+    Route::view('/observing-requests', 'observing-requests')
+        ->name('observing-requests')->middleware('doNotCacheResponse');
+    // Measure your sky: the naked-eye limiting magnitude from a count of stars
+    Route::view('/sky-quality/star-count', 'sky-star-count')
+        ->name('sky-quality.star-count')->middleware('doNotCacheResponse');
     // What's new for me: the objects a telescope or eyepiece adds
     Route::get('/instrument/{user}/{instrument}/whats-new', [App\Http\Controllers\WhatsNewEquipmentController::class, 'instrument'])
         ->name('instrument.whats-new')->middleware('doNotCacheResponse');
     Route::get('/eyepiece/{user}/{eyepiece}/whats-new', [App\Http\Controllers\WhatsNewEquipmentController::class, 'eyepiece'])
         ->name('eyepiece.whats-new')->middleware('doNotCacheResponse');
+    // What if I bought…: the objects a telescope the observer does not have adds
+    Route::view('/instrument/what-if', 'equipment.what-if')
+        ->name('instrument.what-if')->middleware('doNotCacheResponse');
+    // What if I bought this eyepiece: the objects an eyepiece the observer does not have adds to a telescope
+    Route::get('/instrument/{user}/{instrument}/what-if-eyepiece', [App\Http\Controllers\WhatsNewEquipmentController::class, 'plannedEyepiece'])
+        ->name('instrument.what-if-eyepiece')->middleware('doNotCacheResponse');
 
     // Edit / update / delete an observing list
     Route::get('/observing-list/{list}/edit', [App\Http\Controllers\ObservingListController::class, 'edit'])
@@ -1010,6 +1128,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->whereNumber('item')->name('observing-list.eyepiece.log')->middleware('doNotCacheResponse');
     Route::post('/observing-list/{list}/eyepiece/observations', [App\Http\Controllers\AtTheEyepieceController::class, 'store'])
         ->name('observing-list.eyepiece.store')->middleware('throttle:60,1');
+
+    // Finding notes of an object, from the page at the eyepiece (the object
+    // page uses the Livewire ObjectFindingNotes)
+    Route::post('/finding-notes', [App\Http\Controllers\ObjectFindingNoteController::class, 'store'])
+        ->name('finding-notes.store')->middleware('throttle:20,1');
+    Route::post('/finding-notes/{note}/like', [App\Http\Controllers\ObjectFindingNoteController::class, 'toggleLike'])
+        ->whereNumber('note')->name('finding-notes.like')->middleware('throttle:60,1');
 
     // Empty all items from a list (but keep the list itself)
     Route::post('/observing-list/{list}/empty', [App\Http\Controllers\ObservingListController::class, 'emptyList'])
@@ -1049,6 +1174,8 @@ Route::get('/sitemap.xml', function () {
         $urls[] = ['loc' => $base . '/sessions', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '0.8'];
         $urls[] = ['loc' => $base . '/popular-sessions', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
         $urls[] = ['loc' => $base . '/popular-objects', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
+        $urls[] = ['loc' => $base . '/records/aperture', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.5'];
+        $urls[] = ['loc' => $base . '/sky-brightness-map', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.5'];
         $urls[] = ['loc' => $base . '/popular-observations', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
         $urls[] = ['loc' => $base . '/statistics', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
         $urls[] = ['loc' => $base . '/drawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];

@@ -233,6 +233,60 @@
             </div>
         </div>
 
+        @if (!empty($variableStar))
+            {{-- The magnitude estimate of a variable star, nova or supernova, exported in the AAVSO Visual File Format --}}
+            @php
+                $aavsoStar = $variableStar['star'] ?? null;
+                $chosenCodes = (array) old('variable_comment_codes', []);
+            @endphp
+            <div class="mt-6">
+                <h3 class="text-sm text-gray-300 mb-1">{{ __('Magnitude estimate') }}</h3>
+                <p class="text-xs text-gray-400 mb-3">
+                    {{ __('Compare the star with the comparison stars of an AAVSO chart; the labels on the chart are their magnitudes without the decimal point (110 is magnitude 11.0).') }}
+                    @if ($aavsoStar)
+                        <a href="https://apps.aavso.org/vsp/?star={{ urlencode($aavsoStar['name']) }}" target="_blank" rel="noopener" class="text-blue-300 hover:underline">{{ __('AAVSO chart of :star', ['star' => $aavsoStar['name']]) }}</a>
+                    @else
+                        <a href="https://apps.aavso.org/vsp/" target="_blank" rel="noopener" class="text-blue-300 hover:underline">{{ __('AAVSO Variable Star Plotter') }}</a>
+                    @endif
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1" for="variable_magnitude">{{ __('Magnitude') }}</label>
+                        <input id="variable_magnitude" name="variable_magnitude" step="0.1" type="number" min="-2" max="25" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100" value="{{ old('variable_magnitude', '') }}" />
+                        <label class="mt-2 inline-flex items-center text-sm text-gray-300">
+                            <input type="checkbox" name="variable_fainter" value="1" @if(old('variable_fainter')) checked @endif class="mr-2" />
+                            {{ __('Fainter than this magnitude (not seen)') }}
+                        </label>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1" for="variable_chart">{{ __('Chart id') }}</label>
+                        <input id="variable_chart" name="variable_chart" type="text" maxlength="20" placeholder="X12345ABC" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100 uppercase" value="{{ old('variable_chart', '') }}" />
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1" for="variable_comparison1">{{ __('Comparison star 1') }}</label>
+                        <input id="variable_comparison1" name="variable_comparison1" type="text" maxlength="20" placeholder="110" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100" value="{{ old('variable_comparison1', '') }}" />
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1" for="variable_comparison2">{{ __('Comparison star 2') }}</label>
+                        <input id="variable_comparison2" name="variable_comparison2" type="text" maxlength="20" placeholder="113" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100" value="{{ old('variable_comparison2', '') }}" />
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <label class="block text-xs text-gray-400 mb-2">{{ __('Comment codes') }}</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
+                        @foreach (\App\Models\VariableStarEstimate::commentCodeLabels() as $code => $label)
+                            <label class="inline-flex items-center text-sm text-gray-300">
+                                <input type="checkbox" name="variable_comment_codes[]" value="{{ $code }}" @if(in_array($code, $chosenCodes, true)) checked @endif class="mr-2" />
+                                <span class="font-mono mr-1">{{ $code }}</span> {{ $label }}
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div></div>
     </div>
 </div>

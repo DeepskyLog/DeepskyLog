@@ -2,7 +2,7 @@
 @if (!Auth::guest())
     <div class="hidden lg:ml-1 lg:flex lg:items-center">
         <div class="relative mr-0 text-sm">
-            <x-menu.dropdown :width="56">
+            <x-menu.dropdown :width="56" :columns="2">
                 <x-slot name="trigger">
                     <button x-ref="trigger" @click="open = !open" aria-haspopup="true" :aria-expanded="open.toString()" class="inline-flex items-center rounded px-3 py-2 text-sm font-medium text-gray-200 hover:bg-gray-800">
                         {{ __('Add') }}

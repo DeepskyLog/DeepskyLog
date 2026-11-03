@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Observation;
 use App\Models\ObservingList;
 use App\Services\AtTheEyepiece;
 use App\Services\FieldViews\FieldViewBuilder;
+use App\Services\Observations\SketchOverlay;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -57,11 +59,36 @@ class AtTheEyepieceController extends Controller
             }
         }
 
+        // N and W of the sketch pad, as in the telescope view
+        $compass = null;
+        if ($views !== null) {
+            $instrument = $views['instrument'];
+            $mirrors = $instrument !== null && ! $instrument->isBinocular();
+            $rotation = $views['orientation'] === 'zenith'
+                ? SketchOverlay::zenithRotationAt($views['location'], $views['moment'], (float) $current['object']->ra * 15.0, (float) $current['object']->decl)
+                : null;
+            $compass = SketchOverlay::compass($rotation ?? 0.0, $mirrors && (bool) $instrument->flip_image, $mirrors && (bool) $instrument->flop_image);
+        }
+
+        // A planet's disk as the drawing template of the sketch pad
+        $planetSketch = AtTheEyepiece::planetSketch($user, $list, $current, $page['location'], $page['now']);
+        $sketchLabels = AtTheEyepiece::sketchLabels($user, $list, $page['now']);
+        if ($planetSketch !== null) {
+            $compass = $planetSketch['compass'];
+            $sketchLabels = [...$sketchLabels, ...$planetSketch['template']['details']];
+        }
+
         return view('observing-lists.eyepiece', $page + [
             'views' => $views,
+            'compass' => $compass,
             'details' => AtTheEyepiece::details($current['object']),
             'nextDetails' => AtTheEyepiece::details($page['next']['object'] ?? null),
             'goto' => AtTheEyepiece::gotoLink($current, $page['location'], $current['at'] ?? $page['now']),
+            'findingNotes' => AtTheEyepiece::findingNotes($current['object'], $user),
+            'earlier' => AtTheEyepiece::earlierObservations($current, $user, AtTheEyepiece::nightOf($page['now'], $page['timezone']), $page['timezone']),
+            'sketchLabels' => $sketchLabels,
+            'sketchOrientation' => $views['orientation'] ?? $planetSketch['orientation'] ?? null,
+            'planetTemplate' => $planetSketch['template'] ?? null,
         ]);
     }
 
@@ -79,7 +106,9 @@ class AtTheEyepieceController extends Controller
 
     /**
      * Save an observation logged on the page, also one the page kept while
-     * offline: the moment is when it was written down.
+     * offline: the moment is when it was written down. A sketch of the
+     * sketch pad (a data: URL, light on black) becomes its drawing; with a
+     * sketch the description may be empty.
      */
     public function store(Request $request, ObservingList $list): JsonResponse
     {
@@ -89,7 +118,9 @@ class AtTheEyepieceController extends Controller
         $validated = $request->validate([
             'item' => ['required', 'integer'],
             'observed_at' => ['required', 'date'],
-            'description' => ['required', 'string', 'max:'.AtTheEyepiece::MAX_DESCRIPTION],
+            'description' => ['required_without:drawing', 'nullable', 'string', 'max:'.AtTheEyepiece::MAX_DESCRIPTION],
+            // Base64 is a third larger than the image
+            'drawing' => ['nullable', 'string', 'max:'.(int) ceil(AtTheEyepiece::MAX_DRAWING_BYTES * 4 / 3 + 100)],
             'visibility' => ['nullable', 'integer', 'min:1', 'max:7'],
             // The observer who wrote it down: the page keeps the observations
             // of whoever was logged in, which may not be who sends them
@@ -110,7 +141,15 @@ class AtTheEyepieceController extends Controller
             return response()->json(['message' => __('The time of the observation is in the future.')], 422);
         }
 
-        $result = AtTheEyepiece::store($user, $list, $item, $moment, nl2br(e(trim($validated['description']))), $validated['visibility'] ?? null);
+        $drawing = null;
+        if (! empty($validated['drawing'])) {
+            $drawing = AtTheEyepiece::drawingImage($validated['drawing']);
+            if ($drawing === null) {
+                return response()->json(['message' => __('The sketch could not be read.')], 422);
+            }
+        }
+
+        $result = AtTheEyepiece::store($user, $list, $item, $moment, nl2br(e(trim((string) ($validated['description'] ?? '')))), $validated['visibility'] ?? null);
         if ($result->hasErrors() || $result->imported === 0) {
             $errors = collect($result->log)->where('type', 'error')->pluck('message');
 
@@ -118,11 +157,15 @@ class AtTheEyepieceController extends Controller
         }
 
         $saved = $result->importedObservations[0];
+        if ($drawing !== null && ($observation = Observation::find($saved['id']))) {
+            AtTheEyepiece::saveDrawing($observation, $drawing);
+        }
 
         return response()->json([
             'id' => $saved['id'],
             'updated' => $saved['updated'],
             'object' => $saved['object'],
+            'drawing' => $drawing !== null,
             'warnings' => collect($result->log)->where('type', 'warning')->pluck('message')->values(),
         ], $saved['updated'] ? 200 : 201);
     }

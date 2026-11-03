@@ -45,6 +45,12 @@
                 $exportOalUrl = route('observations.search.oal', array_filter([
                     'q' => $q !== '' ? $q : null,
                 ]));
+                $exportIcqUrl = route('observations.search.icq', array_filter([
+                    'q' => $q !== '' ? $q : null,
+                ]));
+                $exportAavsoUrl = route('observations.search.aavso', array_filter([
+                    'q' => $q !== '' ? $q : null,
+                ]));
                 $exportZipUrl = route('observations.zip', array_filter([
                     'q' => $q !== '' ? $q : null,
                 ]));
@@ -84,6 +90,14 @@
                     <x-menu.item href="{{ $exportOalUrl }}" target="_blank" rel="nofollow noopener noreferrer">
                         {{ __('Export OAL') }}
                     </x-menu.item>
+                    <x-menu.item href="{{ $exportIcqUrl }}" target="_blank" rel="nofollow noopener noreferrer">
+                        {{ __('Export comets for COBS (ICQ)') }}
+                    </x-menu.item>
+                    @auth
+                        <x-menu.item href="{{ $exportAavsoUrl }}" target="_blank" rel="nofollow noopener noreferrer">
+                            {{ __('Export my variable star estimates for the AAVSO') }}
+                        </x-menu.item>
+                    @endauth
                     <x-menu.item href="{{ $exportZipUrl }}" rel="nofollow" data-last>
                         {{ auth()->user()?->hasAdministratorPrivileges() ? __('Zip file with drawings') : __('Zip file with my drawings') }}
                     </x-menu.item>

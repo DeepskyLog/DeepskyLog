@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\DB;
  * Only the values the owner entered count, not those converted from
  * the other quantity. Values outside SQM_RANGE / NELM_RANGE are typing
  * errors or placeholders of the old site and are left out.
+ *
+ * A NELM the owner measured by counting stars (sky_measurements, by the UT
+ * date of the count as observed_on is a UT date) replaces the NELMs of the
+ * observations of that night: a count is more reliable than a guess. Such a
+ * night is `measured`.
  */
 class LocationSkyHistory
 {
@@ -28,7 +33,7 @@ class LocationSkyHistory
     public const NELM_RANGE = [2.0, 8.0];
 
     /**
-     * @param  array<int, array{date: string, sqm: ?float, nelm: ?float}>  $nights  oldest first
+     * @param  array<int, array{date: string, sqm: ?float, nelm: ?float, measured: bool}>  $nights  oldest first
      * @param  array<int, array{sqm: ?float, nelm: ?float, nights: int}>  $years  keyed by year, oldest first
      */
     public function __construct(
@@ -56,6 +61,21 @@ class LocationSkyHistory
             $perNight[$date]['nelm'][] = self::within($row->limiting_magnitude, self::NELM_RANGE);
         }
 
+        $measured = [];
+        foreach (DB::table('sky_measurements')
+            ->where('location_id', $location->id)
+            ->where('user_id', $location->user_id)
+            ->orderBy('measured_at')
+            ->get(['measured_at', 'nelm']) as $row) {
+            $measured[substr((string) $row->measured_at, 0, 10)][] = self::within($row->nelm, self::NELM_RANGE);
+        }
+        foreach ($measured as $date => $values) {
+            $perNight[$date]['sqm'] ??= [];
+            $perNight[$date]['nelm'] = $values;
+            $perNight[$date]['measured'] = true;
+        }
+        ksort($perNight);
+
         $nights = [];
         $perYear = [];
         foreach ($perNight as $date => $values) {
@@ -63,6 +83,7 @@ class LocationSkyHistory
                 'date' => $date,
                 'sqm' => self::median($values['sqm'], 2),
                 'nelm' => self::median($values['nelm'], 1),
+                'measured' => $values['measured'] ?? false,
             ];
             $nights[] = $night;
 
@@ -100,7 +121,8 @@ class LocationSkyHistory
         return false;
     }
 
-    private static function within(mixed $value, array $range): ?float
+    /** The value when it lies within the range, else null. */
+    public static function within(mixed $value, array $range): ?float
     {
         if ($value === null || ! is_numeric($value)) {
             return null;
@@ -111,7 +133,7 @@ class LocationSkyHistory
     }
 
     /** The median of the values that are not null, or null without any. */
-    private static function median(array $values, int $precision): ?float
+    public static function median(array $values, int $precision): ?float
     {
         $values = array_values(array_filter($values, fn ($value) => $value !== null));
         if ($values === []) {

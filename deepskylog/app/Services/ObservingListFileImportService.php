@@ -57,6 +57,11 @@ class ObservingListFileImportService
                 case 'apd':
                     $objectNames = $this->parseAstroPlanner($file);
                     break;
+                case 'sol':
+                case 'ol':
+                case 'json':
+                    $objectNames = $this->parseStellarium($file);
+                    break;
                 case 'csv':
                     $objectNames = $this->parseCsv($file);
                     break;
@@ -246,6 +251,61 @@ class ObservingListFileImportService
         }
 
         return $objectNames;
+    }
+
+    /**
+     * Parse a Stellarium observing list: the JSON file of its Observing list
+     * dialog, one list (.sol) or all of them (.ol, whose objects are all
+     * imported), or the legacy bookmarks file (.json). An object is taken by
+     * its designation, else by the first of its English and translated names
+     * DeepskyLog knows. Objects without one (markers, a position only) count
+     * as unknown under the name they have.
+     *
+     * @return array  Array of object names
+     */
+    protected function parseStellarium(UploadedFile $file): array
+    {
+        $data = json_decode($this->readText($file), true);
+        if (!is_array($data) || (!is_array($data['observingLists'] ?? null) && !is_array($data['bookmarks'] ?? null))) {
+            $this->errors[] = __('Not a Stellarium observing list: it has no observing lists or bookmarks.');
+
+            return [];
+        }
+
+        $entries = [];
+        foreach ((array) ($data['observingLists'] ?? []) as $observingList) {
+            foreach ((array) ($observingList['objects'] ?? []) as $object) {
+                if (is_array($object)) {
+                    $entries[] = [$object['designation'] ?? '', $object['name'] ?? '', $object['nameI18n'] ?? ''];
+                }
+            }
+        }
+        foreach ((array) ($data['bookmarks'] ?? []) as $bookmark) {
+            if (is_array($bookmark)) {
+                $entries[] = [$bookmark['name'] ?? '', $bookmark['nameI18n'] ?? ''];
+            }
+        }
+
+        $targets = [];
+        foreach ($entries as $names) {
+            $names = array_values(array_unique(array_filter(array_map(fn ($name) => is_string($name) ? trim($name) : '', $names), fn ($name) => $name !== '')));
+            if ($names !== []) {
+                $targets[] = $names;
+            }
+        }
+
+        $resolver = app(ObservingListItemNameResolver::class);
+        $resolved = $resolver->resolveMany(array_merge([], ...$targets));
+
+        return array_map(function (array $names) use ($resolver, $resolved): string {
+            foreach ($names as $name) {
+                if (($resolved[$resolver->clean($name)] ?? null) !== null) {
+                    return $name;
+                }
+            }
+
+            return $names[0];
+        }, $targets);
     }
 
     /**

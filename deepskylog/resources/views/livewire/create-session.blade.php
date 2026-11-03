@@ -88,6 +88,13 @@
                         <div wire:ignore>
                             <textarea wire:model="weather" id="weather" class="h-40 min-h-fit mt-1 block w-full" name="weather">{{ old('weather') }}</textarea>
                         </div>
+                        @if (\App\Services\Weather\NightWeather::enabled())
+                            <div class="mt-2 flex flex-wrap items-center gap-3">
+                                <x-button flat sm icon="cloud" wire:click="fillWeather" spinner="fillWeather" label="{{ __('Fill in the weather of that night') }}" />
+                                <span class="text-xs text-gray-500">{!! __("Weather data by :link", ["link" => '<a href="https://open-meteo.com/" class="text-blue-400 hover:underline" rel="noopener" target="_blank">Open-Meteo.com</a>']) !!}</span>
+                            </div>
+                            @error('weather') <div class="mt-1 text-sm text-red-400">{{ $message }}</div> @enderror
+                        @endif
                     </div>
 
                     <div class="mb-4">
@@ -200,6 +207,20 @@
                         });
                     });
                 }
+
+                // The weather of the night (CreateSession::fillWeather), added to what the field holds
+                window.addEventListener('session-weather-filled', function (event) {
+                    var editor = typeof tinymce !== 'undefined' ? tinymce.get('weather') : null;
+                    var html = event.detail.html;
+                    if (editor) {
+                        var current = editor.getContent();
+                        editor.setContent(current.trim() !== '' ? current + html : html);
+                        editor.save();
+                        @this.set('weather', editor.getContent(), false);
+                    } else {
+                        @this.set('weather', ((@this.get('weather') || '') + html), false);
+                    }
+                });
 
                 if (typeof tinymce !== 'undefined') {
                     initializeTinyMCE();

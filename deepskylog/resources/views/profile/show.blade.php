@@ -19,7 +19,19 @@
 
             <x-section-border/>
 
+            <div class="mt-10 sm:mt-0">
+                @livewire("profile.own-eye")
+            </div>
+
+            <x-section-border/>
+
             @livewire("profile.update-user-language-information")
+
+            <x-section-border/>
+
+            <div class="mt-10 sm:mt-0">
+                @include("profile.sky-calendar")
+            </div>
 
             <x-section-border/>
 
@@ -64,6 +76,12 @@
                     @livewire("profile.logout-other-browser-sessions-form")
                 </div>
             @endif
+
+            <x-section-border/>
+
+            <div class="mt-10 sm:mt-0">
+                @livewire("profile.download-my-data")
+            </div>
 
             {{-- User 1 owns the system teams and is never deleted --}}
             @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures() && ! is_null($user->getAuthPassword()) && $user->id !== 1)

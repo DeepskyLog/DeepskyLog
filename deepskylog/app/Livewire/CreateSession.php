@@ -7,6 +7,7 @@ use App\Jobs\SendSessionInvitations;
 use App\Models\ObservationSession;
 use App\Models\User;
 use App\Services\SessionObservationLinker;
+use App\Services\Weather\NightWeather;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -124,6 +125,43 @@ class CreateSession extends Component
         } else {
             $this->observer = Auth::user()->username ?? null;
         }
+    }
+
+    /**
+     * The weather of the session's nights from Open-Meteo's historical
+     * archive (NightWeather), sent to the browser, which adds it to the
+     * weather field. A session with stored times keeps them while its dates
+     * are not changed; otherwise the dates of the form give the nights.
+     */
+    public function fillWeather(): void
+    {
+        $this->resetErrorBag('weather');
+        $date = fn ($value) => preg_match('/^(\d{4}-\d{2}-\d{2})/', (string) $value, $m) ? $m[1] : null;
+        $begin = $date($this->begindate);
+        $end = $date($this->enddate) ?? $begin;
+        if ($begin === null || empty($this->locationid)) {
+            $this->addError('weather', __('Choose the location and the dates first.'));
+
+            return;
+        }
+
+        $stored = $this->session;
+        $keepTimes = $stored && $date($stored->getRawOriginal('begindate')) === $begin && $date($stored->getRawOriginal('enddate')) === $end;
+        $session = new ObservationSession();
+        $session->setRawAttributes([
+            'locationid' => $this->locationid,
+            'begindate' => $keepTimes ? $stored->getRawOriginal('begindate') : $begin.' 00:00:00',
+            'enddate' => $keepTimes ? $stored->getRawOriginal('enddate') : $end.' 23:59:59',
+        ]);
+
+        $nights = NightWeather::appliesToSession($session) ? NightWeather::forSession($session) : null;
+        if ($nights === null) {
+            $this->addError('weather', __('No weather is known for these nights yet: the archive holds a night a few days later.'));
+
+            return;
+        }
+
+        $this->dispatch('session-weather-filled', html: NightWeather::text($nights));
     }
 
     public function render()

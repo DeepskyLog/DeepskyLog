@@ -3,7 +3,7 @@
     @if (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
         <div class="hidden lg:ml-2 lg:flex lg:items-center">
             <div class="relative mr-0 text-sm">
-                <x-menu.dropdown :width="56">
+                <x-menu.dropdown :width="60" :columns="2">
                     <x-slot name="trigger">
                         <button x-ref="trigger" @click="open = !open" aria-haspopup="true" :aria-expanded="open.toString()" class="inline-flex items-center rounded px-3 py-2 text-sm font-medium text-gray-200 hover:bg-gray-800">{{ __('Administration') }}</button>
                     </x-slot>
@@ -16,6 +16,8 @@
 
                     @if (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                         <x-menu.item separator icon="check-badge" href="{{ route('admin.objects.check') }}">{{ __('Check Objects') }}</x-menu.item>
+
+                        <x-menu.item icon="exclamation-triangle" href="{{ route('admin.suspect-observations') }}">{{ __('Suspect observations') }}</x-menu.item>
 
                         <x-menu.item icon="lock-closed" href="{{ route('admin.complete-catalogs') }}">{{ __('Complete catalogs') }}</x-menu.item>
 

@@ -106,12 +106,28 @@
                 </label>
                 <label class="mt-1 flex items-start gap-2">
                     <input type="radio" name="visibility" value="private" class="mt-1" @checked (old("visibility", $party->visibility) === "private") />
-                    <span>{{ __("Only the observers I invite.") }}</span>
+                    <span>{{ __("Only the observers I invite (and the members of the club, for a starparty of a club).") }}</span>
                 </label>
                 @error ("visibility")
                     <p class="mt-1 text-red-400">{{ $message }}</p>
                 @enderror
             </fieldset>
+
+            @if ($clubs->isNotEmpty())
+                <div>
+                    <label for="club_id" class="{{ $label }}">{{ __("Club") }}</label>
+                    <select id="club_id" name="club_id" class="{{ $input }}">
+                        <option value="">{{ __("None") }}</option>
+                        @foreach ($clubs as $club)
+                            <option value="{{ $club->id }}" @selected ((int) old("club_id", $party->club_id) === (int) $club->id)>{{ $club->name }}</option>
+                        @endforeach
+                    </select>
+                    <p class="mt-1 text-xs text-gray-400">{{ __("A starparty of a club is shown on the page of the club, and you can invite all its members at once.") }}</p>
+                    @error ("club_id")
+                        <p class="mt-1 text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+            @endif
 
             <fieldset>
                 <legend class="{{ $label }}">{{ __("Observed at the starparty") }}</legend>

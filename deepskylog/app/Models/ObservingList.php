@@ -9,7 +9,9 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ObservingList extends Model
@@ -34,6 +36,9 @@ class ObservingList extends Model
         'comments_count' => 'integer',
         'likes_count' => 'integer',
     ];
+
+    /** @var array<int, Collection> the clubs per user id whose members edit the list, read once */
+    private array $editableClubs = [];
 
     protected static function booted(): void
     {
@@ -92,6 +97,51 @@ class ObservingList extends Model
     public function items(): HasMany
     {
         return $this->hasMany(ObservingListItem::class);
+    }
+
+    /**
+     * The clubs the list is shared with (club_observing_list).
+     */
+    public function clubs(): BelongsToMany
+    {
+        return $this->belongsToMany(Club::class, 'club_observing_list')
+            ->withPivot('user_id', 'members_edit')
+            ->withTimestamps();
+    }
+
+    /**
+     * The clubs of the user that share this list to edit together: the
+     * owner shared it with members_edit and the user is a member. Only while
+     * the list is public, as others cannot see a private list.
+     */
+    public function clubsEditableBy(?User $user): Collection
+    {
+        if ($user === null || !$this->exists || !$this->public) {
+            return collect();
+        }
+        if (!array_key_exists($user->id, $this->editableClubs)) {
+            $this->editableClubs[$user->id] = $this->clubs()
+                ->wherePivot('members_edit', true)
+                ->whereIn('clubs.id', ClubMember::select('club_id')->where('user_id', $user->id)->where('status', ClubMember::MEMBER))
+                ->get();
+        }
+
+        return $this->editableClubs[$user->id];
+    }
+
+    /**
+     * Whether the user may add and remove the objects of the list and edit
+     * their notes: the owner, or a member of a club it is shared with to
+     * edit together. The name, description, publicity, times and deleting
+     * stay with the owner.
+     */
+    public function isEditableBy(?User $user): bool
+    {
+        if ($user === null) {
+            return false;
+        }
+
+        return (int) $user->id === (int) $this->owner_user_id || $this->clubsEditableBy($user)->isNotEmpty();
     }
 
     /**

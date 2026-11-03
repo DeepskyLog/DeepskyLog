@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\DB;
  * progress is counted from the observations, so it follows every edit; it
  * is shown on the observer page and, for public goals, in the blog. A goal
  * with a challenge_id is an observer's part in an ObservingChallenge: it
- * follows the challenge and is removed by leaving it.
+ * follows the challenge and is removed by leaving it. A goal with
+ * beginner_path is the observer's beginner path (App\Services\BeginnerPath).
  */
 class ObservingGoal extends Model
 {
@@ -31,7 +32,7 @@ class ObservingGoal extends Model
     public const MAX_YEARS = 10;
 
     protected $fillable = [
-        'user_id', 'challenge_id', 'name', 'catalog', 'observing_list_id', 'source_label', 'target_count',
+        'user_id', 'challenge_id', 'beginner_path', 'name', 'catalog', 'observing_list_id', 'source_label', 'target_count',
         'mode', 'new_only', 'starts_on', 'ends_on', 'public',
     ];
 
@@ -40,6 +41,7 @@ class ObservingGoal extends Model
         'ends_on' => 'date',
         'new_only' => 'boolean',
         'public' => 'boolean',
+        'beginner_path' => 'boolean',
         'target_count' => 'integer',
     ];
 

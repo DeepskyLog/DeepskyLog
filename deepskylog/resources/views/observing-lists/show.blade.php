@@ -41,6 +41,19 @@
                             @endif
                             &bull; {{ __('created') }} {{ $list->created_at->translatedFormat('j M Y') }}
                         </p>
+                        {{-- The clubs of the viewer the list is shared with --}}
+                        @foreach ($clubs as $club)
+                            <p class="text-sm text-gray-400 mt-1">
+                                @if ($club->pivot->members_edit)
+                                    {{ __('Edited together by the members of') }}
+                                @else
+                                    {{ __('Shared with') }}
+                                @endif
+                                <a href="{{ route('clubs.show', $club) }}" class="text-gray-200 hover:underline font-medium">{{ html_entity_decode($club->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                                &bull;
+                                <a href="{{ route('clubs.lists.progress', [$club, $list]) }}" class="text-blue-400 hover:underline">{{ __('Who has seen what') }}</a>
+                            </p>
+                        @endforeach
                     </div>
 
                     {{-- Action buttons --}}
@@ -103,12 +116,14 @@
                                 @endif
                             @endif
 
-                            {{-- Edit / Delete (owner) --}}
+                            {{-- Edit / Delete (owner; import and notes also the members of a club that edits the list together) --}}
                             @if ($isOwner)
                                 <a href="{{ route('observing-list.edit', $list) }}"
                                    class="inline-flex items-center px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded text-xs font-semibold">
                                     {{ __('Edit') }}
                                 </a>
+                            @endif
+                            @if ($canEdit)
                                 @include('observing-lists.partials.import-modal')
                                 <form method="POST" action="{{ route('observing-list.items.autofill-notes', $list) }}"
                                       onsubmit="return confirm('{{ __('Fill in the longest observation note for every object that has no note yet?') }}')">
@@ -118,6 +133,8 @@
                                         {{ __('Autofill notes') }}
                                     </button>
                                 </form>
+                            @endif
+                            @if ($isOwner)
                                 <form method="POST" action="{{ route('observing-list.empty', $list) }}"
                                       onsubmit="return confirm('{{ __('Remove all items from this list?') }}')">
                                     @csrf
@@ -237,7 +254,7 @@
                             'observing_lists_mode' => 'in',
                             'well_placed_month' => $wellPlacedMonth,
                         ];
-                        $showAddColumn = !($list->public && !$isOwner);
+                        $showAddColumn = !($list->public && !$canEdit);
                         $exportNamesBase = route('observing-list.export.names.pdf', $list);
                         $exportTableBase = route('observing-list.export.table.pdf', $list);
                         $exportArgoBase = route('observing-list.export.argo', $list);
@@ -245,6 +262,7 @@
                         $exportStxtBase = route('observing-list.export.stxt', $list);
                         $exportApdBase = route('observing-list.export.apd', $list);
                         $exportOalBase = route('observing-list.export.oal', $list);
+                        $exportStellariumBase = route('observing-list.export.stellarium', $list);
                     @endphp
 
                     <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
@@ -276,7 +294,7 @@
                     </div>
 
                     @if ($items->isEmpty())
-                        @if ($isOwner)
+                        @if ($canEdit)
                             {{-- How to fill a list (#378) --}}
                             <div class="rounded-lg border border-gray-700 bg-gray-800 p-5 text-sm text-gray-300">
                                 <h3 class="text-base font-semibold text-white mb-1">{{ __('How to add objects to this list') }}</h3>
@@ -382,6 +400,8 @@
                                                     class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export SkyTools (.txt)') }}</a>
                                                 <a href="{{ $exportApdBase }}" target="_blank" rel="nofollow noopener noreferrer"
                                                     class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export AstroPlanner (.apd)') }}</a>
+                                                <a href="{{ $exportStellariumBase }}" target="_blank" rel="nofollow noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export Stellarium (.sol)') }}</a>
                                                 <a href="{{ $exportOalBase }}" target="_blank" rel="nofollow noopener noreferrer"
                                                     class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export OAL') }}</a>
                                             </div>

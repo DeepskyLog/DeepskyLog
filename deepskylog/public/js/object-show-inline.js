@@ -614,7 +614,12 @@ document.addEventListener('click', function (e) {
             var data = c.getAttribute('data-aladin');
             var opts = {};
             try { if (data) opts = JSON.parse(atob(data)); } catch (e) { }
-            // Ensure minimal options: target or ra/dec and fov defaults
+            // Ensure minimal options: target or ra/dec and fov defaults.
+            // Prefer the stored position (ra_raw in hours, dec_raw in degrees): a name has to be
+            // resolved by CDS's Sesame, which fails for names it does not know or when CDS is down,
+            // and Aladin then stays at RA 0, Dec 0.
+            var raH = Number(opts.ra_raw), decD = Number(opts.dec_raw);
+            if (!opts.target && opts.ra_raw != null && opts.dec_raw != null && isFinite(raH) && isFinite(decD)) opts.target = (raH * 15).toFixed(6) + ' ' + (decD >= 0 ? '+' : '') + decD.toFixed(6);
             if (!opts.target && (c.getAttribute('data-name') || c.getAttribute('data-slug'))) opts.target = c.getAttribute('data-name') || c.getAttribute('data-slug');
             if (!opts.fov) opts.fov = opts.fov || 0.5;
             try { window.__dsl_aladin_instance = A.aladin('#aladin-lite-container', opts); } catch (e) { if (window.__dsl_debug_enabled && console.warn) console.warn('[dsl] aladin init failed', e); }
@@ -629,4 +634,6 @@ document.addEventListener('click', function (e) {
         setTimeout(waiter, 50);
     }
     if (document.readyState === 'complete' || document.readyState === 'interactive') waiter(); else document.addEventListener('DOMContentLoaded', waiter);
+    // Aladin loads asynchronously (partials.aladin-assets) and may arrive after the waiter gave up
+    document.addEventListener('dsl:aladin-ready', tryInit);
 })();

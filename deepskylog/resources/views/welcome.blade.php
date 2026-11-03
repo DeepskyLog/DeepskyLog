@@ -92,10 +92,38 @@
                     />
                 @endif
 
+                @if (!empty($beginnerPath))
+                    <x-beginner-path
+                        :path="$beginnerPath"
+                        class="order-1 lg:order-none"
+                    />
+                @endif
+
                 @if ($sessionsWithoutObservations->isNotEmpty())
                     <x-session-reminders
                         :sessions="$sessionsWithoutObservations"
                         class="order-1 lg:order-none"
+                    />
+                @endif
+
+                @if (($suspectObservationCount ?? 0) > 0)
+                    <x-suspect-observations-notice
+                        :count="$suspectObservationCount"
+                        class="order-1 lg:order-none"
+                    />
+                @endif
+
+                @if (!empty($observingRequests))
+                    <x-observing-requests-home
+                        :requests="$observingRequests"
+                        class="order-3 lg:order-none"
+                    />
+                @endif
+
+                @if (!empty($onThisNight))
+                    <x-on-this-night
+                        :years="$onThisNight['years']"
+                        class="order-3 lg:order-none"
                     />
                 @endif
 

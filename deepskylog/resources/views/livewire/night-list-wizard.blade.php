@@ -13,6 +13,7 @@
         "double_stars" => __("Double stars"),
         "planets" => __("Planets"),
         "comets" => __("Comets"),
+        "lunar_features" => __("Lunar features"),
     ];
 @endphp
 
@@ -62,8 +63,12 @@
                     @elseif ($dark)
                         @if ($dark["twilight"] === "astronomical")
                             {{ __("Dark from :from to :until.", $dark) }}
+                        @elseif (isset($dark["dark_from"]))
+                            {{ __("It is completely dark only from :dark_from to :dark_until: the list uses the nautical twilight from :from to :until.", $dark) }}
+                            {{ __("The visibility takes the brighter sky of the twilight into account.") }}
                         @else
                             {{ __("It does not get completely dark: from :from to :until the sky stays in nautical twilight.", $dark) }}
+                            {{ __("The visibility takes the brighter sky of the twilight into account.") }}
                         @endif
                     @endif
                 </p>
@@ -114,7 +119,7 @@
                         </label>
                     @endforeach
                 </div>
-                <p class="mt-1 text-xs text-gray-500">{{ __("Choose nothing for all kinds of objects but double stars. Planets and comets come on top of the number of deep-sky objects.") }}</p>
+                <p class="mt-1 text-xs text-gray-500">{{ __("Choose nothing for all kinds of objects but double stars. Planets, comets and lunar features come on top of the number of deep-sky objects; lunar features only when the Moon is up and at least a quarter lit.") }}</p>
             </section>
 
             {{-- 4. Catalogs and lists first --}}
@@ -193,6 +198,10 @@
                         {{ __("Well placed between :from and :until.", $result["period"]) }}
                     @endif
                 </p>
+                @if ($result["field"] ?? null)
+                    <p>{{ __("Your telescope has a field of view of :field°: large, bright objects that fill it come first.", ["field" => $result["field"]]) }}</p>
+                @endif
+                <x-tonights-best-seeing :best="$result" />
                 @if ($result["moon"])
                     <p>{{ __("The Moon (:fraction% illuminated) is above the horizon from :from to :until; the times and the visibility take the brighter sky into account.", ["fraction" => (int) round($result["moon"]["fraction"] * 100), "from" => $result["moon"]["from"], "until" => $result["moon"]["until"]]) }}</p>
                 @endif

@@ -40,6 +40,7 @@ class Location extends Model
         'picture',
         'hidden',
         'description',
+        'horizon',
     ];
 
     protected $casts = [
@@ -51,6 +52,8 @@ class Location extends Model
         'active' => 'boolean',
         'hidden' => 'boolean',
         'description' => PurifiedHtml::class,
+        // The local horizon every LocalHorizon::STEP degrees of azimuth, null when open
+        'horizon' => 'array',
     ];
 
     /**

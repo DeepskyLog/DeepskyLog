@@ -23,6 +23,8 @@
         table.telescope td.image { width: 176mm; }
         table.telescope td.side { width: 97mm; }
         .page-break { page-break-before: always; }
+        /* Helvetica has no Greek letters for the Bayer names. */
+        .hop { font-family: "DejaVu Sans", sans-serif; font-size: 9pt; }
     </style>
 </head>
 <body>
@@ -74,6 +76,29 @@
         @endisset
     @else
         @include('pdf.partials.field_view_warnings')
+    @endif
+
+    {{-- The star-hop route on a page of its own --}}
+    @if (isset($starHop['image']))
+        <div class="page-break"></div>
+        <table class="telescope">
+            <tr>
+                <td class="image">
+                    <img class="large" src="{{ $starHop['image'] }}" alt="{{ $starHop['title'] }}" />
+                </td>
+                <td class="side">
+                    @include('pdf.partials.field_view_header')
+                    <div class="title">{{ $starHop['title'] }}</div>
+                    <div class="sub">
+                        {{ $starHop['subtitle'] }}<br />
+                        {{ __('Field of view: :fov', ['fov' => $starHop['field']]) }} · {{ __('Stars to magnitude :mag', ['mag' => number_format($starHop['limit'], 1)]) }}
+                    </div>
+                    <div class="sub hop">@include('partials.star-hop-steps', ['starHop' => $starHop, 'object' => $result['object']->name])</div>
+                </td>
+            </tr>
+        </table>
+    @elseif (isset($starHop['message']))
+        <div class="message">{{ $starHop['message'] }}</div>
     @endif
 </body>
 </html>

@@ -14,9 +14,13 @@ use App\Models\SketchOfTheMonth;
 use App\Models\SketchOfTheWeek;
 use App\Models\StarParty;
 use App\Models\User;
+use App\Services\BeginnerPath;
 use App\Services\Moon\LunarTerminator;
 use App\Services\Planets\PlanetMoonEvents;
 use App\Services\Observations\ObservationCardData;
+use App\Services\Observations\SuspectObservations;
+use App\Services\ObservingRequests;
+use App\Services\OnThisNight;
 use App\Services\SessionObservationReminders;
 use App\Services\TonightsBest;
 use App\Services\Weather\NightForecast;
@@ -1062,9 +1066,45 @@ class SessionController extends Controller
             $sessionsWithoutObservations = collect();
         }
 
+        // The number of the observer's observations that look wrong
+        try {
+            $suspectObservationCount = Auth::check() ? SuspectObservations::openCount(Auth::user()) : 0;
+        } catch (\Throwable $e) {
+            report($e);
+            $suspectObservationCount = 0;
+        }
+
+        // The beginner path: the next object, or an invitation to new observers
+        try {
+            $beginnerPath = Auth::check() ? BeginnerPath::forHomePage(Auth::user()) : null;
+        } catch (\Throwable $e) {
+            report($e);
+            $beginnerPath = null;
+        }
+
+        // What the observer observed in the night of this date in earlier years
+        try {
+            $onThisNight = Auth::check() ? OnThisNight::forHomePage(Auth::user()) : null;
+        } catch (\Throwable $e) {
+            report($e);
+            $onThisNight = null;
+        }
+
+        // Objects others asked to observe that the observer's telescope can probably show
+        try {
+            $observingRequests = Auth::check() ? ObservingRequests::forHomePage(Auth::user()) : null;
+        } catch (\Throwable $e) {
+            report($e);
+            $observingRequests = null;
+        }
+
         return $this->noCacheResponse(response()->view('welcome', compact(
             'sessions',
+            'observingRequests',
+            'onThisNight',
             'sessionsWithoutObservations',
+            'beginnerPath',
+            'suspectObservationCount',
             'observations',
             'sketches',
             'sketchOfTheWeek',

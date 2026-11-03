@@ -78,6 +78,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'two_factor_recovery_codes',
         'two_factor_secret',
         'follow_feed_token',
+        'calendar_feed_token',
     ];
 
     /**
@@ -96,6 +97,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'session_reminder' => 'boolean',
         'year_review' => 'boolean',
         'year_review_sent_year' => 'integer',
+        'partner_search' => 'boolean',
+        'detection_threshold' => 'float',
+        'detection_threshold_fit' => 'array',
+        'use_detection_threshold' => 'boolean',
         'about' => PurifiedHtml::class,
     ];
 
@@ -146,11 +151,17 @@ class User extends Authenticatable implements MustVerifyEmail
             'follow_digest',
             'follow_digest_sent_at',
             'follow_feed_token',
+            'calendar_feed_token',
             'clear_night_alert',
             'clear_night_alert_night',
             'session_reminder',
             'year_review',
             'year_review_sent_year',
+            'partner_search',
+            'partner_note',
+            'detection_threshold',
+            'detection_threshold_fit',
+            'use_detection_threshold',
             'showInches',
             'version',
         ];
@@ -1152,6 +1163,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(User::class, 'user_follows', 'followed_id', 'follower_id')->withTimestamps();
     }
 
+    /**
+     * The clubs the observer is a member of (an observer can be in several).
+     */
+    public function clubs(): BelongsToMany
+    {
+        return $this->belongsToMany(Club::class, 'club_members')
+            ->wherePivot('status', ClubMember::MEMBER)
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
     public function isFollowing(User $observer): bool
     {
         return UserFollow::where('follower_id', $this->id)->where('followed_id', $observer->id)->exists();
@@ -1167,18 +1189,56 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * The observations of the observers this user follows.
+     * The objects this user follows.
+     */
+    public function followedObjects(): HasMany
+    {
+        return $this->hasMany(ObjectFollow::class);
+    }
+
+    /**
+     * The observations of the observers this user follows and those of
+     * others of the objects they follow.
      *
      * @return \Illuminate\Database\Eloquent\Builder<Observation>
      */
     public function followedObservations(): \Illuminate\Database\Eloquent\Builder
     {
+        $objects = $this->followedObjects()->get();
+        if ($objects->isEmpty()) {
+            return $this->followedObserverObservations();
+        }
+
+        return Observation::query()->where(fn ($query) => $query
+            ->whereIn('observer_username', $this->following()->select('users.username'))
+            ->orWhere(fn ($query) => ObjectFollow::constrainObservations($query, $objects)
+                ->where('observer_username', '!=', $this->username)));
+    }
+
+    /**
+     * The observations of the observers this user follows.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<Observation>
+     */
+    public function followedObserverObservations(): \Illuminate\Database\Eloquent\Builder
+    {
         return Observation::query()->whereIn('observer_username', $this->following()->select('users.username'));
     }
 
     /**
-     * The secret token of the personal RSS feed of the observers this user
-     * follows, made the first time it is asked for.
+     * The observations by others of the objects this user follows.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<Observation>
+     */
+    public function followedObjectObservations(): \Illuminate\Database\Eloquent\Builder
+    {
+        return ObjectFollow::constrainObservations(Observation::query(), $this->followedObjects()->get())
+            ->where('observer_username', '!=', $this->username);
+    }
+
+    /**
+     * The secret token of the personal RSS feed of the observers and objects
+     * this user follows, made the first time it is asked for.
      */
     public function followFeedToken(): string
     {
@@ -1196,6 +1256,28 @@ class User extends Authenticatable implements MustVerifyEmail
     public function regenerateFollowFeedToken(): void
     {
         $this->forceFill(['follow_feed_token' => Str::random(48)])->save();
+    }
+
+    /**
+     * The secret token of the personal sky calendar (App\Services\SkyCalendar),
+     * made the first time it is asked for.
+     */
+    public function calendarFeedToken(): string
+    {
+        if (empty($this->calendar_feed_token)) {
+            $this->regenerateCalendarFeedToken();
+        }
+
+        return $this->calendar_feed_token;
+    }
+
+    /**
+     * Give the sky calendar a new token, so the old calendar URL stops
+     * working.
+     */
+    public function regenerateCalendarFeedToken(): void
+    {
+        $this->forceFill(['calendar_feed_token' => Str::random(48)])->save();
     }
 
     /**

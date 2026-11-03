@@ -1,13 +1,19 @@
 <?php
 
 use App\Http\Controllers\ObservationsController;
+use App\Models\Instrument;
+use App\Models\Location;
 use App\Models\Observation;
 use App\Models\ObservingList;
 use App\Models\User;
+use App\Services\AtTheEyepiece;
 use Carbon\Carbon;
+use Database\Factories\EyepieceFactory;
 use Database\Factories\InstrumentFactory;
+use Database\Factories\LensFactory;
 use Database\Factories\LocationFactory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 // The page at the eyepiece of an observing list with times
@@ -128,6 +134,42 @@ it('shows a list without times in its own order, from the first object not obser
         ->assertSee('There is no finder chart for M 13.');
 });
 
+it('shows the observer\'s own earlier observations of the current object, not those of tonight or of others', function () {
+    $owner = aeObserver();
+    $other = aeObserver();
+    $list = aeList($owner);
+    $observe = fn (User $user, string $date, string $time, string $description, array $extra = []) => Observation::create([
+        'observer_username' => $user->username, 'observer_user_id' => $user->id, 'observed_on' => $date, 'observed_time' => $time,
+        'target_table' => 'objects', 'target_key' => 'M 31', 'target_type' => 'deepsky', 'target_name' => 'M 31',
+        'description' => $description, 'instrument_id' => $user->stdtelescope,
+    ] + $extra);
+    $observe($owner, '2020-09-01', '21:00:00', '<p>Dust lane &amp; M 110</p>');
+    $observe($owner, '2023-10-10', '22:00:00', 'With a drawing', ['has_drawing' => true, 'drawing_filename' => 'observations/m31.jpg']);
+    $notSeen = $observe($owner, '2024-01-05', '19:00:00', 'Too much haze');
+    DB::table('deepsky_observation_details')->insert(['observation_id' => $notSeen->id, 'visibility' => Observation::VISIBILITY_NOT_SEEN]);
+    $observe($owner, '2018-08-08', '23:00:00', 'Oldest');
+    $observe($owner, '2026-10-26', '20:10:00', 'Tonight');
+    $observe($other, '2025-11-01', '21:00:00', 'Not mine');
+
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', $list))
+        ->assertOk()
+        ->assertViewHas('earlier', fn ($earlier) => $earlier['total'] === 4
+            && array_column($earlier['observations'], 'description') === ['Too much haze', 'With a drawing', 'Dust lane & M 110']
+            && $earlier['observations'][0]['not_seen'] && ! $earlier['observations'][1]['not_seen']
+            && $earlier['observations'][0]['instrument'] === 'Dobson'
+            && str_ends_with((string) $earlier['observations'][1]['drawing'], 'observations/m31.jpg'))
+        ->assertSee('Your earlier observations')
+        ->assertSee('data-offline-src', false)
+        ->assertSee('You observed M 31 4 times before.')
+        ->assertDontSee('Not mine');
+
+    $m42 = $list->items()->where('object_name', 'M 42')->first();
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', ['list' => $list, 'item' => $m42->id]))
+        ->assertOk()
+        ->assertViewHas('earlier', fn ($earlier) => $earlier['total'] === 0)
+        ->assertDontSee('Your earlier observations');
+});
+
 it('sends an empty list back to the list page', function () {
     $owner = aeObserver();
     $list = ObservingList::createWithObjects($owner, 'Empty', []);
@@ -244,6 +286,95 @@ it('refuses an observation noted by another observer or of an object not in the 
     ])->assertStatus(422);
 
     expect(Observation::count())->toBe(0);
+});
+
+/** A sketch as the sketch pad sends it: a white star on black. */
+function aeSketch(): string
+{
+    $image = imagecreatetruecolor(100, 100);
+    imagefilledellipse($image, 50, 50, 10, 10, imagecolorallocate($image, 255, 255, 255));
+    ob_start();
+    imagejpeg($image, null, 95);
+
+    return 'data:image/jpeg;base64,'.base64_encode((string) ob_get_clean());
+}
+
+it('saves a sketch of the sketch pad as the drawing, white stars on black, also without a description', function () {
+    Storage::fake('public');
+    $owner = aeObserver();
+    $list = aeList($owner);
+    $m31 = $list->items()->where('object_name', 'M 31')->first();
+    $payload = ['item' => $m31->id, 'observed_at' => '2026-10-26T20:41:30Z', 'drawing' => aeSketch(), 'user' => $owner->id];
+
+    $first = $this->actingAs($owner)->postJson(route('observing-list.eyepiece.store', $list), $payload)
+        ->assertCreated()->assertJson(['drawing' => true]);
+
+    $observation = Observation::findOrFail($first->json('id'));
+    expect($observation->has_drawing)->toBeTrue()
+        ->and($observation->drawing_filename)->toStartWith('observations/eyepiece-');
+    Storage::disk('public')->assertExists($observation->drawing_filename);
+
+    // As drawn: a black sky with a white star
+    $image = imagecreatefromstring(Storage::disk('public')->get($observation->drawing_filename));
+    expect(imagecolorat($image, 2, 2) & 0xFF)->toBeLessThan(15)
+        ->and(imagecolorat($image, 50, 50) & 0xFF)->toBeGreaterThan(240);
+
+    // Sent again, it replaces its own copy
+    $old = $observation->drawing_filename;
+    $this->actingAs($owner)->postJson(route('observing-list.eyepiece.store', $list), $payload)->assertOk();
+    $observation->refresh();
+    expect($observation->drawing_filename)->not->toBe($old);
+    Storage::disk('public')->assertMissing($old);
+    expect(Observation::count())->toBe(1);
+});
+
+it('refuses a note without description or sketch, and a sketch that is no image', function () {
+    $owner = aeObserver();
+    $list = aeList($owner);
+    $m31 = $list->items()->where('object_name', 'M 31')->first();
+
+    $this->actingAs($owner)->postJson(route('observing-list.eyepiece.store', $list), [
+        'item' => $m31->id, 'observed_at' => '2026-10-26T20:41:00Z',
+    ])->assertStatus(422)->assertJsonValidationErrors('description');
+
+    $this->actingAs($owner)->postJson(route('observing-list.eyepiece.store', $list), [
+        'item' => $m31->id, 'observed_at' => '2026-10-26T20:41:00Z', 'drawing' => 'data:image/png;base64,'.base64_encode('not an image'),
+    ])->assertStatus(422);
+
+    expect(Observation::count())->toBe(0);
+});
+
+it('offers the sketch pad on the page at the eyepiece', function () {
+    $owner = aeObserver();
+    $list = aeList($owner);
+
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', $list))->assertOk()
+        ->assertSee('id="sketch-pad"', false)
+        ->assertSee('id="sketch-open"', false)
+        ->assertSee('dsl-eyepiece-sketch:', false)
+        ->assertViewHas('compass', fn ($compass) => is_array($compass)
+            && abs(hypot(...$compass['north']) - 1) < 1e-3 && abs(hypot(...$compass['west']) - 1) < 1e-3
+            // West is a quarter turn from north, to the right without mirroring
+            && abs($compass['north'][0] * $compass['west'][0] + $compass['north'][1] * $compass['west'][1]) < 1e-3);
+});
+
+it('offers the details of the observation to print on the sketch', function () {
+    $owner = aeObserver();
+    $list = aeList($owner);
+    $lens = LensFactory::new()->create(['user_id' => $owner->id, 'observer' => '', 'name' => 'Paracorr', 'factor' => 1.15]);
+    $eyepiece = EyepieceFactory::new()->create(['user_id' => $owner->id, 'name' => '6mm Ethos', 'focal_length_mm' => 6, 'apparentFOV' => 100]);
+    Instrument::whereKey($owner->stdtelescope)->update(['focal_length_mm' => 2000, 'fixedMagnification' => 0, 'lens_id' => $lens->id]);
+    Location::whereKey($owner->stdlocation)->update(['skyBackground' => 19.8]);
+    $owner->forceFill(['stdeyepiece' => $eyepiece->id])->save();
+
+    // 2000 mm × 1.15 / 6 mm = 383x, 100° / 383 = 16′
+    expect(AtTheEyepiece::sketchLabels($owner->fresh(), $list, now()))
+        ->toBe(['Dobson', 'Leuven', 'SQM 19.80', '6mm Ethos, Paracorr: 383x, 16′']);
+
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', $list))->assertOk()
+        ->assertSee('id="sketch-labels-on"', false)
+        ->assertSee('id="sketch-brightness"', false)
+        ->assertViewHas('sketchLabels', fn ($labels) => in_array('SQM 19.80', $labels, true));
 });
 
 it('adds the red night mode to every page', function () {

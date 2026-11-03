@@ -38,10 +38,15 @@
                     $best["dark"]["twilight"] ===
                     "astronomical"
                         ? __("Dark :from–:until", $best["dark"])
-                        : __(
-                            "Nautical twilight :from–:until",
-                            $best["dark"],
-                        )
+                        : (isset($best["dark"]["dark_from"])
+                            ? __(
+                                "Nautical twilight :from–:until, completely dark :dark_from–:dark_until",
+                                $best["dark"],
+                            )
+                            : __(
+                                "Nautical twilight :from–:until",
+                                $best["dark"],
+                            ))
                 }}
                 &middot;
                 {{
@@ -49,6 +54,10 @@
                         ? __("Moon :fraction%, up :from–:until", $moon)
                         : __("No Moon")
                 }}
+            @endif
+            @if ($best["seeing"] ?? null)
+                &middot;
+                <x-forecast-seeing :seeing="$best['seeing']" />
             @endif
         </p>
 
@@ -130,6 +139,17 @@
                         }}
                     @endif
                 </p>
+                @if ($best["field"] ?? null)
+                    <p>
+                        {{
+                            __(
+                                "Your telescope has a field of view of :field°: large, bright objects that fill it come first.",
+                                ["field" => $best["field"]],
+                            )
+                        }}
+                    </p>
+                @endif
+                <x-tonights-best-seeing :best="$best" />
                 @if ($best["dark"])
                     <p>
                         @if ($best["dark"]["twilight"] === "astronomical")
@@ -139,11 +159,28 @@
                                     $best["dark"],
                                 )
                             }}
+                        @elseif (isset($best["dark"]["dark_from"]))
+                            {{
+                                __(
+                                    "It is completely dark only from :dark_from to :dark_until: the list uses the nautical twilight from :from to :until.",
+                                    $best["dark"],
+                                )
+                            }}
+                            {{
+                                __(
+                                    "The visibility takes the brighter sky of the twilight into account.",
+                                )
+                            }}
                         @else
                             {{
                                 __(
                                     "It does not get completely dark tonight: from :from to :until the sky stays in nautical twilight.",
                                     $best["dark"],
+                                )
+                            }}
+                            {{
+                                __(
+                                    "The visibility takes the brighter sky of the twilight into account.",
                                 )
                             }}
                         @endif

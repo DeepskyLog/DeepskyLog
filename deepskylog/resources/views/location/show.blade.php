@@ -188,6 +188,7 @@
                                         <x-night-forecast-nights
                                             :nights="$nightForecast"
                                             :list-links="auth()->check() && auth()->user()->stdlocation == $location->id"
+                                            :instrument="auth()->user()?->standardInstrument"
                                             class="py-2"
                                         />
                                     @else
@@ -214,6 +215,18 @@
 
                 </div>
             </div>
+
+            @if (!$location->hidden || $isOwner || $isAdmin)
+                {{-- The trees and houses around the location, which the planners take into account --}}
+                <livewire:location-horizon :location="$location" />
+            @endif
+
+            @if ($isOwner)
+                <p class="mt-6 text-sm">
+                    <a href="{{ route('sky-quality.star-count', ['location' => $location->id]) }}" class="text-blue-400 hover:underline">{{ __('Measure the sky here by counting stars') }}</a>
+                    <span class="text-gray-400">&middot; {{ __('a measured limiting magnitude is far more reliable than a guess') }}</span>
+                </p>
+            @endif
 
             @if ($skyQualityChart)
                 {{-- The SQM and NELM of the observations at this location over the years --}}

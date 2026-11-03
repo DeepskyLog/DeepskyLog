@@ -134,10 +134,8 @@ it('finds close conjunctions of planets, the Moon and Messier objects', function
         ->and($planets[0]['data']['bodies'])->toBe(['saturn', 'neptune'])
         ->and($planets[0]['data']['separation'])->toBeLessThan(1.0);
 
-    // The Moon close to Venus on 2026 June 17, an occultation for parts of the Earth
-    $moon = newsEvents('2026-06-15', '2026-06-20', 'moon_conjunction');
-    expect(collect($moon)->pluck('data.bodies')->all())->toContain(['moon', 'venus'])
-        ->and(collect($moon)->firstWhere('data.bodies.1', 'venus')['data']['occultation'])->toBeTrue();
+    // The Moon close to Venus on 2026 June 17 covers it for parts of the Earth: a lunar occultation
+    expect(newsEvents('2026-06-15', '2026-06-20', 'moon_conjunction'))->toBe([]);
 
     // Mars in the Beehive on 2026 October 11
     newsMessier44();
@@ -148,14 +146,66 @@ it('finds close conjunctions of planets, the Moon and Messier objects', function
 });
 
 it('gives the best moment of a conjunction for a location', function () {
-    $event = collect(newsEvents('2026-06-15', '2026-06-20', 'moon_conjunction'))->firstWhere('data.bodies.1', 'venus');
+    $event = newsEvents('2026-06-15', '2026-06-20', 'lunar_occultation')[0];
 
-    $local = LocalCircumstances::compute('moon_conjunction', $event['at'], $event['data'], 50.85, 4.35);
-
-    // In the evening twilight of June 17, low in the west
-    expect($local['best'])->not->toBeNull()
+    // Brussels does not see Venus covered: the Moon passes it in the evening twilight of June 17, low in the west
+    $local = LocalCircumstances::compute('lunar_occultation', $event['at'], $event['data'], 50.85, 4.35);
+    expect($local['occultation'])->toBeNull()
+        ->and($local['best'])->not->toBeNull()
         ->and(gmdate('Y-m-d', $local['best']['at']))->toBe('2026-06-17')
         ->and($local['best']['altitude'])->toBeGreaterThanOrEqual(LocalCircumstances::MIN_ALTITUDE);
+});
+
+it('finds the lunar occultations of planets and of bright stars', function () {
+    DB::table('stars')->insert([
+        ['source_key' => 'regulus', 'source_table' => 'stars8', 'constellation_code' => 'Leo', 'bayer' => 'Alp', 'flamsteed' => '32', 'name' => 'SOA98967', 'ra_degrees' => 152.09296, 'decl_degrees' => 11.96721, 'vmag' => 1.35],
+        // Too faint, and Polaris is never covered
+        ['source_key' => 'rho-leo', 'source_table' => 'stars8', 'constellation_code' => 'Leo', 'bayer' => 'Rho', 'flamsteed' => '47', 'name' => 'SOA118355', 'ra_degrees' => 158.20279, 'decl_degrees' => 9.30659, 'vmag' => 3.85],
+        ['source_key' => 'polaris', 'source_table' => 'stars8', 'constellation_code' => 'UMi', 'bayer' => 'Alp', 'flamsteed' => '1', 'name' => 'SOA308', 'ra_degrees' => 37.95456, 'decl_degrees' => 89.26411, 'vmag' => 1.97],
+    ]);
+
+    $venus = newsEvents('2026-06-15', '2026-06-18', 'lunar_occultation');
+    expect($venus)->toHaveCount(1)
+        ->and($venus[0]['key'])->toBe('lunar_occultation:venus:2026-06-17')
+        ->and($venus[0]['data']['target'])->toBe('venus');
+
+    $regulus = newsEvents('2026-03-27', '2026-04-01', 'lunar_occultation');
+    expect($regulus)->toHaveCount(1)
+        ->and($regulus[0]['key'])->toBe('lunar_occultation:alp-leo:2026-03-29')
+        ->and($regulus[0]['data']['star']['name'])->toBe('Regulus')
+        ->and($regulus[0]['data']['star']['designation'])->toBe('α Leo');
+
+    // Seen from Brussels in the evening of March 29: in at the dark limb of the waxing Moon, out at the bright limb
+    $local = LocalCircumstances::compute('lunar_occultation', $regulus[0]['at'], $regulus[0]['data'], 50.85, 4.35);
+    expect($local['occultation']['visible'])->toBeTrue()
+        ->and(gmdate('Y-m-d H:i', $local['occultation']['disappears']['at']))->toBe('2026-03-29 18:18')
+        ->and($local['occultation']['disappears']['limb'])->toBe('dark')
+        ->and(gmdate('Y-m-d H:i', $local['occultation']['reappears']['at']))->toBe('2026-03-29 19:25')
+        ->and($local['occultation']['reappears']['limb'])->toBe('bright');
+});
+
+it('shows a lunar occultation with the local times of the reader', function () {
+    $item = NewsItem::create([
+        'kind'         => 'lunar_occultation',
+        'event_key'    => 'lunar_occultation:alp-leo:2026-03-29',
+        'event_at'     => '2026-03-29 19:58:00',
+        'published_at' => now()->subDay(),
+        'data'         => [
+            'target' => 'star', 'bodies' => ['moon'], 'separation' => 0.32, 'elongation' => 142.0, 'magnitudes' => [], 'moon_illumination' => 0.89,
+            'star'   => ['key' => 'alp-leo', 'name' => 'Regulus', 'designation' => 'α Leo', 'slug' => null, 'ra' => 152.09296, 'decl' => 11.96721, 'mag' => 1.4],
+        ],
+    ]);
+    $location = new App\Models\Location(['name' => 'Brussels', 'latitude' => 50.85, 'longitude' => 4.35, 'timezone' => 'Europe/Brussels']);
+    $location->setAttribute('id', 1);
+
+    expect($item->displayTitle($location))->toBe('The Moon covers Regulus on 29 March 2026')
+        ->and($item->excerpt(220, $location))->toBe('Seen from Brussels, Regulus disappears at 29 March 20:18 and reappears at 29 March 21:25.');
+
+    $html = view('news.partials.item', ['item' => $item, 'location' => $location])->render();
+    expect($html)->toContain('Regulus (α Leo) has magnitude 1.4.')
+        ->toContain('Disappears at the dark limb: 29 March 20:18')
+        ->toContain('Reappears at the bright limb: 29 March 21:25')
+        ->toContain('(The Moon is 44° above the horizon.)');
 });
 
 it('adds the coming events as news items a week before them, once', function () {

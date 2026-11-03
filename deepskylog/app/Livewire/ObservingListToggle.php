@@ -49,7 +49,8 @@ class ObservingListToggle extends Component
         /** @var ActiveObservingListService $svc */
         $svc = app(ActiveObservingListService::class);
         $this->activeList = $svc->getActiveList($user);
-        $this->ownsActiveList = (bool) ($this->activeList && (int) $this->activeList->owner_user_id === (int) $user->id);
+        // The owner, or a member of a club that edits the list together
+        $this->ownsActiveList = (bool) ($this->activeList && $user->can('addItem', $this->activeList));
 
         if ($this->activeList && $this->ownsActiveList) {
             $item = ObservingListItem::where('observing_list_id', $this->activeList->id)

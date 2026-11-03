@@ -230,3 +230,94 @@ it('links to the page from the own instrument page', function () {
         ->assertSee("What's new for me")
         ->assertDontSee('&amp;#039;', false);
 });
+
+it('lists the objects a telescope the observer does not have would show', function () {
+    [$user, $small, $large] = equipmentGainObserver();
+    $location               = EquipmentGain::location($user, null);
+
+    // as the 400 mm Dobsonian, compared with the 80 mm refractor
+    $gain   = EquipmentGain::forPlanned($user, ['aperture' => 400, 'focal_length' => 1800], $location, [$small->id]);
+    $result = $gain->compute();
+    expect($gain->unavailable())->toBeNull()
+        ->and(array_column($result['objects'], 'name'))->toBe(['Seen Galaxy', 'Faint Galaxy'])
+        ->and($result['compared'])->toHaveCount(1)
+        ->and($gain->equipmentName())->toBe('400 mm f/4.5 telescope');
+
+    // compared with all instruments, it adds nothing to the Dobsonian
+    $gain = EquipmentGain::forPlanned($user, ['aperture' => 400, 'focal_length' => 1800], $location);
+    expect($gain->comparable()->pluck('id')->all())->toBe([$large->id, $small->id])
+        ->and($gain->compute()['total'])->toBe(0);
+
+    // binoculars, at the magnification of a 5 mm exit pupil
+    $gain = EquipmentGain::forPlanned($user, ['binoculars' => true, 'aperture' => 50, 'focal_length' => 200], $location, []);
+    expect($gain->planned)->toBe(['binoculars' => true, 'aperture' => 50.0, 'focal_length' => null, 'magnification' => null])
+        ->and($gain->equipmentName())->toBe('50 mm binoculars')
+        ->and(array_column($gain->compute()['objects'], 'name'))->toBe(['Bright Galaxy']);
+});
+
+it('calculates a planned telescope from the form and makes a list', function () {
+    [$user, $small, $large] = equipmentGainObserver();
+    $large->forceFill(['active' => false])->save();
+
+    $this->actingAs($user)->get(route('instrument.what-if'))
+        ->assertOk()
+        ->assertSee('What if I bought')
+        ->assertDontSee('wire:poll', false);
+
+    $page = Livewire::actingAs($user)
+        ->test(WhatsNewEquipment::class, ['kind' => EquipmentGain::PLANNED])
+        ->assertSet('compare', [(string) $small->id])
+        ->set('aperture', '5')
+        ->call('calculate')
+        ->assertHasErrors('aperture')
+        ->set('aperture', '400')
+        ->set('focalLength', '1800')
+        ->call('calculate')
+        ->assertHasNoErrors()
+        ->assertSee('A 400 mm f/4.5 telescope would show one object you have not seen at Backyard.')
+        ->assertSee('Faint Galaxy')
+        ->assertDontSee('Bright Galaxy')
+        ->call('create')
+        ->assertRedirect();
+
+    $list = ObservingList::where('owner_user_id', $user->id)->firstOrFail();
+    expect($list->name)->toBe('With a 400 mm f/4.5 telescope')
+        ->and($list->items()->pluck('object_name')->all())->toBe(['Faint Galaxy']);
+});
+
+it('takes a planned telescope in inches from the query string', function () {
+    [$user] = equipmentGainObserver();
+    $user->forceFill(['showInches' => true])->save();
+
+    Livewire::actingAs($user->fresh())
+        ->withQueryParams(['aperture' => '16'])
+        ->test(WhatsNewEquipment::class, ['kind' => EquipmentGain::PLANNED])
+        ->assertSet('planned.aperture', 406.4)
+        ->call('compareNone')
+        ->assertSee('A 16" telescope would show');
+});
+
+it('links to the planned telescope from the instrument pages', function () {
+    [$user, , $large] = equipmentGainObserver();
+
+    $this->actingAs($user)->get(route('instrument.index'))->assertSee(route('instrument.what-if'));
+    $this->actingAs($user)->get(route('instrument.whats-new', [$user->slug, $large->slug]))->assertSee(route('instrument.what-if'));
+});
+
+it('uses the observer\'s own detection threshold when they chose to', function () {
+    [$user, , $large] = equipmentGainObserver();
+    $before = EquipmentGain::forInstrument($user, $large, EquipmentGain::location($user, null))->compute();
+
+    $user->forceFill(['use_detection_threshold' => true, 'detection_threshold_fit' => ['threshold' => -0.3, 'reliable' => true]])->save();
+    $gain  = EquipmentGain::forInstrument($user->fresh(), $large, EquipmentGain::location($user, null));
+    $after = $gain->result() ?? $gain->compute();
+
+    $reserves = fn (array $result) => array_column($result['objects'], 'contrast_reserve', 'name');
+    foreach (array_intersect_key($reserves($after), $reserves($before)) as $name => $reserve) {
+        expect($reserve)->toEqualWithDelta($reserves($before)[$name] + 0.3, 0.011);
+    }
+    foreach ($after['objects'] as $object) {
+        expect($object['before'] === null || $object['before'] <= EquipmentGain::VISIBLE_ABOVE)->toBeTrue();
+    }
+    expect($after)->not->toBe($before);
+});

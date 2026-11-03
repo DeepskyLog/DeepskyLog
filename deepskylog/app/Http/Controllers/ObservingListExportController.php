@@ -223,6 +223,102 @@ class ObservingListExportController extends Controller
         }
     }
 
+    /**
+     * The list as a Stellarium single observing list (.sol, the JSON file of
+     * Stellarium's Observing list dialog, version 2.1), which its Import
+     * button reads. Stellarium finds each object by its designation; the
+     * deep-sky objects also carry their J2000 position, which Stellarium uses
+     * for an object it does not know. Moving targets carry only their name.
+     */
+    public function stellarium(Request $request, ObservingList $list)
+    {
+        $this->authorize('view', $list);
+
+        try {
+            [, $rows] = $this->resolveRows($list);
+
+            $names = $rows->filter(fn ($row) => ($row->source_table ?? '') === 'objects')
+                ->map(fn ($row) => $row->obj_name ?? $row->name)->filter()->unique()->values()->all();
+            $constellations = [];
+            foreach (array_chunk($names, 500) as $chunk) {
+                $constellations += DB::table('objects')->whereIn('name', $chunk)->pluck('con', 'name')->all();
+            }
+
+            $starCodes = ['DS', 'AA1STAR', 'AA2STAR', 'AA3STAR', 'AA4STAR', 'AA8STAR'];
+            $objects = [];
+            $written = [];
+            foreach ($rows as $row) {
+                $table = strtolower(trim((string) ($row->source_table ?? '')));
+                $designation = trim((string) ($table === 'objects' ? ($row->obj_name ?? $row->name) : ($row->name ?? $row->display_name)));
+                if ($designation === '' || isset($written[$table . '|' . $designation])) {
+                    continue;
+                }
+                $written[$table . '|' . $designation] = true;
+
+                $object = [
+                    'designation' => $designation,
+                    'name' => trim((string) ($row->display_name ?? $designation)),
+                    'nameI18n' => trim((string) ($row->display_name ?? $designation)),
+                    'type' => $table === 'objects' ? 'Nebula' : 'Planet',
+                    'objtype' => trim((string) ($row->type_name ?? $row->source_type ?? '')),
+                    'ra' => '',
+                    'dec' => '',
+                    'magnitude' => '',
+                    'constellation' => '',
+                    'jd' => 0,
+                    'location' => '',
+                    'landscapeID' => '',
+                    'fov' => 0,
+                    'isVisibleMarker' => false,
+                ];
+
+                if ($table === 'objects') {
+                    if (in_array(strtoupper(trim((string) ($row->obj_type ?? ''))), $starCodes, true)) {
+                        $object['type'] = 'Star';
+                    }
+                    if (is_numeric($row->obj_ra ?? null) && is_numeric($row->obj_decl ?? null)) {
+                        $object['ra'] = $this->formatRaStellarium((float) $row->obj_ra);
+                        $object['dec'] = $this->formatDecStellarium((float) $row->obj_decl);
+                    }
+                    if (is_numeric($row->mag) && (float) $row->mag !== 99.9 && (float) $row->mag !== 0.0) {
+                        $object['magnitude'] = number_format((float) $row->mag, 2, '.', '');
+                    }
+                    $object['constellation'] = $this->constellationAbbreviation((string) ($constellations[$designation] ?? ''));
+                }
+
+                $objects[] = $object;
+            }
+
+            $created = now()->format('Y-m-d H:i:s');
+            $olud = '{' . Str::uuid()->toString() . '}';
+            $document = [
+                'defaultListOlud' => '',
+                'observingLists' => [
+                    $olud => [
+                        'name' => (string) $list->name,
+                        'description' => trim(html_entity_decode(strip_tags((string) $list->description), ENT_QUOTES | ENT_HTML5, 'UTF-8')),
+                        'sorting' => '',
+                        'creation date' => $created,
+                        'last edit' => $created,
+                        'objects' => $objects,
+                    ],
+                ],
+                'shortName' => 'Observing list for Stellarium',
+                'version' => '2.1',
+            ];
+
+            $content = json_encode($document, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n";
+
+            return response()->streamDownload(function () use ($content) {
+                echo $content;
+            }, $this->buildExportFilename($list, 'sol'), ['Content-Type' => 'application/json']);
+        } catch (\Throwable $ex) {
+            Log::error('ObservingListExportController::stellarium failed', ['list_id' => $list->id ?? null, 'error' => (string) $ex]);
+
+            return redirect()->back()->with('error', __('Failed to generate Stellarium export'));
+        }
+    }
+
     public function stxt(Request $request, ObservingList $list)
     {
         $this->authorize('view', $list);
@@ -529,6 +625,31 @@ class ObservingListExportController extends Controller
         }
 
         return sprintf('%s%02d:%02d:%02d', $sign, $degreePart, $minutePart, $secondPart);
+    }
+
+    /** RA in hours as Stellarium writes it (StelUtils::radToHmsStr): 0h42m44.3s. */
+    private function formatRaStellarium(float $hours): string
+    {
+        $tenths = (int) round(fmod(fmod($hours, 24.0) + 24.0, 24.0) * 36000.0) % 864000;
+
+        return sprintf('%dh%02dm%04.1fs', intdiv($tenths, 36000), intdiv($tenths % 36000, 600), ($tenths % 600) / 10);
+    }
+
+    /** Declination in degrees as Stellarium writes it (StelUtils::radToDmsStr): +41°16'09". */
+    private function formatDecStellarium(float $degrees): string
+    {
+        $seconds = (int) round(abs($degrees) * 3600.0);
+
+        return sprintf("%s%d°%02d'%02d\"", $degrees < 0 ? '-' : '+', intdiv($seconds, 3600), intdiv($seconds % 3600, 60), $seconds % 60);
+    }
+
+    /** The IAU abbreviation of objects.con (AND, UMA) as Stellarium writes it (And, UMa). */
+    private function constellationAbbreviation(string $con): string
+    {
+        $con = trim($con);
+        $mixed = ['CMA' => 'CMa', 'CMI' => 'CMi', 'CVN' => 'CVn', 'CRA' => 'CrA', 'CRB' => 'CrB', 'LMI' => 'LMi', 'PSA' => 'PsA', 'TRA' => 'TrA', 'UMA' => 'UMa', 'UMI' => 'UMi'];
+
+        return $mixed[strtoupper($con)] ?? ucfirst(strtolower($con));
     }
 
     private function computeBestMagForExport($row, $component = null): string

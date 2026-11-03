@@ -2,12 +2,16 @@
 
 use App\Livewire\LocationTable;
 use App\Livewire\NightListWizard;
+use App\Models\Instrument;
+use App\Models\InstrumentType;
 use App\Models\Location;
 use App\Models\Message;
 use App\Models\StarParty;
 use App\Models\StarPartyParticipant;
 use App\Models\User;
+use App\Services\Weather\CoolDownAdvice;
 use App\Services\Weather\NightForecast;
+use Database\Factories\InstrumentFactory;
 use Database\Factories\LocationFactory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -28,9 +32,10 @@ afterEach(function () {
 
 /**
  * Fakes Open-Meteo with the cloud cover $cloud(timestamp) every hour of
- * seven days from $from (UTC).
+ * seven days from $from (UTC), and the temperature, dew point and humidity
+ * of the callables (else 10 °C, 2 °C and 80%).
  */
-function fakeForecast(callable $cloud, string $from = '2026-11-08 00:00', int $status = 200): void
+function fakeForecast(callable $cloud, string $from = '2026-11-08 00:00', int $status = 200, ?callable $temperature = null, ?callable $dewPoint = null, ?callable $humidity = null): void
 {
     $start = Carbon::parse($from, 'UTC')->getTimestamp();
     $time  = array_map(fn (int $i) => $start + 3600 * $i, range(0, 7 * 24 - 1));
@@ -42,8 +47,10 @@ function fakeForecast(callable $cloud, string $from = '2026-11-08 00:00', int $s
         'cloud_cover_low'      => $cover,
         'cloud_cover_mid'      => array_fill(0, count($time), 0),
         'cloud_cover_high'     => array_fill(0, count($time), 0),
-        'relative_humidity_2m' => array_fill(0, count($time), 80),
+        'relative_humidity_2m' => array_map($humidity ?? fn () => 80, $time),
         'wind_speed_10m'       => array_fill(0, count($time), 10),
+        'temperature_2m'       => array_map($temperature ?? fn () => 10.0, $time),
+        'dew_point_2m'         => array_map($dewPoint ?? fn () => 2.0, $time),
     ]] : ['reason' => 'Too many requests'], $status)]);
 }
 
@@ -101,6 +108,25 @@ it('finds the clear part of a night that clouds over', function () {
     expect($night['verdict'])->toBe('clear_dark')
         ->and($night['clear_dark']['from'])->toBe('18:53')
         ->and($night['clear_dark']['until'])->toBe('21:30');
+});
+
+it('calls a clear midsummer night clear in twilight, and sends no message for it', function () {
+    // Near the new Moon of 15 June, the Sun never 18° below the horizon
+    Carbon::setTestNow(Carbon::parse('2026-06-14 14:00', 'Europe/Brussels'));
+    fakeForecast(fn () => 0, '2026-06-13 00:00');
+
+    $night = forecastNight('2026-06-14');
+    expect($night['verdict'])->toBe('clear_twilight')
+        ->and($night['dark']['twilight'])->toBe('nautical')
+        ->and($night['moon'])->toBeNull()
+        ->and($night['clear']['minutes'])->toBeGreaterThan(200)
+        ->and($night['clear_dark'])->toBeNull()
+        ->and($night['clear_dark_minutes'])->toBe(0)
+        ->and(collect($night['hours'])->every(fn (array $hour) => $hour['twilight']))->toBeTrue()
+        ->and(NightForecast::verdictLabel('clear_twilight'))->toBe('Clear, in twilight');
+
+    forecastObserver();
+    $this->artisan('forecast:send-clear-night-alerts --apply')->expectsOutput('Messages sent: 0')->assertSuccessful();
 });
 
 it('calls a night with one clear hour partly cloudy and an overcast night cloudy', function () {
@@ -296,4 +322,119 @@ it('opens the night list wizard on the night of the link', function () {
         ->withQueryParams(['night' => '2026-02-31'])
         ->test(NightListWizard::class)
         ->assertNotSet('night', '2026-02-31');
+});
+
+/**
+ * The air cooling from 12 °C at 15:00 UTC on 9 November by half a degree an hour.
+ */
+function coolingAir(): callable
+{
+    $from = Carbon::parse('2026-11-09 15:00', 'UTC')->getTimestamp();
+
+    return fn (int $t) => 12.0 - 0.5 * ($t - $from) / 3600;
+}
+
+function coolDownTelescope(User $user, string $type, float $aperture, string $name = 'Dobson'): Instrument
+{
+    $instrument = InstrumentFactory::new()->create([
+        'user_id'            => $user->id, 'observer' => $user->username, 'name' => $name, 'aperture_mm' => $aperture,
+        'instrument_type_id' => InstrumentType::firstOrCreate(['name' => $type])->id,
+    ]);
+    $user->forceFill(['stdtelescope' => $instrument->id])->save();
+
+    return $instrument->fresh();
+}
+
+it('warns per hour from when the dew heater is needed and dew forms', function () {
+    // The air at 10 °C; the dew point 8 °C from 22:00 UTC, humid from 01:00 UTC
+    $heater = Carbon::parse('2026-11-09 22:00', 'UTC')->getTimestamp();
+    $dew    = Carbon::parse('2026-11-10 01:00', 'UTC')->getTimestamp();
+    fakeForecast(fn () => 0, dewPoint: fn (int $t) => $t < $heater ? 2.0 : 8.0, humidity: fn (int $t) => $t < $dew ? 80 : 95);
+
+    $night = forecastNight('2026-11-09');
+    $hours = collect($night['hours'])->keyBy('time');
+
+    expect($night['heater_from'])->toBe('23:00')
+        ->and($night['dew_from'])->toBe('02:00')
+        ->and($night['dew'])->toBeTrue()
+        ->and($hours['22:00']['heater'])->toBeFalse()
+        ->and($hours['23:00']['heater'])->toBeTrue()
+        ->and($hours['23:00']['dew'])->toBeFalse()
+        ->and($hours['02:00']['dew'])->toBeTrue()
+        ->and($hours['23:00']['temperature'])->toBe(10.0)
+        ->and($hours['23:00']['dew_point'])->toBe(8.0)
+        ->and(NightForecast::dewLabel($night))->toBe('Dew heater from 23:00, dew from 02:00')
+        ->and(NightForecast::summary($night))->toContain('Dew heater from 23:00, dew from 02:00');
+});
+
+it('leaves out the dew under clouds', function () {
+    fakeForecast(fn () => 100, dewPoint: fn () => 9.5, humidity: fn () => 98);
+
+    $night = forecastNight('2026-11-09');
+
+    expect($night['heater_from'])->toBeNull()
+        ->and($night['dew'])->toBeFalse()
+        ->and(NightForecast::dewLabel($night))->toBeNull();
+});
+
+it('tells when to put a mirror outside to cool down', function () {
+    fakeForecast(fn () => 0, temperature: coolingAir());
+    $user  = forecastObserver();
+    $night = forecastNight('2026-11-09');
+
+    $dobson = CoolDownAdvice::forNight($night, coolDownTelescope($user, 'Reflector', 305));
+    $small  = CoolDownAdvice::forNight($night, coolDownTelescope($user, 'Reflector', 150, 'Small'));
+    $sct    = CoolDownAdvice::forNight($night, coolDownTelescope($user, 'Schmidt Cassegrain', 280, 'SCT'));
+
+    // Dark from 18:53: the 12" without a fan two hours before, with a fan an hour later
+    expect($dobson['ready'])->toBe('18:53')
+        ->and($dobson['minutes'])->toBeGreaterThan(90)->toBeLessThan(150)
+        ->and($dobson['put_out_fan'])->toBeGreaterThan($dobson['put_out'])
+        ->and($dobson['air_start'])->toBeGreaterThan($dobson['air_end'])
+        ->and($small['minutes'])->toBeLessThan($dobson['minutes'])
+        ->and($sct['minutes'])->toBeGreaterThan($dobson['minutes'])
+        ->and($sct['put_out_fan'])->toBeNull()
+        ->and(CoolDownAdvice::forNight($night, coolDownTelescope($user, 'Refractor', 120, 'Refractor')))->toBeNull()
+        ->and(CoolDownAdvice::label($dobson, Instrument::where('name', 'Dobson')->sole()))
+        ->toContain('Put the Dobson outside at '.$dobson['put_out'].' (with a fan behind the mirror at '.$dobson['put_out_fan'].') to have it cooled at 18:53');
+});
+
+it('says so when the air cools too fast for the mirror to be cooled in time', function () {
+    // The air falls 3 °C an hour around the evening: a 16" without a fan never catches up
+    fakeForecast(fn () => 0, temperature: fn (int $t) => max(0.0, 14.0 - 3.0 * ($t - Carbon::parse('2026-11-09 14:00', 'UTC')->getTimestamp()) / 3600));
+    $user       = forecastObserver();
+    $instrument = coolDownTelescope($user, 'Reflector', 406);
+
+    $advice = CoolDownAdvice::forNight(forecastNight('2026-11-09'), $instrument);
+
+    expect($advice['in_time'])->toBeFalse()
+        ->and($advice['behind'])->toBeGreaterThan(CoolDownAdvice::TOLERANCE_C)
+        ->and($advice['fan_in_time'])->toBeTrue()
+        ->and(CoolDownAdvice::label($advice, $instrument))->toContain('Put the Dobson outside as early as you can: without a fan the mirror is still');
+});
+
+it('needs no cool-down when the air is as warm as the room', function () {
+    fakeForecast(fn () => 0, temperature: fn () => 22.0);
+    $user = forecastObserver();
+
+    $advice = CoolDownAdvice::forNight(forecastNight('2026-11-09'), coolDownTelescope($user, 'Reflector', 305));
+
+    expect($advice['put_out'])->toBeNull()
+        ->and($advice['minutes'])->toBe(0)
+        ->and($advice['lag'])->toEqual(0);
+});
+
+it('shows the cool-down of the standard telescope on the home page and in the clear night message', function () {
+    Carbon::setTestNow(Carbon::parse('2026-11-09 14:00', 'Europe/Brussels'));
+    fakeForecast(fn () => 0, temperature: coolingAir());
+    $user = forecastObserver();
+    coolDownTelescope($user, 'Reflector', 305);
+    NightForecast::hourly(50.1, 5.5);
+
+    $this->actingAs($user->fresh())->get('/')
+        ->assertOk()
+        ->assertSee('Put the Dobson outside at');
+
+    $this->artisan('forecast:send-clear-night-alerts --apply')->assertSuccessful();
+    expect(Message::sole()->message)->toContain('Put the Dobson outside at');
 });

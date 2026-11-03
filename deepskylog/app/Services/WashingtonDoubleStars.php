@@ -61,7 +61,7 @@ class WashingtonDoubleStars
     private const MAIN_COMPONENTS = ['AB', ''];
 
     /** The Bayer letters as the stars table stores them. */
-    private const GREEK = [
+    public const GREEK = [
         'alpha' => 'Alp', 'beta' => 'Bet', 'gamma' => 'Gam', 'delta' => 'Del', 'epsilon' => 'Eps', 'zeta' => 'Zet',
         'eta'   => 'Eta', 'theta' => 'The', 'iota' => 'Iot', 'kappa' => 'Kap', 'lambda' => 'Lam', 'mu' => 'Mu',
         'nu'    => 'Nu', 'xi' => 'Xi', 'omicron' => 'Omi', 'pi' => 'Pi', 'rho' => 'Rho', 'sigma' => 'Sig',

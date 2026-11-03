@@ -3,6 +3,8 @@
 namespace App\Actions\Jetstream;
 
 use App\Jobs\ComputeObserverStats;
+use App\Models\Club;
+use App\Models\ObjectFindingNote;
 use App\Models\Observation;
 use App\Models\ObservationLike;
 use App\Models\Team;
@@ -18,10 +20,11 @@ use Laravel\Jetstream\Contracts\DeletesUsers;
 /**
  * Deletes an account with everything the observer recorded: observations
  * (with their sketches, likes and comments), sessions, equipment, locations,
- * observing lists, comments, likes and settings. Used when observers delete
+ * observing lists, comments, likes, club memberships and settings. Used when observers delete
  * their own account on the profile page, by the administrators' "remove
  * user" page and by users:prune-inactive. Messages the observer sent stay in
- * the inbox of their receivers.
+ * the inbox of their receivers. A new table of the observer's own rows also
+ * belongs in AccountDataExport::tables(), which gives them a copy first.
  */
 class DeleteUser implements DeletesUsers
 {
@@ -59,6 +62,12 @@ class DeleteUser implements DeletesUsers
             $user->connectedAccounts->each->delete();
             $user->tokens->each->delete();
 
+            // The clubs: another member takes over as administrator, a club
+            // left without members goes; the membership rows cascade
+            foreach (Club::ofMember($user)->get() as $club) {
+                $club->remove($user);
+            }
+
             $objectNames = $this->deleteObservations($user, $files);
             $this->deleteSessions($user, $files);
 
@@ -84,10 +93,11 @@ class DeleteUser implements DeletesUsers
             }
             // Personal rows without a foreign key, or one that would only set
             // the user to null; the cascading ones (comments, likes, saved
-            // searches, report layouts, streaks, blocks, follows in both
-            // directions, the starparties they organise with their
-            // participants and invitations, their answers to those of
+            // searches, report layouts, streaks, blocks, finding notes,
+            // follows in both directions, followed objects, the starparties they organise with
+            // their participants and invitations, their answers to those of
             // others) go with the user row
+            ObjectFindingNote::removeLikesOf($user);
             foreach (['user_object_metrics', 'user_table_settings', 'sessions', 'observation_comments', 'observation_likes'] as $table) {
                 DB::table($table)->where('user_id', $user->id)->delete();
             }

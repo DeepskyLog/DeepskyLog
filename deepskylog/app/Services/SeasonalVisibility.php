@@ -17,6 +17,11 @@ use Carbon\Carbon;
  * The time above the altitude follows from the hour angle at which the point
  * crosses it, so a list of thousands of objects takes a few milliseconds.
  * Planets, comets and asteroids move, so this is for deep-sky objects only.
+ *
+ * The local horizon of the location (LocalHorizon) counts too: a point
+ * behind the trees in its direction is not above the altitude, and a low
+ * point only counts when its transit is above the horizon in the south (or
+ * north).
  */
 class SeasonalVisibility
 {
@@ -43,6 +48,7 @@ class SeasonalVisibility
         public readonly float $latitude,
         public readonly int $currentMonth,
         private readonly array $windows,
+        private readonly ?LocalHorizon $horizon = null,
     ) {
     }
 
@@ -66,9 +72,9 @@ class SeasonalVisibility
 
     public static function for(Location $location, int $year, int $currentMonth, string $timezone): self
     {
-        $key = implode('|', [$location->id, (float) $location->latitude, (float) $location->longitude, $year, $currentMonth, $timezone]);
+        $key = implode('|', [$location->id, (float) $location->latitude, (float) $location->longitude, $year, $currentMonth, $timezone, json_encode($location->horizon)]);
 
-        return self::$instances[$key] ??= self::build($location, (float) $location->latitude, (float) $location->longitude, $year, $currentMonth, $timezone);
+        return self::$instances[$key] ??= self::build($location, (float) $location->latitude, (float) $location->longitude, $year, $currentMonth, $timezone, LocalHorizon::forLocation($location));
     }
 
     /**
@@ -79,14 +85,14 @@ class SeasonalVisibility
         return self::build(null, $latitude, $longitude, $year, $currentMonth, $timezone);
     }
 
-    private static function build(?Location $location, float $latitude, float $longitude, int $year, int $currentMonth, string $timezone): self
+    private static function build(?Location $location, float $latitude, float $longitude, int $year, int $currentMonth, string $timezone, ?LocalHorizon $horizon = null): self
     {
         $windows = [];
         for ($month = 1; $month <= 12; $month++) {
             $windows[$month] = NightWindow::for($latitude, $longitude, sprintf('%04d-%02d-%02d', $year, $month, self::SAMPLE_DAY), $timezone);
         }
 
-        return new self($location, $latitude, $currentMonth, $windows);
+        return new self($location, $latitude, $currentMonth, $windows, $horizon);
     }
 
     /**
@@ -187,9 +193,17 @@ class SeasonalVisibility
         }
 
         $hours = $this->hoursAbove($window, $raDeg, $decDeg);
-        $well  = $this->isLow($decDeg) ? $this->transitsIn($window, $raDeg) : $hours >= self::MIN_HOURS;
+        $well  = $this->isLow($decDeg) ? $this->transitsIn($window, $raDeg) && $this->clearAtTransit($decDeg) : $hours >= self::MIN_HOURS;
 
         return ['hours' => $hours, 'well' => $well];
+    }
+
+    /**
+     * Whether the point stands above the local horizon at its transit.
+     */
+    private function clearAtTransit(float $decDeg): bool
+    {
+        return $this->horizon === null || $this->horizon->isClear($this->latitude, 0.0, $decDeg);
     }
 
     /**
@@ -213,6 +227,10 @@ class SeasonalVisibility
 
     private function hoursAbove(NightWindow $window, float $raDeg, float $decDeg): float
     {
+        if ($this->horizon?->blocksAbove(self::MIN_ALTITUDE)) {
+            return $this->horizon->hours($window, $raDeg, $decDeg, self::MIN_ALTITUDE);
+        }
+
         // The point is above the altitude for hour angles in [-limit, limit].
         $limit = $this->limitHourAngle($window->latitude, $decDeg);
         if ($limit === null) {

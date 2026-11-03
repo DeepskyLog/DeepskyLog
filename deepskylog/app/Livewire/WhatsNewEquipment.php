@@ -2,10 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Models\InstrumentSet;
 use App\Models\ObservingList;
 use App\Services\EquipmentGain;
+use App\Services\EyepieceGaps;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 /**
@@ -13,8 +16,14 @@ use Livewire\Component;
  * /eyepiece/{user}/{eyepiece}/whats-new): the objects an observer's
  * telescope or eyepiece lets them see at one of their locations that they
  * could not see before and have not seen yet (EquipmentGain), with a button
- * that makes them an observing list. The result is calculated on the queue;
- * the page polls until it is there.
+ * that makes them an observing list. "What if I bought…"
+ * (/instrument/what-if, kind PLANNED) asks for a telescope or binoculars
+ * the observer does not have instead, and "What if I bought this
+ * eyepiece" (/instrument/{user}/{instrument}/what-if-eyepiece, kind
+ * PLANNED_EYEPIECE, linked from the eyepiece gap analysis) an eyepiece for
+ * one of their telescopes; the values are kept in the query string and only
+ * calculated with calculate(), not while typing. The result
+ * is calculated on the queue; the page polls until it is there.
  */
 class WhatsNewEquipment extends Component
 {
@@ -29,13 +38,48 @@ class WhatsNewEquipment extends Component
 
     public string $name = '';
 
+    /** For a planned instrument: telescope or binoculars. */
+    #[Url(as: 'type')]
+    public string $plannedType = 'telescope';
+
+    /** In inches for a telescope when the observer uses them, else mm. */
+    #[Url]
+    public string $aperture = '';
+
+    /** In inches when the observer uses them, else mm; of a planned eyepiece always mm. */
+    #[Url(as: 'focal_length')]
+    public string $focalLength = '';
+
+    /** Of a planned eyepiece, in degrees. */
+    #[Url(as: 'apparent_field')]
+    public string $apparentField = '';
+
+    /** For a planned eyepiece: the instrument set whose eyepieces and lenses it is added to; empty for all. */
+    #[Url(as: 'set')]
+    public string $instrumentSet = '';
+
+    /** Of binoculars. */
+    #[Url]
+    public string $magnification = '';
+
+    /** The planned instrument or eyepiece calculated (EquipmentGain::plannedSpec(), plannedEyepieceSpec()), empty before calculate(). */
+    public array $planned = [];
+
     public bool $public = false;
 
-    public function mount(string $kind, int $equipmentId): void
+    public function mount(string $kind, int $equipmentId = 0): void
     {
         $this->kind        = $kind;
         $this->equipmentId = $equipmentId;
-        $gain              = $this->gain();
+        if ($this->isPlanned() && ($kind === EquipmentGain::PLANNED ? $this->aperture : $this->focalLength) !== '') {
+            // a shared link calculates at once; invalid values only show the form
+            try {
+                $this->calculate();
+            } catch (\Illuminate\Validation\ValidationException) {
+                $this->planned = [];
+            }
+        }
+        $gain = $this->gain();
         abort_unless($gain, 404);
         $this->locationId = $gain->location?->id;
         $this->compareAll();
@@ -43,8 +87,8 @@ class WhatsNewEquipment extends Component
 
     public function compareAll(): void
     {
-        $this->compare = $this->kind === EquipmentGain::INSTRUMENT
-            ? EquipmentGain::for(Auth::user(), $this->kind, $this->equipmentId, null)->comparable()->pluck('id')->map(fn ($id) => (string) $id)->all()
+        $this->compare = $this->comparesInstruments()
+            ? EquipmentGain::for(Auth::user(), $this->kind, $this->equipmentId, null, null, $this->planned)->comparable()->pluck('id')->map(fn ($id) => (string) $id)->all()
             : [];
     }
 
@@ -54,6 +98,51 @@ class WhatsNewEquipment extends Component
     public function retry(): void
     {
         $this->gain()?->retry();
+    }
+
+    /**
+     * Takes the planned instrument of the form.
+     */
+    public function calculate(): void
+    {
+        if ($this->kind === EquipmentGain::PLANNED_EYEPIECE) {
+            $this->validate([
+                'focalLength'   => ['required', 'numeric', 'min:1', 'max:100'],
+                'apparentField' => ['nullable', 'numeric', 'min:20', 'max:130'],
+                'instrumentSet' => ['nullable', 'integer'],
+            ], [], [
+                'focalLength'   => __('focal length'),
+                'apparentField' => __('Apparent Field of View'),
+            ]);
+            $this->planned = EquipmentGain::plannedEyepieceSpec([
+                'focal_length' => (float) $this->focalLength,
+                'apparent_fov' => $this->apparentField !== '' ? (float) $this->apparentField : null,
+                // only one of the observer's sets
+                'instrument_set' => EyepieceGaps::set(Auth::user(), $this->instrumentSet)?->id,
+            ]);
+
+            return;
+        }
+        $binoculars = $this->plannedType === 'binoculars';
+        // binoculars are named in mm (10×50)
+        $inches = ! $binoculars && Auth::user()->showInches;
+        $this->validate([
+            'plannedType'   => ['required', 'in:telescope,binoculars'],
+            'aperture'      => ['required', 'numeric', 'min:'.($inches ? 0.5 : 10), 'max:'.($inches ? 80 : 2000)],
+            'focalLength'   => ['nullable', 'numeric', 'min:'.($inches ? 2 : 50), 'max:'.($inches ? 800 : 20000)],
+            'magnification' => ['nullable', 'integer', 'min:1', 'max:100'],
+        ], [], [
+            'aperture'      => __('aperture'),
+            'focalLength'   => __('focal length'),
+            'magnification' => __('magnification'),
+        ]);
+        $factor        = $inches ? 25.4 : 1.0;
+        $this->planned = EquipmentGain::plannedSpec([
+            'binoculars'    => $binoculars,
+            'aperture'      => (float) $this->aperture                                  * $factor,
+            'focal_length'  => $this->focalLength   !== '' ? (float) $this->focalLength * $factor : null,
+            'magnification' => $this->magnification !== '' ? (int) $this->magnification : null,
+        ]);
     }
 
     public function compareNone(): void
@@ -82,29 +171,48 @@ class WhatsNewEquipment extends Component
 
     private function gain(): ?EquipmentGain
     {
-        return EquipmentGain::for(Auth::user(), $this->kind, $this->equipmentId, $this->locationId, $this->kind === EquipmentGain::INSTRUMENT ? $this->compare : null);
+        return EquipmentGain::for(Auth::user(), $this->kind, $this->equipmentId, $this->locationId, $this->comparesInstruments() ? $this->compare : null, $this->planned);
+    }
+
+    private function comparesInstruments(): bool
+    {
+        return ! in_array($this->kind, [EquipmentGain::EYEPIECE, EquipmentGain::PLANNED_EYEPIECE], true);
+    }
+
+    private function isPlanned(): bool
+    {
+        return in_array($this->kind, [EquipmentGain::PLANNED, EquipmentGain::PLANNED_EYEPIECE], true);
     }
 
     public function render()
     {
-        $gain        = $this->gain();
-        $unavailable = $gain?->unavailable();
-        $result      = $unavailable === null ? $gain?->result() : null;
-        if ($gain && $unavailable === null && ! $result && ! $gain->pending()) {
+        $gain = $this->gain();
+        // a planned instrument or eyepiece waits for the form
+        $entered     = ! $this->isPlanned() || $this->planned !== [];
+        $unavailable = $entered ? $gain?->unavailable() : null;
+        $result      = $entered && $unavailable === null ? $gain?->result() : null;
+        if ($gain && $entered && $unavailable === null && ! $result && ! $gain->pending()) {
             $gain->queue();
             // a sync queue (tests, no worker configured) has it now
             $result = $gain->result();
         }
-        $failed = $gain && $unavailable === null && ! $result && $gain->failed();
+        $failed = $gain && $entered && $unavailable === null && ! $result && $gain->failed();
 
         return view('livewire.whats-new-equipment', [
             'gain'        => $gain,
+            'entered'     => $entered,
+            'inches'      => (bool) Auth::user()->showInches,
             'failed'      => $failed,
             'unavailable' => $unavailable,
             'result'      => $result,
             'shown'       => $result ? $gain->objects($result) : null,
-            'comparable'  => $gain && $gain->kind === EquipmentGain::INSTRUMENT
+            'comparable'  => $gain && $this->comparesInstruments()
                 ? $gain->comparable()->get()->mapWithKeys(fn ($instrument) => [(int) $instrument->id => html_entity_decode((string) $instrument->fullName(), ENT_QUOTES | ENT_HTML5, 'UTF-8')])->all()
+                : [],
+            'sets' => $this->kind === EquipmentGain::PLANNED_EYEPIECE
+                ? InstrumentSet::where('user_id', Auth::id())->orderBy('name')->get(['id', 'name'])
+                    ->mapWithKeys(fn ($set) => [(int) $set->id => html_entity_decode((string) $set->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')])
+                    ->all()
                 : [],
             'locations' => EquipmentGain::locations(Auth::user())
                 ->mapWithKeys(fn ($location) => [(int) $location->id => html_entity_decode((string) $location->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')])

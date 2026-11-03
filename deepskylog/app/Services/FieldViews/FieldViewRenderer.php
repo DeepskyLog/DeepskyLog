@@ -3,6 +3,7 @@
 namespace App\Services\FieldViews;
 
 use App\Services\AtmosphericExtinction;
+use App\Services\LocalHorizon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -31,9 +32,14 @@ use Illuminate\Support\Facades\Schema;
  * - up: 'zenith' or 'north'
  * - flip (top-bottom), flop (left-right): mirroring of the image
  * - horizon: whether to draw the ground and the compass points on it
+ * - local_horizon: the altitudes of the trees and houses around the location
+ *   (LocalHorizon::$altitudes), drawn as ground above the horizon
  * - extinction: whether stars fade towards the horizon
  * - constellations, star_names, object_labels: what to draw besides the stars
  * - overlays: [['radius_deg' => float, 'label' => string]], circles around the centre
+ * - route: a star-hop route (StarHopRoute): ['points' => [['ra', 'dec' (degrees),
+ *   'label' => ?string]], 'field_deg' => radius of the finder's field, drawn
+ *   as a dashed circle around every point but the last; 0 for none]
  * - theme: 'dark' (screen) or 'light' (print)
  * - size: width and height in pixels
  */
@@ -42,7 +48,7 @@ class FieldViewRenderer
     /** Stars brighter than this get their Bayer letter in views with star names. */
     private const STAR_NAME_MAGNITUDE = 3.0;
 
-    private const GREEK_LETTERS = [
+    public const GREEK_LETTERS = [
         'Alp' => 'α', 'Bet' => 'β', 'Gam' => 'γ', 'Del' => 'δ', 'Eps' => 'ε', 'Zet' => 'ζ', 'Eta' => 'η', 'The' => 'θ',
         'Iot' => 'ι', 'Kap' => 'κ', 'Lam' => 'λ', 'Mu' => 'μ', 'Nu' => 'ν', 'Xi' => 'ξ', 'Omi' => 'ο', 'Pi' => 'π',
         'Rho' => 'ρ', 'Sig' => 'σ', 'Tau' => 'τ', 'Ups' => 'υ', 'Phi' => 'φ', 'Chi' => 'χ', 'Psi' => 'ψ', 'Ome' => 'ω',
@@ -120,11 +126,13 @@ class FieldViewRenderer
             'flip'               => false,
             'flop'               => false,
             'horizon'            => false,
+            'local_horizon'      => null,
             'extinction'         => false,
             'constellations'     => false,
             'star_names'         => false,
             'object_labels'      => false,
             'overlays'           => [],
+            'route'              => null,
             'theme'              => 'dark',
             'size'               => 600,
         ];
@@ -152,8 +160,10 @@ class FieldViewRenderer
         $svg[] = $this->stars($s);
         if ($this->view['horizon'] && $this->hasTime()) {
             $svg[] = $this->ground($s);
+            $svg[] = $this->localHorizon($s);
         }
         $svg[] = $this->overlays($s);
+        $svg[] = $this->route($s);
         $svg[] = $this->targetMarker($s);
         // What lies outside the field is painted over rather than clipped:
         // not every SVG renderer (ImageMagick, dompdf) supports clip paths.
@@ -708,6 +718,65 @@ class FieldViewRenderer
         return $fill.sprintf('<circle cx="%s" cy="%s" r="%s" fill="none" stroke="%s" stroke-width="%s"/>', $this->f($cx), $this->f($cy), $this->f($r), $lineColor, $width);
     }
 
+    /**
+     * The local horizon: for each stretch of azimuth the part of the sky
+     * between the horizon and the trees and houses, as one path. Stretches
+     * that lie far outside the field are left out, as the projection blows
+     * up near the opposite point of the sky.
+     */
+    private function localHorizon(float $s): string
+    {
+        $altitudes = $this->view['local_horizon'];
+        if (! is_array($altitudes) || $altitudes === []) {
+            return '';
+        }
+        $horizon = LocalHorizon::fromArray($altitudes);
+        if ($horizon === null) {
+            return '';
+        }
+
+        $lst   = (float) $this->view['lst'];
+        $lat   = (float) $this->view['latitude'];
+        $point = function (float $alt, float $az) use ($lst, $lat): ?array {
+            [$ra, $dec] = self::horizontalToEquatorial($alt, $az, $lst, $lat);
+            $point      = $this->project($ra, $dec);
+
+            return $point !== null && hypot($point[0] - $this->centerX, $point[1] - $this->centerY) < 3 * $this->plotRadius ? $point : null;
+        };
+
+        $step  = 2.5;
+        $path  = '';
+        $edges = '';
+        for ($az = 0.0; $az < 360.0; $az += $step) {
+            $h1 = $horizon->altitudeAt($az);
+            $h2 = $horizon->altitudeAt($az + $step);
+            if ($h1 <= 0.0 && $h2 <= 0.0) {
+                continue;
+            }
+            $corners = [$point(0.0, $az), $point($h1, $az), $point($h2, $az + $step), $point(0.0, $az + $step)];
+            if (in_array(null, $corners, true)) {
+                continue;
+            }
+            $path  .= 'M'.implode('L', array_map(fn (array $p) => $this->f($p[0]).' '.$this->f($p[1]), $corners)).'Z';
+            $edges .= sprintf('M%s %sL%s %s', $this->f($corners[1][0]), $this->f($corners[1][1]), $this->f($corners[2][0]), $this->f($corners[2][1]));
+        }
+        if ($path === '') {
+            return '';
+        }
+
+        return sprintf(
+            '<path d="%s" fill="%s" fill-opacity="0.92" stroke="%s" stroke-width="%s"/><path d="%s" fill="none" stroke="%s" stroke-width="%s" stroke-dasharray="%s"/>',
+            $path,
+            $this->colors['ground'],
+            $this->colors['ground'],
+            $this->f(0.6 * $s),
+            $edges,
+            $this->colors['horizon'],
+            $this->f(1.2 * $s),
+            $this->f(4 * $s).' '.$this->f(3 * $s),
+        );
+    }
+
     private function circlePath(float $cx, float $cy, float $r): string
     {
         return sprintf('M%1$s %2$sa%3$s %3$s 0 1 0 %4$s 0a%3$s %3$s 0 1 0 %5$s 0Z', $this->f($cx - $r), $this->f($cy), $this->f($r), $this->f(2 * $r), $this->f(-2 * $r));
@@ -784,6 +853,63 @@ class FieldViewRenderer
             $out .= sprintf('<circle cx="%s" cy="%s" r="%s" fill="none" stroke="%s" stroke-width="%s" stroke-dasharray="%s"/>', $this->f($this->centerX), $this->f($this->centerY), $this->f($r), $this->colors['overlay'], $this->f(1.4 * $s), $this->f(6 * $s));
             if (! empty($overlay['label'])) {
                 $out .= sprintf('<text x="%s" y="%s" font-size="%s" fill="%s" text-anchor="middle">%s</text>', $this->f($this->centerX), $this->f($this->centerY - $r - 5 * $s), $this->f(18 * $s), $this->colors['overlay'], e($overlay['label']));
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * The star-hop route: a line from star to star, kept clear of the stars,
+     * the finder's field around each star and the labels of the stars.
+     */
+    private function route(float $s): string
+    {
+        $route  = $this->view['route'];
+        $points = [];
+        foreach (is_array($route) ? ($route['points'] ?? []) : [] as $point) {
+            $xy = $this->project((float) $point['ra'], (float) $point['dec']);
+            if ($xy === null) {
+                return '';
+            }
+            $points[] = $xy + [2 => $point['label'] ?? null];
+        }
+        if (count($points) < 2) {
+            return '';
+        }
+
+        $color = $this->colors['overlay'];
+        $gap   = 9 * $s;
+        $out   = '';
+        $field = (float) ($route['field_deg'] ?? 0);
+        if ($field > 0) {
+            $r = $this->overlayRadius($field);
+            foreach (array_slice($points, 0, -1) as [$x, $y]) {
+                $out .= sprintf('<circle cx="%s" cy="%s" r="%s" fill="none" stroke="%s" stroke-opacity="0.45" stroke-width="%s" stroke-dasharray="%s"/>', $this->f($x), $this->f($y), $this->f($r), $color, $this->f($s), $this->f(5 * $s));
+            }
+        }
+
+        $d = '';
+        for ($i = 1; $i < count($points); $i++) {
+            [$x0, $y0] = $points[$i - 1];
+            [$x1, $y1] = $points[$i];
+            $length    = hypot($x1 - $x0, $y1 - $y0);
+            // Clear of the reticle of the target at the end.
+            $end = $i === count($points) - 1 ? 2 * $gap : $gap;
+            if ($length <= $gap + $end) {
+                continue;
+            }
+            $ux = ($x1 - $x0) / $length;
+            $uy = ($y1 - $y0) / $length;
+            $d .= 'M'.$this->f($x0 + $ux * $gap).' '.$this->f($y0 + $uy * $gap).'L'.$this->f($x1 - $ux * $end).' '.$this->f($y1 - $uy * $end);
+        }
+        if ($d !== '') {
+            $out .= sprintf('<path d="%s" fill="none" stroke="%s" stroke-width="%s" stroke-linecap="round"/>', $d, $color, $this->f(2 * $s));
+        }
+
+        foreach ($points as [$x, $y, $label]) {
+            if ($label !== null && $label !== '' && $this->inField([$x, $y], -20 * $s)) {
+                $out .= sprintf('<text x="%s" y="%s" font-size="%s" font-weight="bold" fill="%s">%s</text>', $this->f($x + 10 * $s), $this->f($y - 8 * $s), $this->f(18 * $s), $color, e($label));
             }
         }
 

@@ -16,6 +16,12 @@
             >
                 {{ __("Add Location") }}
             </x-button>
+            <x-button
+                :href="route('location.best-site')"
+                class="ml-2 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
+            >
+                {{ __("Which of my sites tonight?") }}
+            </x-button>
         </div>
 
         <x-card>

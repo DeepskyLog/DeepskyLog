@@ -1,8 +1,9 @@
-@props (["nights", "listLinks" => true])
+@props (["nights", "listLinks" => true, "instrument" => null])
 
 {{--
-    The cloud forecast of nights (App\Services\Weather\NightForecast): per night the verdict, the dark hours,
-    the Moon, the clouds and the hourly cloud cover. With listLinks, a clear night links to the night list
+    The cloud forecast of nights (App\Services\Weather\NightForecast): per night the verdict, the seeing, the dark
+    hours, the Moon, the clouds, the dew, the hourly cloud cover and, for an instrument with a mirror, when to put it
+    outside to cool down (App\Services\Weather\CoolDownAdvice). With listLinks, a clear night links to the night list
     wizard, which uses the observer's standard location.
 --}}
 <div {{ $attributes->merge(["class" => "space-y-3 text-sm text-gray-400"]) }}>
@@ -11,7 +12,10 @@
             <div class="flex flex-wrap items-center gap-2">
                 <span class="font-semibold text-white">{{ \Carbon\Carbon::parse($night["night"])->locale(app()->getLocale())->isoFormat("ddd D MMM") }}</span>
                 <x-forecast-verdict :night="$night" />
-                @if ($listLinks && in_array($night["verdict"], ["clear_dark", "clear_moon"], true))
+                @if ($night["seeing"] ?? null)
+                    <x-forecast-seeing :seeing="$night['seeing']" />
+                @endif
+                @if ($listLinks && in_array($night["verdict"], ["clear_dark", "clear_twilight", "clear_moon"], true))
                     <a href="{{ route("observing-list.night", ["night" => $night["night"]]) }}" class="text-xs text-blue-400 hover:underline">{{ __("Make a list for this night") }}</a>
                 @endif
             </div>
@@ -20,7 +24,9 @@
                     {{
                         $night["dark"]["twilight"] === "astronomical"
                             ? __("Dark :from–:until", $night["dark"])
-                            : __("Nautical twilight :from–:until", $night["dark"])
+                            : (isset($night["dark"]["dark_from"])
+                                ? __("Nautical twilight :from–:until, completely dark :dark_from–:dark_until", $night["dark"])
+                                : __("Nautical twilight :from–:until", $night["dark"]))
                     }}
                     &middot;
                     {{
@@ -37,10 +43,13 @@
                 @elseif ($night["clear"] && $night["clear"]["minutes"] >= 60)
                     &middot; {{ __("Clear :from–:until", $night["clear"]) }}
                 @endif
-                @if ($night["dew"])
-                    &middot; {{ __("Risk of dew") }}
+                @if ($dew = \App\Services\Weather\NightForecast::dewLabel($night))
+                    &middot; {{ $dew }}
                 @endif
             </p>
+            @if ($night["clear"] && ($coolDown = \App\Services\Weather\CoolDownAdvice::forNight($night, $instrument)))
+                <p>{{ \App\Services\Weather\CoolDownAdvice::label($coolDown, $instrument) }}</p>
+            @endif
 
             @if ($night["hours"] !== [])
                 <x-forecast-hours :hours="$night['hours']" class="mt-1" />

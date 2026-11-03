@@ -32,12 +32,22 @@ class StarPartyNights
      */
     public static function night(StarParty $party, string $night): array
     {
-        $timezone = $party->timezone ?: 'UTC';
-        $key      = 'star_party_night:'.md5(json_encode([round($party->latitude, 4), round($party->longitude, 4), $timezone, $night]));
+        return self::at($party->latitude, $party->longitude, $party->elevation, $party->timezone ?: 'UTC', $night);
+    }
 
-        return Cache::remember($key, self::CACHE_SECONDS, function () use ($party, $night, $timezone) {
+    /**
+     * The same for any place, such as the site of a trip (TripPlanner).
+     *
+     * @return array{night: string, dark: ?array{from: string, until: string, twilight: string},
+     *     moon: ?array{fraction: int, from: string, until: string}, moonless_minutes: int}
+     */
+    public static function at(float $latitude, float $longitude, ?float $elevation, string $timezone, string $night): array
+    {
+        $key = 'star_party_night:'.md5(json_encode([round($latitude, 4), round($longitude, 4), $timezone, $night]));
+
+        return Cache::remember($key, self::CACHE_SECONDS, function () use ($latitude, $longitude, $elevation, $night, $timezone) {
             $result = ['night' => $night, 'dark' => null, 'moon' => null, 'moonless_minutes' => 0];
-            $window = NightWindow::for($party->latitude, $party->longitude, $night, $timezone);
+            $window = NightWindow::for($latitude, $longitude, $night, $timezone);
             if ($window === null) {
                 return $result;
             }
@@ -46,7 +56,7 @@ class StarPartyNights
             $result['dark'] = ['from' => $time($window->start), 'until' => $time($window->end), 'twilight' => $window->twilight];
             $moonless       = $window->end - $window->start;
 
-            $moon = new MoonlightSky($window, $party->longitude, (float) ($party->elevation ?? 0.0));
+            $moon = new MoonlightSky($window, $longitude, (float) ($elevation ?? 0.0));
             if ($up = $moon->upBetween()) {
                 $result['moon'] = ['fraction' => (int) round($moon->illuminatedFraction() * 100), 'from' => $time($up[0]), 'until' => $time($up[1])];
                 $moonless -= $up[1] - $up[0];

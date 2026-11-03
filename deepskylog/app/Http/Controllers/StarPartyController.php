@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\TranslateStarParty;
 use App\Mail\StarPartyInvitationMail;
+use App\Models\Club;
 use App\Models\Country;
 use App\Models\Location;
 use App\Models\StarParty;
@@ -101,13 +102,15 @@ class StarPartyController extends Controller
             return redirect()->route('star-parties.index')->with('error', $refusal);
         }
 
+        $clubs = $this->clubs($request->user());
         $party = new StarParty([
             'visibility'  => StarParty::PUBLIC,
             'language'    => $request->user()->observationlanguage ?: $request->user()->language ?: config('app.locale'),
             'location_id' => $request->user()->stdlocation,
+            'club_id'     => $clubs->firstWhere('slug', (string) $request->query('club'))?->id,
         ]);
 
-        return view('star-parties.form', ['party' => $party, 'locations' => $this->locations($request->user())]);
+        return view('star-parties.form', ['party' => $party, 'locations' => $this->locations($request->user()), 'clubs' => $clubs]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -137,7 +140,7 @@ class StarPartyController extends Controller
             $this->acceptInvitation($starParty, $token, $user);
         }
 
-        $starParty->load(['organiser', 'participants.user:id,name,slug,username,profile_photo_path']);
+        $starParty->load(['organiser', 'club', 'participants.user:id,name,slug,username,profile_photo_path']);
 
         $nights = [];
         $forecast = [];
@@ -199,7 +202,7 @@ class StarPartyController extends Controller
     {
         abort_unless($starParty->canBeManagedBy($request->user()), 403);
 
-        return view('star-parties.form', ['party' => $starParty, 'locations' => $this->locations($starParty->organiser)]);
+        return view('star-parties.form', ['party' => $starParty, 'locations' => $this->locations($starParty->organiser), 'clubs' => $this->clubs($starParty->organiser, $starParty->club)]);
     }
 
     public function update(Request $request, StarParty $starParty): RedirectResponse
@@ -290,8 +293,9 @@ class StarPartyController extends Controller
 
     /**
      * Invite observers (the multiselect posts 'receivers', a JSON list of
-     * usernames) and e-mail addresses ('emails', separated by commas,
-     * semicolons or new lines).
+     * usernames, and 'club_members' the members of the starparty's club) and
+     * e-mail addresses ('emails', separated by commas, semicolons or new
+     * lines).
      */
     public function invite(Request $request, StarParty $starParty): RedirectResponse
     {
@@ -304,6 +308,10 @@ class StarPartyController extends Controller
         ]);
 
         $usernames = $this->usernames($request);
+        if ($request->boolean('club_members') && $starParty->club) {
+            $usernames = collect($usernames)->concat($starParty->club->members()->pluck('username'))
+                ->unique(fn ($u) => mb_strtolower($u))->values()->all();
+        }
         $emails    = array_values(array_unique(array_filter(
             array_map(fn (string $e) => mb_strtolower(trim($e)), preg_split('/[\s,;]+/', (string) $request->input('emails', '')) ?: []),
             fn (string $e) => $e !== ''
@@ -312,7 +320,7 @@ class StarPartyController extends Controller
         if ($usernames === [] && $emails === []) {
             return back()->with('error', __('Choose the observers or give the e-mail addresses to invite.'));
         }
-        if (count($usernames) > MessagesController::MAX_RECEIVERS) {
+        if (count($usernames) > MessagesController::MAX_RECEIVERS && ! $request->boolean('club_members')) {
             return back()->with('error', __('You can invite at most :max observers at once.', ['max' => MessagesController::MAX_RECEIVERS]));
         }
         $invalid = array_filter($emails, fn (string $e) => filter_var($e, FILTER_VALIDATE_EMAIL) === false);
@@ -468,7 +476,16 @@ class StarPartyController extends Controller
             'website'                    => ['nullable', 'url:http,https', 'max:255'],
             'activity_radius_km'         => ['nullable', Rule::in(StarParty::RADIUS_OPTIONS)],
             'activity_participants_only' => ['nullable', 'boolean'],
+            'club_id'                    => ['nullable', 'integer'],
         ]);
+        // One of the organiser's clubs, or the club it already had
+        if (! empty($validated['club_id'])) {
+            $organiser = User::find($organiserId);
+            if ((int) $validated['club_id'] !== (int) $party->club_id && ! ($organiser && Club::ofMember($organiser)->whereKey($validated['club_id'])->exists())) {
+                throw ValidationException::withMessages(['club_id' => __('Choose one of your clubs.')]);
+            }
+        }
+        $validated['club_id'] = ($validated['club_id'] ?? null) ? (int) $validated['club_id'] : null;
         // The form always sends both; without them the earlier choice stays.
         $validated['activity_radius_km'] = (float) ($validated['activity_radius_km'] ?? $party->activity_radius_km);
         if ($request->has('activity_participants_only')) {
@@ -501,6 +518,21 @@ class StarPartyController extends Controller
         if ($translate && trim(strip_tags((string) $party->description)) !== '' && config('app.translate_observations')) {
             TranslateStarParty::dispatch($party->id);
         }
+    }
+
+    /**
+     * The clubs the organiser is a member of, and the club the starparty has.
+     *
+     * @return \Illuminate\Support\Collection<int, Club>
+     */
+    private function clubs(?User $user, ?Club $current = null)
+    {
+        $clubs = $user ? $user->clubs()->orderBy('name')->get(['clubs.id', 'clubs.name', 'clubs.slug']) : collect();
+        if ($current && ! $clubs->contains('id', $current->id)) {
+            $clubs->push($current);
+        }
+
+        return $clubs;
     }
 
     /** @return \Illuminate\Support\Collection<int, Location> the active locations of the observer */

@@ -9,7 +9,11 @@ use deepskylog\AstronomyLibrary\Time;
 /**
  * The dark part of a night at a location: from the end of astronomical
  * twilight in the evening to its begin the next morning, or, when it never
- * gets that dark, between the ends of nautical twilight.
+ * gets that dark or only for less than MIN_ASTRONOMICAL_MINUTES, between the
+ * ends of nautical twilight. Without that minimum the last nights before the
+ * summer solstice with astronomical darkness would have a window of half an
+ * hour, and the next night one of hours; $astronomical keeps the short dark
+ * part of such a nautical window.
  *
  * The local sidereal time over the window gives the highest altitude a fixed
  * point of the sky reaches in it, without stepping through the night.
@@ -19,12 +23,19 @@ class NightWindow
     /** The local sidereal time advances this many degrees a day. */
     private const SIDEREAL_DEGREES_PER_DAY = 360.98564736629;
 
+    /** A shorter astronomically dark window gives way to the nautical one. */
+    public const MIN_ASTRONOMICAL_MINUTES = 120;
+
+    /**
+     * @param  array{0: int, 1: int}|null  $astronomical  the astronomically dark part (timestamps) of a nautical window
+     */
     private function __construct(
         public readonly int $start,
         public readonly int $end,
         public readonly string $twilight,
         public readonly float $latitude,
         public readonly float $lstStart,
+        public readonly ?array $astronomical = null,
     ) {
     }
 
@@ -32,7 +43,9 @@ class NightWindow
      * The window of the night that starts on the evening of $night (Y-m-d in
      * $timezone), or null when it does not get darker than nautical twilight.
      * With $twilights ['nautical'] the window runs between the ends of
-     * nautical twilight (the Sun 12° below the horizon) in any case.
+     * nautical twilight (the Sun 12° below the horizon) in any case. A
+     * window shorter than MIN_ASTRONOMICAL_MINUTES gives way to the next
+     * twilight of the list, when there is one.
      *
      * @param  list<string>  $twilights  the twilights tried, darkest first
      */
@@ -42,14 +55,20 @@ class NightWindow
         $today    = date_sun_info($evening->getTimestamp(), $latitude, $longitude);
         $tomorrow = date_sun_info($evening->copy()->addDay()->getTimestamp(), $latitude, $longitude);
 
-        foreach ($twilights as $twilight) {
+        $astronomical = null;
+        foreach (array_values($twilights) as $i => $twilight) {
             $start = $today[$twilight.'_twilight_end']      ?? null;
             $end   = $tomorrow[$twilight.'_twilight_begin'] ?? null;
             if (! is_int($start) || ! is_int($end) || $end <= $start) {
                 continue;
             }
+            if ($twilight === 'astronomical' && $i < count($twilights) - 1 && $end - $start < self::MIN_ASTRONOMICAL_MINUTES * 60) {
+                $astronomical = [$start, $end];
 
-            return self::span($latitude, $longitude, $start, $end, $twilight);
+                continue;
+            }
+
+            return self::span($latitude, $longitude, $start, $end, $twilight, $astronomical);
         }
 
         return null;
@@ -59,12 +78,14 @@ class NightWindow
      * The window between two moments (timestamps) at the location, however
      * dark the sky is then, such as the hours an observer chose; $twilight
      * is 'hours' then.
+     *
+     * @param  array{0: int, 1: int}|null  $astronomical
      */
-    public static function span(float $latitude, float $longitude, int $start, int $end, string $twilight = 'hours'): self
+    public static function span(float $latitude, float $longitude, int $start, int $end, string $twilight = 'hours', ?array $astronomical = null): self
     {
         $sidereal = Time::meanSiderialTime(Carbon::createFromTimestamp($start, 'UTC'), new GeographicalCoordinates($longitude, $latitude));
 
-        return new self($start, $end, $twilight, $latitude, ($sidereal->hour + $sidereal->minute / 60 + $sidereal->second / 3600) * 15.0);
+        return new self($start, $end, $twilight, $latitude, ($sidereal->hour + $sidereal->minute / 60 + $sidereal->second / 3600) * 15.0, $astronomical);
     }
 
     /**
@@ -76,7 +97,7 @@ class NightWindow
         $start = max($start, $this->start);
         $end   = min($end, $this->end);
 
-        return $end > $start ? new self($start, $end, $this->twilight, $this->latitude, $this->siderealTime($start)) : null;
+        return $end > $start ? new self($start, $end, $this->twilight, $this->latitude, $this->siderealTime($start), $this->astronomical) : null;
     }
 
     /**

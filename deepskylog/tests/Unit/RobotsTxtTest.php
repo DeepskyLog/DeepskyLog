@@ -43,6 +43,7 @@ it('keeps crawlers off the exports', function (string $path) {
     '/observing-list/my-list/export/names.pdf',
     '/observing-list/my-list/export/argo.txt',
     '/observing-list/my-list/export/apd.apd',
+    '/observing-list/my-list/export/stellarium.sol',
     '/object/m-51/nearby-names.pdf',
     '/object/m-51/nearby-table.pdf',
     '/object/m-51/nearby-chart.pdf',

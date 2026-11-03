@@ -41,6 +41,21 @@ class Kernel extends ConsoleKernel
         // days, to the observers who come.
         $schedule->command('star-parties:send-reminders --apply')->dailyAt('08:00')->withoutOverlapping();
 
+        // The observations that look wrong (below the horizon, far too faint,
+        // duplicated): hourly those changed since the last run, weekly all,
+        // as a changed object, location or instrument changes the findings.
+        $schedule->command('observations:check-suspect')->hourlyAt(25)->withoutOverlapping();
+        $schedule->command('observations:check-suspect --all')->weeklyOn(0, '04:15')->withoutOverlapping();
+
+        // The weather of the nights of the sessions and observations from
+        // Open-Meteo's historical archive, a few days after them; hourly
+        // with at most 250 requests, so the archive fills in over a few days.
+        $schedule->command('weather:fill-nights --apply')->hourlyAt(35)->withoutOverlapping();
+
+        // "Your own eye": the detection threshold of the observers whose
+        // observations changed, fitted from what they saw and did not see.
+        $schedule->command('observers:fit-detection-thresholds')->dailyAt('04:45')->withoutOverlapping();
+
         // The reminder of the sessions of the last days without any
         // observation of their observer, to finish logging the night.
         $schedule->command('sessions:send-observation-reminders --apply')->dailyAt('10:00')->withoutOverlapping();
@@ -80,6 +95,10 @@ class Kernel extends ConsoleKernel
         // The observations the old site (DeepskyLog.old) created, changed or
         // deleted get the counters, session links and statistics of this site.
         $schedule->command('observations:apply-legacy-changes --apply')->everyMinute()->withoutOverlapping();
+
+        // "Observers who saw this also saw…" and the personal suggestions
+        // built on it, from the observations of the week (on the long queue).
+        $schedule->job(new \App\Jobs\ComputeObjectSimilarities())->weeklyOn(1, '03:50');
 
         $schedule->command('astronomy:updateCometPhotometry')->weeklyOn(2, '4:30');
         // Incremental search index reindex (one-run nightly; safe for production)

@@ -58,6 +58,12 @@
                             ])
                         @endif
                     @endauth
+
+                    <x-follow-object :target="$followTarget ?? null" />
+
+                    @if ($isDeepskyObject ?? false)
+                        <x-report-object-error :slug="$objSlugTop" />
+                    @endif
                 </div>
 
                 {{-- Summary row: object type, constellation and quick stats (observations/drawings, user-specific counts) --}}
@@ -250,7 +256,15 @@
                                     @if (!empty(trim($session->comments ?? '')))
                                         <tr>
                                             <td class="pr-4 font-medium">{{ __('Description') }}</td>
-                                            <td>{!! \App\Support\Html::purify($session->comments, true) !!}</td>
+                                            <td>
+                                                {!! \App\Support\Html::purify($session->comments, true) !!}
+                                                @if (!empty($session->plain_description))
+                                                    <div class="mt-1 text-sm text-gray-300" title="{{ __('dreyer.plain_words_title') }}">
+                                                        <span class="text-gray-400">{{ __('dreyer.plain_words') }}:</span>
+                                                        {{ $session->plain_description }}
+                                                    </div>
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endif
                                     @auth
@@ -717,6 +731,18 @@ try {
 
                             </div>
 
+                            {{-- The light curve of a variable star, nova or supernova from the estimates in DeepskyLog --}}
+                            @if (!empty($canonicalSlug) && !empty($session->name) && \App\Models\VariableStarEstimate::appliesTo($session->source_type_raw ?? null))
+                                <x-variable-star-light-curve :object-name="$session->name" :slug="$canonicalSlug" />
+                            @endif
+
+                            {{-- Finding notes of observers (deep-sky objects) --}}
+                            @if (!empty($session->name) && \App\Models\DeepskyObject::where('name', $session->name)->exists()
+                                && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
+                                @livewire('object-finding-notes', ['objectName' => $session->name], key('finding-notes-' . $session->name))
+                                @livewire('object-observing-requests', ['objectName' => $session->name], key('observing-requests-' . $session->name))
+                            @endif
+
                             {{-- Nearby objects (powergrid) --}}
                                 @if (isset($session->ra) &&
                                     isset($session->decl) &&
@@ -1176,6 +1202,18 @@ try {
                                 </div>
                             @endif
 
+                            {{-- One drawing per aperture class, linking to the comparison of the drawings --}}
+                            @if (!empty($canonicalSlug) && !empty($session->name)
+                                && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
+                                {{-- The smallest aperture and the brightest sky with which the object was seen --}}
+                                <x-aperture-records :object-name="$session->name" />
+                                {{-- How many observers saw it, per aperture class, next to the model --}}
+                                <x-seen-by-aperture :object-name="$session->name" />
+                                <x-drawing-apertures :object-name="$session->name" :slug="$canonicalSlug" />
+                                {{-- Observers who saw this also saw… --}}
+                                <x-also-seen :object-name="$session->name" />
+                            @endif
+
                             {{-- Sketches that were DeepskyLog sketch(s) of the week for this object --}}
                             @php
 $objectSketches = collect();
@@ -1272,6 +1310,13 @@ try {
                                                 class="text-gray-300 hover:underline">{{ __('All drawings') }}</a>
                                         @endif
                                     </li>
+                                    @if (!empty($canonicalSlug) && ($drawingsCount ?? 0) > 1
+                                        && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
+                                        <li>
+                                            <a href="{{ route('object.drawings.compare', ['slug' => $canonicalSlug]) }}"
+                                                class="text-gray-300 hover:underline">{{ __('Compare drawings by aperture') }}</a>
+                                        </li>
+                                    @endif
                                     {{-- The charts are only useful for deep-sky objects --}}
                                     @if ((!empty($canonicalSlug) || !empty($session->slug))
                                         && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
@@ -1510,16 +1555,16 @@ try {
                 </div>
         </div>
 
-<!-- Aladin Lite assets (inline so layout stack is not required) -->
-<link rel="stylesheet" href="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css">
 <!-- Tom Select removed: using native selects / WireUI styling instead -->
 
 <input type="hidden" id="object-id-hidden" value="{{ $session->id ?? '' }}">
 <!-- Fallback payload observer installer: ensures an observer is present even if earlier script didn't run -->
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script defer src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js"></script>
-<script src="/js/object-show-inline.js"></script>
+@if ($showSkyPreview ?? false)
+    @include('partials.aladin-assets')
+@endif
+<script src="/js/object-show-inline.js?v={{ @filemtime(public_path('js/object-show-inline.js')) }}"></script>
 
 <script>
 // Attach Save handler for Aladin preview defaults

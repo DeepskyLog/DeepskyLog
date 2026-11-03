@@ -9,6 +9,7 @@
     $time = fn ($moment) => $moment ? $moment->format('H:i') : null;
     $showViews = $views ? array_filter([
         'finder' => isset($views['views']['finder']['svg']) ? $views['views']['finder'] : null,
+        'star_hop' => isset($views['star_hop']['svg']) ? $views['star_hop'] : null,
         'telescope' => isset($views['views']['telescope']['svg']) ? $views['views']['telescope'] : null,
         'naked_eye' => isset($views['views']['naked_eye']['svg']) ? $views['views']['naked_eye'] : null,
     ]) : [];
@@ -52,6 +53,8 @@
         .meta { margin: 0; color: #d1d5db; }
         .note { margin: .5rem 0 0; color: #e5e7eb; }
         .muted { color: #9ca3af; font-size: .9rem; }
+        .hop-steps { margin: .25rem 0 .75rem !important; font-size: 1rem; }
+        .hop-steps li { margin: .2rem 0; }
         .log { display: block; width: 100%; margin: 1rem 0 .5rem; padding: 1.1rem; border: 0; border-radius: .75rem; background: #b91c1c; color: #fff; font-size: 1.6rem; font-weight: 800; text-align: center; text-decoration: none; cursor: pointer; }
         .row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
         .row.spread { justify-content: space-between; }
@@ -72,6 +75,32 @@
         dialog select, dialog textarea { width: 100%; padding: .5rem; border: 1px solid #374151; border-radius: .5rem; background: #000; color: #f3f4f6; font: inherit; }
         .queue li { margin: .35rem 0; }
         .queue .problem { color: #fca5a5; }
+        ul.tips { margin: .4rem 0; padding-left: 1.2rem; }
+        ul.tips li { margin: .3rem 0; color: #e5e7eb; }
+        .like { padding: .1rem .45rem; border: 1px solid #374151; border-radius: .4rem; background: transparent; color: #9ca3af; font: inherit; font-size: .85rem; cursor: pointer; }
+        .like[aria-pressed="true"] { border-color: #b91c1c; color: #fca5a5; }
+        .tip-form { display: flex; gap: .5rem; margin-top: .5rem; }
+        .tip-form input { flex: 1; min-width: 0; padding: .5rem; border: 1px solid #374151; border-radius: .5rem; background: #000; color: #f3f4f6; font: inherit; }
+        dialog.sketch { inset: 0; width: auto; max-width: none; height: auto; max-height: none; margin: 0; padding: .5rem; border: 0; border-radius: 0; background: #000; }
+        dialog.sketch[open] { display: flex; flex-direction: column; gap: .5rem; }
+        .sketch-stage { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+        .sketch-stage canvas { display: block; max-width: 100%; max-height: 100%; aspect-ratio: 1; touch-action: none; background: #000; }
+        .sketch-tools { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; }
+        .sketch-tools .button { padding: .5rem .7rem; }
+        .sketch-tools .button[aria-pressed="true"] { background: #1f2937; border-color: #d1d5db; color: #fff; }
+        .sketch-tools .gap { width: .6rem; }
+        .sketch-tools label.button { display: inline-flex; align-items: center; gap: .4rem; }
+        .sketch-tools input[type="range"] { width: 7rem; }
+        .sketch-labels { display: flex; flex-wrap: wrap; gap: .5rem; align-items: flex-start; justify-content: center; }
+        .sketch-labels[hidden] { display: none; }
+        .sketch-labels textarea { flex: 1 1 14rem; max-width: 24rem; min-height: 7rem; }
+        .sketch-labels img { width: 12rem; max-width: 100%; border: 1px solid #374151; background: #000; }
+        .sketch-thumb { display: block; width: 12rem; max-width: 100%; height: auto; margin: .4rem 0; border: 1px solid #374151; border-radius: .4rem; background: #000; }
+        ul.earlier { margin: .4rem 0 0; padding: 0; list-style: none; }
+        ul.earlier li { display: flex; gap: .75rem; align-items: flex-start; padding: .5rem 0; border-top: 1px solid #1f2937; }
+        ul.earlier li:first-child { border-top: 0; }
+        ul.earlier img { display: block; width: 6rem; height: 6rem; object-fit: cover; border: 1px solid #374151; border-radius: .4rem; background: #000; }
+        ul.earlier .note { margin-top: .25rem; font-size: .95rem; }
         .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     </style>
 </head>
@@ -138,7 +167,10 @@
 
             <a class="log" id="log-it" href="{{ route('observing-list.eyepiece.log', ['list' => $list, 'item' => $current['item']->id]) }}">{{ __('Log it') }}</a>
             <div class="row spread">
-                <button type="button" class="button" id="quick-log-open">{{ __('Quick note') }}</button>
+                <span class="row">
+                    <button type="button" class="button" id="quick-log-open">{{ __('Quick note') }}</button>
+                    <button type="button" class="button" id="sketch-open">{{ __('Sketch') }}</button>
+                </span>
                 @if ($session)
                     <span class="muted">{{ __('Session: :name', ['name' => html_entity_decode((string) $session->name)]) }}</span>
                 @endif
@@ -175,6 +207,83 @@
             @endif
         </nav>
 
+        {{-- The observer's own earlier observations of the object, to compare with --}}
+        @if ($earlier['observations'] !== [])
+            <section class="card" aria-labelledby="earlier-title">
+                <div class="label" id="earlier-title">{{ __('Your earlier observations') }}</div>
+                <ul class="earlier">
+                    @foreach ($earlier['observations'] as $observation)
+                        <li>
+                            @if ($observation['drawing'])
+                                <a href="{{ $observation['drawing'] }}" target="_blank" rel="noopener">
+                                    <img src="{{ $observation['drawing'] }}" data-offline-src alt="{{ __('Drawing of :object', ['object' => $current['name']]) }}" loading="lazy" />
+                                </a>
+                            @endif
+                            <div>
+                                <div class="meta">
+                                    @if ($observation['url'])
+                                        <a href="{{ $observation['url'] }}">{{ $observation['date'] }}</a>
+                                    @else
+                                        {{ $observation['date'] }}
+                                    @endif
+                                    {{ $observation['instrument'] ? '· '.$observation['instrument'] : '' }}
+                                    @if ($observation['not_seen'])
+                                        · <span class="muted">{{ __('Not seen') }}</span>
+                                    @endif
+                                </div>
+                                @if ($observation['description'] !== '')
+                                    <p class="note">{{ $observation['description'] }}</p>
+                                @endif
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+                @if ($earlier['total'] > count($earlier['observations']))
+                    <p class="muted">{{ __('You observed :object :count times before.', ['object' => $current['name'], 'count' => $earlier['total']]) }}</p>
+                @endif
+            </section>
+        @endif
+
+        {{-- Finding notes of observers, the most liked (deep-sky objects) --}}
+        @if ($current['object'])
+            <section class="card" aria-labelledby="finding-notes-title">
+                <div class="label" id="finding-notes-title">{{ __('Finding notes') }}</div>
+                @if ($findingNotes['notes']->isEmpty())
+                    <p class="muted">{{ __('No finding notes yet.') }}</p>
+                @else
+                    <ul class="tips">
+                        @foreach ($findingNotes['notes'] as $note)
+                            <li>
+                                <span>{{ $note->text }}</span>
+                                <span class="muted">— {{ html_entity_decode((string) ($note->user?->name ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</span>
+                                @if ($note->canBeLikedBy($user))
+                                    <button type="button" class="like" data-like="{{ route('finding-notes.like', $note) }}" aria-pressed="{{ $note->liked ? 'true' : 'false' }}" title="{{ __('Like') }}">♥ <span>{{ $note->likes_count }}</span></button>
+                                @elseif ($note->likes_count > 0)
+                                    <span class="muted" title="{{ __('Likes') }}">♥ {{ $note->likes_count }}</span>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                    @if ($findingNotes['total'] > $findingNotes['notes']->count())
+                        <a class="muted" href="{{ route('object.show', ['slug' => $current['slug']]) }}#finding-notes">{{ __('All :count finding notes', ['count' => $findingNotes['total']]) }}</a>
+                    @endif
+                @endif
+                <details @if ($errors->has('text')) open @endif>
+                    <summary class="muted">{{ __('Add finding note') }}</summary>
+                    <form method="POST" action="{{ route('finding-notes.store') }}" class="tip-form">
+                        @csrf
+                        <input type="hidden" name="object_name" value="{{ $current['object']->name }}" />
+                        <input type="text" name="text" maxlength="{{ \App\Models\ObjectFindingNote::MAX_LENGTH }}" required
+                            value="{{ old('text') }}" aria-label="{{ __('Finding note') }}" placeholder="{{ __('E.g. hop from ζ Ori, use the UHC filter') }}" />
+                        <button type="submit" class="button">{{ __('Save') }}</button>
+                    </form>
+                    @error('text')
+                        <p class="error">{{ $message }}</p>
+                    @enderror
+                </details>
+            </section>
+        @endif
+
         {{-- Charts --}}
         <section>
             @if ($showViews !== [])
@@ -188,10 +297,15 @@
                         <p class="muted">
                             {{ implode(' · ', array_filter([
                                 $view['subtitle'] ?? null,
-                                __('Field of view: :fov', ['fov' => $view['fov']]),
-                                __('Limiting magnitude: :mag', ['mag' => number_format($view['limit'], 1)]),
+                                __('Field of view: :fov', ['fov' => $view['field'] ?? $view['fov']]),
+                                isset($view['steps'])
+                                    ? __('Stars to magnitude :mag', ['mag' => number_format($view['limit'], 1)])
+                                    : __('Limiting magnitude: :mag', ['mag' => number_format($view['limit'], 1)]),
                             ])) }}
                         </p>
+                        @isset($view['steps'])
+                            @include('partials.star-hop-steps', ['starHop' => $view, 'object' => $current['name'], 'class' => 'hop-steps'])
+                        @endisset
                         @if (! empty($view['contrast']['category']) && $view['contrast']['value'] !== null)
                             <p class="muted">{{ __('contrast.reserve.summary', ['value' => number_format($view['contrast']['value'], 2), 'category' => __('contrast.reserve.category.'.$view['contrast']['category'])]) }}</p>
                         @endif
@@ -203,6 +317,9 @@
                 @endforeach
                 @if (isset($views['views']['finder']['message']))
                     <p class="muted">{{ $views['views']['finder']['message'] }}</p>
+                @endif
+                @if (isset($views['star_hop']['message']))
+                    <p class="muted">{{ $views['star_hop']['message'] }}</p>
                 @endif
                 @foreach ($views['warnings'] ?? [] as $warning)
                     <p class="muted">{{ $warning }}</p>
@@ -305,13 +422,21 @@
                 </select>
             @endif
             <label for="quick-log-description">{{ __('Description') }}</label>
-            <textarea id="quick-log-description" rows="6" maxlength="{{ \App\Services\AtTheEyepiece::MAX_DESCRIPTION }}" required></textarea>
+            <textarea id="quick-log-description" rows="6" maxlength="{{ \App\Services\AtTheEyepiece::MAX_DESCRIPTION }}"></textarea>
             <div class="row" style="margin-top:.5rem">
                 <button type="button" class="button" id="quick-log-dictate" aria-pressed="false" hidden>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0 0 14 0v-1M12 18v4"/></svg>
                     <span data-dictation-label>{{ __('Dictate') }}</span>
                 </button>
                 <span class="muted" id="quick-log-dictation" role="status" aria-live="polite"></span>
+            </div>
+            <div id="quick-log-sketch" hidden>
+                <label>{{ __('Sketch') }}</label>
+                <img class="sketch-thumb" id="quick-log-sketch-image" alt="{{ __('Sketch') }}" />
+            </div>
+            <div class="row" style="margin-top:.5rem">
+                <button type="button" class="button" id="quick-log-sketch-edit">{{ __('Add a sketch') }}</button>
+                <button type="button" class="button" id="quick-log-sketch-remove" hidden>{{ __('Remove the sketch') }}</button>
             </div>
             <p class="muted">{{ __('Saved with the location and equipment of your last observation tonight, else your standard ones. Complete it later on the observation page.') }}</p>
             <p class="error" id="quick-log-error" hidden></p>
@@ -320,6 +445,55 @@
                 <button type="submit" class="button" style="border-color:#b91c1c">{{ __('Save') }}</button>
             </div>
         </form>
+    </dialog>
+
+    {{-- Sketch pad: light on black as in the eyepiece, the field circle to
+         the edges; saved with the Quick note as it is drawn
+         (AtTheEyepiece::saveDrawing()) --}}
+    <dialog id="sketch-pad" class="sketch" aria-labelledby="sketch-title">
+        <div class="row spread">
+            <span class="label" id="sketch-title">{{ __('Sketch') }} · {{ $current['name'] }}</span>
+            <span class="muted" id="sketch-up"></span>
+        </div>
+        <div class="sketch-stage">
+            <canvas id="sketch-canvas" width="1000" height="1000" role="img" aria-label="{{ __('Sketch of :object', ['object' => $current['name']]) }}"></canvas>
+        </div>
+        <div class="sketch-tools" role="toolbar" aria-label="{{ __('Tools') }}">
+            <button type="button" class="button" data-tool="soft" aria-pressed="true">{{ __('Soft') }}</button>
+            <button type="button" class="button" data-tool="hard" aria-pressed="false">{{ __('Hard') }}</button>
+            <button type="button" class="button" data-tool="star" aria-pressed="false">{{ __('Star') }}</button>
+            <button type="button" class="button" data-tool="eraser" aria-pressed="false">{{ __('Eraser') }}</button>
+            @if ($planetTemplate)
+                {{-- Belts and markings on a filled disk --}}
+                <button type="button" class="button" data-tool="dark" aria-pressed="false">{{ __('Darken') }}</button>
+            @endif
+            <span class="gap"></span>
+            <button type="button" class="button" data-size="0" aria-pressed="false" title="{{ __('Small') }}">S</button>
+            <button type="button" class="button" data-size="1" aria-pressed="true" title="{{ __('Medium') }}">M</button>
+            <button type="button" class="button" data-size="2" aria-pressed="false" title="{{ __('Large') }}">L</button>
+            <span class="gap"></span>
+            <button type="button" class="button" id="sketch-undo">{{ __('Undo') }}</button>
+            <button type="button" class="button" id="sketch-clear">{{ __('Clear') }}</button>
+        </div>
+        <div class="sketch-tools">
+            <label class="button">{{ __('Field brightness') }} <input type="range" id="sketch-brightness" min="0" max="80" step="2" /></label>
+            <label class="button"><input type="checkbox" id="sketch-labels-on" /> {{ __('Details on the sketch') }}</label>
+            @if ($planetTemplate)
+                <label class="button"><input type="checkbox" id="sketch-outline-on" /> {{ __('Outline of the planet') }}</label>
+                <button type="button" class="button" id="sketch-fill">{{ __('Fill the disk') }}</button>
+            @endif
+            <button type="button" class="button" id="sketch-labels-edit" aria-expanded="false" aria-controls="sketch-labels">{{ __('Edit the details') }}</button>
+        </div>
+        {{-- The date, object and constellation come first; these lines (equipment,
+             site, sky) go at the bottom and can be changed --}}
+        <div class="sketch-labels" id="sketch-labels" hidden>
+            <textarea id="sketch-labels-text" rows="5" aria-label="{{ __('Details on the sketch, one per line') }}"></textarea>
+            <img id="sketch-labels-preview" alt="{{ __('Sketch') }}" />
+        </div>
+        <div class="row spread">
+            <button type="button" class="button" id="sketch-close">{{ __('Close') }}</button>
+            <button type="button" class="button" id="sketch-done" style="border-color:#b91c1c">{{ __('Continue to the note') }}</button>
+        </div>
     </dialog>
 
     @php
@@ -335,6 +509,16 @@
             'language' => $user->observationlanguage ?: ($user->language ?: app()->getLocale()),
             'item' => $current['item']->id,
             'object' => $current['name'],
+            // How the field views turn the field: the sketch is drawn as seen
+            // Unit vectors (x right, y down) of north and west in the view
+            'compass' => $compass,
+            'compassLabels' => ['north' => __('N'), 'west' => __('W')],
+            'sketchField' => \App\Services\AtTheEyepiece::SKETCH_FIELD,
+            'constellation' => $details['constellation'],
+            'sketchLabels' => $sketchLabels,
+            'up' => $sketchOrientation ? ($sketchOrientation === 'zenith' ? __('Zenith up, as in the telescope view') : __('North up, as in the telescope view')) : '',
+            // The disk of a planet as drawing template (PlanetSketchTemplate)
+            'planet' => $planetTemplate,
             'following' => $following,
             // Only a list with times follows the clock
             'sequence' => $timed ? $entries->map(fn ($entry) => ['id' => $entry['item']->id, 'at' => $entry['at']->timestamp])->values() : [],
@@ -352,7 +536,13 @@
                 'login' => __('Log in again to send the observations kept on this device.'),
                 'remove' => __('Remove'),
                 'removeConfirm' => __('Remove this observation from this device? It has not been sent.'),
-                'empty' => __('Write what you saw.'),
+                'empty' => __('Write what you saw, or add a sketch.'),
+                'full' => __('There is no room left on this device: send the observations waiting first.'),
+                'sketch' => __('sketch'),
+                'addSketch' => __('Add a sketch'),
+                'editSketch' => __('Edit the sketch'),
+                'clearConfirm' => __('Clear the whole sketch?'),
+                'removeSketchConfirm' => __('Remove the sketch?'),
                 'at' => __('At :time'),
                 'copied' => __('Copied: paste it in the search of SkySafari.'),
                 'noSkySafari' => __('SkySafari did not open: copy the name and paste it in its search.'),
@@ -376,8 +566,10 @@
             var storage = function (store, key, value) {
                 try {
                     if (value === undefined) return window[store].getItem(key);
-                    window[store].setItem(key, value);
-                } catch (e) { return null; }
+                    if (value === null) window[store].removeItem(key);
+                    else window[store].setItem(key, value);
+                    return true;
+                } catch (e) { return value === undefined ? null : false; }
             };
 
             // The clock and the minutes to or since each time, at the location
@@ -415,6 +607,24 @@
             }
             tick();
             setInterval(function () { tick(); follow(); }, 15000);
+
+            // Liking a finding note (needs a connection)
+            document.querySelectorAll('[data-like]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    button.disabled = true;
+                    fetch(button.getAttribute('data-like'), {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
+                    }).then(function (response) {
+                        if (! response.ok) throw new Error(response.status);
+                        return response.json();
+                    }).then(function (result) {
+                        button.setAttribute('aria-pressed', result.liked ? 'true' : 'false');
+                        button.querySelector('span').textContent = result.count;
+                    }).catch(function () {}).then(function () { button.disabled = false; });
+                });
+            });
 
             // Charts
             document.querySelectorAll('[data-view]').forEach(function (tab) {
@@ -473,7 +683,12 @@
             function queue() {
                 try { return JSON.parse(storage('localStorage', QUEUE) || '[]'); } catch (e) { return []; }
             }
-            function saveQueue(entries) { storage('localStorage', QUEUE, JSON.stringify(entries)); renderQueue(); }
+            // False when the device has no room left (a sketch takes some)
+            function saveQueue(entries) {
+                var saved = storage('localStorage', QUEUE, JSON.stringify(entries)) === true;
+                renderQueue();
+                return saved;
+            }
             var queueStatus = document.getElementById('queue-status');
             function renderQueue(status) {
                 var entries = queue();
@@ -483,7 +698,7 @@
                 list.textContent = '';
                 entries.forEach(function (entry) {
                     var li = document.createElement('li');
-                    li.textContent = entry.object + ' · ' + hm.format(new Date(entry.observed_at)) + ' ';
+                    li.textContent = entry.object + ' · ' + hm.format(new Date(entry.observed_at)) + (entry.drawing ? ' · ' + texts.sketch : '') + ' ';
                     if (entry.problem) {
                         var problem = document.createElement('div');
                         problem.className = 'problem';
@@ -520,7 +735,7 @@
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': token },
-                    body: JSON.stringify({ item: entry.item, observed_at: entry.observed_at, description: entry.description, visibility: entry.visibility, user: entry.user }),
+                    body: JSON.stringify({ item: entry.item, observed_at: entry.observed_at, description: entry.description, visibility: entry.visibility, user: entry.user, drawing: entry.drawing || null }),
                 });
             }
             var sending = false;
@@ -573,6 +788,406 @@
             renderQueue();
             send();
 
+            // Sketch pad: strokes in canvas pixels, light on black, kept on
+            // the device per object until the note is saved, so a reload or
+            // the next object does not lose it. The image is the strokes,
+            // screened over the grey of the field (Field brightness), black
+            // outside the field circle and the circle itself; with the
+            // details on, a wider image with the date, object and
+            // constellation at the top left and the editable lines of the
+            // equipment at the bottom left, the field still in the middle
+            // (SketchOverlay takes the field from the smaller side).
+            var sketch = (function () {
+                var SIZE = 1000;
+                var RADIUS = SIZE / 2 * data.sketchField;
+                var DRAFT = 'dsl-eyepiece-sketch:' + data.list + ':' + data.item;
+                // The field brightness and details on or off, for every sketch on this device
+                var STYLE = 'dsl-eyepiece-sketch-style';
+                var MARGIN = 300;
+                var style = { brightness: 40, labels: true, outline: true };
+                try {
+                    var kept = JSON.parse(storage('localStorage', STYLE) || 'null');
+                    if (kept && typeof kept.brightness === 'number') style.brightness = kept.brightness;
+                    if (kept && typeof kept.labels === 'boolean') style.labels = kept.labels;
+                    if (kept && typeof kept.outline === 'boolean') style.outline = kept.outline;
+                } catch (e) {}
+                // Per tool the small, medium and large size (pixels)
+                var SIZES = { soft: [14, 28, 56], dark: [14, 28, 56], hard: [1.5, 3, 6], star: [2, 3.5, 6], eraser: [10, 24, 50] };
+                // A planet's template fills this part of the field circle
+                var planet = data.planet;
+                var TEMPLATE = planet ? RADIUS * 0.82 / planet.extent : 0;
+                var dialog = document.getElementById('sketch-pad');
+                var canvas = document.getElementById('sketch-canvas');
+                var context = canvas.getContext('2d');
+                var paint = document.createElement('canvas');
+                paint.width = paint.height = SIZE;
+                var ink = paint.getContext('2d');
+                var tool = 'soft';
+                var size = 1;
+                var strokes = [];
+                var started = null;
+                var labels = null;
+                var current = null;
+                var queued = false;
+                try {
+                    var draft = JSON.parse(storage('localStorage', DRAFT) || 'null');
+                    if (draft && Array.isArray(draft.strokes)) { strokes = draft.strokes; started = draft.started || null; }
+                    if (draft && typeof draft.labels === 'string') labels = draft.labels;
+                } catch (e) {}
+                showUp();
+                var labelsText = document.getElementById('sketch-labels-text');
+                var labelsPanel = document.getElementById('sketch-labels');
+                var labelsPreview = document.getElementById('sketch-labels-preview');
+                var labelsOn = document.getElementById('sketch-labels-on');
+                var brightness = document.getElementById('sketch-brightness');
+                labelsText.value = labels !== null ? labels : (data.sketchLabels || []).join('\n');
+                labelsOn.checked = style.labels;
+                brightness.value = style.brightness;
+
+                function keep() {
+                    var edited = labelsText.value !== (data.sketchLabels || []).join('\n');
+                    storage('localStorage', DRAFT, strokes.length || edited ? JSON.stringify({ strokes: strokes, started: started, labels: edited ? labelsText.value : null }) : null);
+                }
+                function keepStyle() {
+                    storage('localStorage', STYLE, JSON.stringify(style));
+                }
+                function dab(x, y, radius, alpha, rgb) {
+                    rgb = rgb || '255,255,255';
+                    var gradient = ink.createRadialGradient(x, y, 0, x, y, radius);
+                    gradient.addColorStop(0, 'rgba(' + rgb + ',' + alpha + ')');
+                    gradient.addColorStop(1, 'rgba(' + rgb + ',0)');
+                    ink.fillStyle = gradient;
+                    ink.beginPath();
+                    ink.arc(x, y, radius, 0, 2 * Math.PI);
+                    ink.fill();
+                }
+                function line(a, b, colour, width) {
+                    ink.strokeStyle = colour;
+                    ink.lineWidth = width;
+                    ink.lineCap = ink.lineJoin = 'round';
+                    ink.beginPath();
+                    ink.moveTo(a[0], a[1]);
+                    ink.lineTo(b[0] + (a[0] === b[0] && a[1] === b[1] ? 0.01 : 0), b[1]);
+                    ink.stroke();
+                }
+                // Paint the points of a stroke from index `from` on; a soft
+                // stroke lays dabs a quarter of its radius apart
+                // A point of the planet [west, north] (equatorial radii) on
+                // the canvas, turned and mirrored as N and W of the view
+                function place(point) {
+                    var north = data.compass ? data.compass.north : [0, -1];
+                    var west = data.compass ? data.compass.west : [1, 0];
+                    return [
+                        SIZE / 2 + TEMPLATE * (point[0] * west[0] + point[1] * north[0]),
+                        SIZE / 2 + TEMPLATE * (point[0] * west[1] + point[1] * north[1]),
+                    ];
+                }
+                function trace(pen, points, closed) {
+                    pen.beginPath();
+                    points.forEach(function (point, i) {
+                        var p = place(point);
+                        if (i === 0) pen.moveTo(p[0], p[1]); else pen.lineTo(p[0], p[1]);
+                    });
+                    if (closed) pen.closePath();
+                }
+                function draw(stroke, from) {
+                    var points = stroke.points;
+                    // "Fill the disk": the lit disk (rings, caps) in its
+                    // shades, the night side black, painted back to front
+                    if (stroke.tool === 'disk') {
+                        if (! planet) return;
+                        planet.fills.forEach(function (fill) {
+                            var level = Math.round(fill.level * 255);
+                            ink.fillStyle = 'rgb(' + level + ',' + level + ',' + level + ')';
+                            trace(ink, fill.points, true);
+                            ink.fill();
+                        });
+                        return;
+                    }
+                    var radius = SIZES[stroke.tool][stroke.size];
+                    if (stroke.tool === 'star') {
+                        dab(points[0][0], points[0][1], radius * 2.2, 0.9);
+                        ink.fillStyle = '#fff';
+                        ink.beginPath();
+                        ink.arc(points[0][0], points[0][1], radius * 0.6, 0, 2 * Math.PI);
+                        ink.fill();
+                        return;
+                    }
+                    for (var i = from; i < points.length; i++) {
+                        var a = points[Math.max(i - 1, 0)];
+                        var b = points[i];
+                        if (stroke.tool !== 'soft' && stroke.tool !== 'dark') {
+                            line(a, b, stroke.tool === 'eraser' ? '#000' : '#fff', stroke.tool === 'eraser' ? 2 * radius : radius);
+                            continue;
+                        }
+                        var spacing = radius / 4;
+                        var rgb = stroke.tool === 'dark' ? '0,0,0' : null;
+                        if (i === 0) { dab(b[0], b[1], radius, 0.06, rgb); stroke.carry = 0; continue; }
+                        var length = Math.hypot(b[0] - a[0], b[1] - a[1]);
+                        var t = spacing - (stroke.carry || 0);
+                        for (; t <= length; t += spacing) {
+                            dab(a[0] + (b[0] - a[0]) * t / length, a[1] + (b[1] - a[1]) * t / length, radius, 0.06, rgb);
+                        }
+                        stroke.carry = length - (t - spacing);
+                    }
+                }
+                function compose() {
+                    queued = false;
+                    context.fillStyle = '#000';
+                    context.fillRect(0, 0, SIZE, SIZE);
+                    context.save();
+                    context.beginPath();
+                    context.arc(SIZE / 2, SIZE / 2, RADIUS, 0, 2 * Math.PI);
+                    context.clip();
+                    // The grey of the field, darker towards the edge as in an
+                    // eyepiece; the strokes are screened over it, so the
+                    // eraser (black) gives the grey back
+                    if (style.brightness > 0) {
+                        var grey = function (level) { level = Math.round(level); return 'rgb(' + level + ',' + level + ',' + level + ')'; };
+                        var field = context.createRadialGradient(SIZE / 2, SIZE / 2, 0, SIZE / 2, SIZE / 2, RADIUS);
+                        field.addColorStop(0, grey(style.brightness));
+                        field.addColorStop(0.8, grey(style.brightness * 0.95));
+                        field.addColorStop(1, grey(style.brightness * 0.45));
+                        context.fillStyle = field;
+                        context.fillRect(0, 0, SIZE, SIZE);
+                    }
+                    // The outline of the planet under the strokes, which a
+                    // filled disk lightens but leaves visible
+                    if (planet && style.outline) {
+                        context.strokeStyle = '#6b6b6b';
+                        context.lineWidth = 2;
+                        context.lineJoin = 'round';
+                        planet.lines.forEach(function (line) {
+                            trace(context, line.points, line.closed);
+                            context.stroke();
+                        });
+                    }
+                    context.globalCompositeOperation = 'screen';
+                    context.drawImage(paint, 0, 0);
+                    context.restore();
+                    context.strokeStyle = '#555';
+                    context.lineWidth = 3;
+                    context.beginPath();
+                    context.arc(SIZE / 2, SIZE / 2, RADIUS, 0, 2 * Math.PI);
+                    context.stroke();
+                    // N and W outside the rim, with a tick, as on a sketch on paper
+                    if (data.compass) {
+                        context.fillStyle = context.strokeStyle = '#888';
+                        context.font = 'bold 40px system-ui, sans-serif';
+                        context.textAlign = 'center';
+                        context.textBaseline = 'middle';
+                        ['north', 'west'].forEach(function (key) {
+                            var d = data.compass[key];
+                            context.beginPath();
+                            context.moveTo(SIZE / 2 + d[0] * RADIUS, SIZE / 2 + d[1] * RADIUS);
+                            context.lineTo(SIZE / 2 + d[0] * (RADIUS + 12), SIZE / 2 + d[1] * (RADIUS + 12));
+                            context.stroke();
+                            context.fillText(data.compassLabels[key], SIZE / 2 + d[0] * (RADIUS + 36), SIZE / 2 + d[1] * (RADIUS + 36));
+                        });
+                    }
+                }
+                function show() {
+                    if (! queued) { queued = true; window.requestAnimationFrame(compose); }
+                }
+                // "2025/02/01 21:55" at the location
+                function moment(date) {
+                    var parts = {};
+                    try {
+                        new Intl.DateTimeFormat('en-CA', { timeZone: data.timezone, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+                            .formatToParts(date).forEach(function (part) { parts[part.type] = part.value; });
+                    } catch (e) {
+                        return date.toLocaleString();
+                    }
+                    return parts.year + '/' + parts.month + '/' + parts.day + ' ' + parts.hour + ':' + parts.minute;
+                }
+                // The central meridians of the planet when the sketch was
+                // begun: "CM I 123.4° · CM II 234.5°"
+                function meridians() {
+                    if (! planet || ! planet.meridians.length) return '';
+                    var at = started ? new Date(started).getTime() : Date.now();
+                    var hours = (at - planet.at * 1000) / 3600000;
+                    return planet.meridians.map(function (meridian) {
+                        var value = ((meridian.value + meridian.rate * hours) % 360 + 360) % 360;
+                        return meridian.label + ' ' + value.toFixed(1) + '°';
+                    }).join(' · ');
+                }
+                function showUp() {
+                    document.getElementById('sketch-up').textContent = [data.up || '', meridians()].filter(Boolean).join(' · ');
+                }
+                // The sketch with the details beside the field: each line as
+                // large as fits between the edge and the field circle with N and W
+                function labelled() {
+                    compose();
+                    var width = SIZE + 2 * MARGIN;
+                    var out = document.createElement('canvas');
+                    out.width = width;
+                    out.height = SIZE;
+                    var pen = out.getContext('2d');
+                    pen.fillStyle = '#000';
+                    pen.fillRect(0, 0, width, SIZE);
+                    pen.drawImage(canvas, MARGIN, 0);
+                    var PAD = 28, FONT = 38, LINE = 1.3;
+                    var centreX = MARGIN + SIZE / 2, centreY = SIZE / 2;
+                    var clear = RADIUS + 64;
+                    function write(text, top, colour) {
+                        var bottom = top + FONT * LINE;
+                        var dy = top <= centreY && bottom >= centreY ? 0 : Math.min(Math.abs(top - centreY), Math.abs(bottom - centreY));
+                        var right = dy >= clear ? width - PAD : centreX - Math.sqrt(clear * clear - dy * dy);
+                        pen.font = FONT + 'px system-ui, sans-serif';
+                        var size = Math.max(16, Math.min(FONT, FONT * (right - PAD) / Math.max(1, pen.measureText(text).width)));
+                        pen.font = size + 'px system-ui, sans-serif';
+                        pen.fillStyle = colour;
+                        pen.textBaseline = 'top';
+                        pen.textAlign = 'left';
+                        pen.fillText(text, PAD, top + (FONT - size) * 0.8);
+                    }
+                    var head = [
+                        [moment(started ? new Date(started) : new Date()), '#d4d4d4'],
+                        [data.object, '#d4d4d4'],
+                        [data.constellation || '', '#c4f1f6'],
+                        [meridians(), '#d4d4d4'],
+                    ].filter(function (line) { return line[0]; });
+                    head.forEach(function (line, i) { write(line[0], PAD + i * FONT * LINE, line[1]); });
+                    var foot = labelsText.value.split('\n').map(function (line) { return line.trim(); }).filter(Boolean);
+                    foot.forEach(function (line, i) { write(line, SIZE - PAD - (foot.length - i) * FONT * LINE, '#ffffff'); });
+                    return out;
+                }
+                function preview() {
+                    if (! labelsPanel.hidden) labelsPreview.src = api.image(384);
+                }
+                function redraw() {
+                    ink.fillStyle = '#000';
+                    ink.fillRect(0, 0, SIZE, SIZE);
+                    strokes.forEach(function (stroke) { draw(stroke, 0); });
+                    compose();
+                }
+                function point(event) {
+                    var box = canvas.getBoundingClientRect();
+                    return [
+                        Math.round((event.clientX - box.left) / box.width * SIZE * 10) / 10,
+                        Math.round((event.clientY - box.top) / box.height * SIZE * 10) / 10,
+                    ];
+                }
+                canvas.addEventListener('pointerdown', function (event) {
+                    event.preventDefault();
+                    canvas.setPointerCapture(event.pointerId);
+                    if (! started) started = new Date().toISOString();
+                    current = { tool: tool, size: size, points: [point(event)] };
+                    strokes.push(current);
+                    draw(current, 0);
+                    show();
+                    if (tool === 'star') { current = null; keep(); }
+                });
+                canvas.addEventListener('pointermove', function (event) {
+                    if (! current) return;
+                    var events = event.getCoalescedEvents ? event.getCoalescedEvents() : [event];
+                    var from = current.points.length;
+                    (events.length ? events : [event]).forEach(function (one) { current.points.push(point(one)); });
+                    draw(current, from);
+                    show();
+                });
+                ['pointerup', 'pointercancel'].forEach(function (name) {
+                    canvas.addEventListener(name, function () {
+                        if (! current) return;
+                        delete current.carry;
+                        current = null;
+                        keep();
+                    });
+                });
+                document.querySelectorAll('[data-tool]').forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        tool = button.getAttribute('data-tool');
+                        document.querySelectorAll('[data-tool]').forEach(function (other) { other.setAttribute('aria-pressed', other === button ? 'true' : 'false'); });
+                    });
+                });
+                document.querySelectorAll('[data-size]').forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        size = Number(button.getAttribute('data-size'));
+                        document.querySelectorAll('[data-size]').forEach(function (other) { other.setAttribute('aria-pressed', other === button ? 'true' : 'false'); });
+                    });
+                });
+                document.getElementById('sketch-undo').addEventListener('click', function () {
+                    strokes.pop();
+                    keep();
+                    redraw();
+                });
+                document.getElementById('sketch-clear').addEventListener('click', function () {
+                    if (strokes.length && window.confirm(texts.clearConfirm)) api.clear();
+                });
+                document.getElementById('sketch-close').addEventListener('click', function () { dialog.close(); });
+                brightness.addEventListener('input', function () {
+                    style.brightness = Number(brightness.value);
+                    keepStyle();
+                    show();
+                });
+                brightness.addEventListener('change', preview);
+                var outlineOn = document.getElementById('sketch-outline-on');
+                if (outlineOn) {
+                    outlineOn.checked = style.outline;
+                    outlineOn.addEventListener('change', function () {
+                        style.outline = outlineOn.checked;
+                        keepStyle();
+                        show();
+                        preview();
+                    });
+                    document.getElementById('sketch-fill').addEventListener('click', function () {
+                        if (! started) started = new Date().toISOString();
+                        var stroke = { tool: 'disk', size: size, points: [[SIZE / 2, SIZE / 2]] };
+                        strokes.push(stroke);
+                        draw(stroke, 0);
+                        keep();
+                        show();
+                        preview();
+                    });
+                }
+                labelsOn.addEventListener('change', function () {
+                    style.labels = labelsOn.checked;
+                    keepStyle();
+                    preview();
+                });
+                document.getElementById('sketch-labels-edit').addEventListener('click', function () {
+                    labelsPanel.hidden = ! labelsPanel.hidden;
+                    this.setAttribute('aria-expanded', labelsPanel.hidden ? 'false' : 'true');
+                    if (! labelsPanel.hidden && ! labelsOn.checked) { labelsOn.checked = style.labels = true; keepStyle(); }
+                    preview();
+                });
+                labelsText.addEventListener('input', function () {
+                    keep();
+                    preview();
+                });
+                redraw();
+
+                var api = {
+                    open: function () {
+                        showUp();
+                        if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
+                    },
+                    close: function () { if (dialog.open) dialog.close(); },
+                    has: function () { return strokes.length > 0; },
+                    started: function () { return started ? new Date(started) : null; },
+                    // JPEG is a fraction of PNG for the soft strokes
+                    image: function (width) {
+                        var source = style.labels ? labelled() : (compose(), canvas);
+                        if (! width) return source.toDataURL('image/jpeg', 0.85);
+                        var small = document.createElement('canvas');
+                        small.width = width;
+                        small.height = Math.round(width * source.height / source.width);
+                        small.getContext('2d').drawImage(source, 0, 0, small.width, small.height);
+                        return small.toDataURL('image/jpeg', 0.8);
+                    },
+                    clear: function () {
+                        strokes = [];
+                        started = null;
+                        labelsText.value = (data.sketchLabels || []).join('\n');
+                        keep();
+                        redraw();
+                        preview();
+                    },
+                    dialog: dialog,
+                };
+                return api;
+            })();
+
             // Quick note, and "Log it" without a connection
             var dialog = document.getElementById('quick-log');
             var form = document.getElementById('quick-log-form');
@@ -580,10 +1195,20 @@
             var visibility = document.getElementById('quick-log-visibility');
             var error = document.getElementById('quick-log-error');
             var openedAt = null;
+            var sketchBlock = document.getElementById('quick-log-sketch');
+            var sketchEdit = document.getElementById('quick-log-sketch-edit');
+            var sketchRemove = document.getElementById('quick-log-sketch-remove');
+            function showSketch() {
+                sketchBlock.hidden = sketchRemove.hidden = ! sketch.has();
+                sketchEdit.textContent = sketch.has() ? texts.editSketch : texts.addSketch;
+                if (sketch.has()) document.getElementById('quick-log-sketch-image').src = sketch.image(256);
+            }
+            // The moment of a sketch is when it was begun
             function openQuickLog() {
-                openedAt = new Date();
+                openedAt = sketch.started() || openedAt || new Date();
                 document.getElementById('quick-log-time').textContent = format(texts.at, { time: hm.format(openedAt) });
                 error.hidden = true;
+                showSketch();
                 if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
                 description.focus();
             }
@@ -598,9 +1223,24 @@
                     description.selectionStart = description.selectionEnd = before.length;
                 },
             });
-            dialog.addEventListener('close', function () { if (dictation) dictation.stop(); });
+            var toSketch = false;
+            dialog.addEventListener('close', function () {
+                if (dictation) dictation.stop();
+                if (toSketch) { toSketch = false; sketch.open(); } else { openedAt = null; }
+            });
             document.getElementById('quick-log-open').addEventListener('click', openQuickLog);
             document.getElementById('quick-log-cancel').addEventListener('click', function () { dialog.close(); });
+            document.getElementById('sketch-open').addEventListener('click', function () { sketch.open(); });
+            sketchEdit.addEventListener('click', function () { toSketch = true; dialog.close(); });
+            sketchRemove.addEventListener('click', function () {
+                if (! window.confirm(texts.removeSketchConfirm)) return;
+                sketch.clear();
+                showSketch();
+            });
+            document.getElementById('sketch-done').addEventListener('click', function () {
+                sketch.close();
+                openQuickLog();
+            });
             document.getElementById('log-it').addEventListener('click', function (event) {
                 if (navigator.onLine === false) {
                     event.preventDefault();
@@ -609,13 +1249,14 @@
             });
             form.addEventListener('submit', function (event) {
                 event.preventDefault();
-                if (! description.value.trim()) {
+                if (! description.value.trim() && ! sketch.has()) {
                     error.textContent = texts.empty;
                     error.hidden = false;
                     return;
                 }
                 var entries = queue();
                 entries.push({
+                    drawing: sketch.has() ? sketch.image() : null,
                     key: Date.now() + '-' + Math.random().toString(36).slice(2),
                     store: data.store,
                     item: data.item,
@@ -625,7 +1266,12 @@
                     visibility: visibility && visibility.value ? Number(visibility.value) : null,
                     user: data.user,
                 });
-                saveQueue(entries);
+                if (! saveQueue(entries)) {
+                    error.textContent = texts.full;
+                    error.hidden = false;
+                    return;
+                }
+                sketch.clear();
                 description.value = '';
                 if (visibility) visibility.value = '';
                 dialog.close();
@@ -656,7 +1302,18 @@
                         return fetch(urls[index], { credentials: 'same-origin', cache: 'no-store' })
                             .then(function (response) {
                                 if (! response.ok || response.redirected) throw new Error(response.status);
-                                return cache.put(urls[index], response);
+                                return response.clone().text().then(function (html) {
+                                    return cache.put(urls[index], response).then(function () {
+                                        // The drawings of the earlier observations, which the service worker serves without a connection
+                                        var page = new DOMParser().parseFromString(html, 'text/html');
+                                        var images = Array.prototype.map.call(page.querySelectorAll('img[data-offline-src]'), function (img) { return img.getAttribute('src'); });
+                                        return Promise.all(images.map(function (src) {
+                                            return fetch(src, { credentials: 'same-origin' })
+                                                .then(function (image) { return image.ok ? cache.put(src, image) : null; })
+                                                .catch(function () {});
+                                        }));
+                                    });
+                                });
                             })
                             .catch(function () { failed++; })
                             .then(function () { done++; return step(index + 1); });

@@ -19,6 +19,9 @@ namespace App\Services;
  * misses the fewest objects wins, then the one that sees them highest. Each
  * object is then moved, in the same order, towards the moment it stands
  * highest, keeping at least half the time it could wait.
+ *
+ * With the local horizon of the location (LocalHorizon) a point only counts
+ * while it also stands above the trees and houses in its direction.
  */
 class NightPlanner
 {
@@ -29,14 +32,15 @@ class NightPlanner
         public readonly float $latitude,
         public readonly float $minAltitude,
         public readonly int $minutes,
+        public readonly ?LocalHorizon $horizon = null,
     ) {
     }
 
     /**
      * Per point (RA and declination in degrees, keys 'ra' and 'dec'), the
      * parts of the window (timestamps) it stands at least $minAltitude high
-     * (or its own 'min_altitude'; above 90° never), and its transits in the
-     * window.
+     * (or its own 'min_altitude'; above 90° never) and above the local
+     * horizon, and its transits in those parts.
      *
      * @param  array<int, array{ra: float, dec: float, min_altitude?: float}>  $points
      * @return array<int, array{intervals: list<array{0: int, 1: int}>, transits: list<int>}>
@@ -84,6 +88,11 @@ class NightPlanner
                         $transits[] = $moment($transit, $from);
                     }
                 }
+            }
+
+            if ($intervals !== [] && $this->horizon?->blocksAbove($altitude)) {
+                $intervals = $this->horizon->intervals($window, $point['ra'], $point['dec'], $altitude);
+                $transits  = array_values(array_filter($transits, fn (int $transit) => array_filter($intervals, fn (array $i) => $transit >= $i[0] && $transit <= $i[1]) !== []));
             }
 
             $visibility[$key] = ['intervals' => $intervals, 'transits' => $transits];

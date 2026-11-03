@@ -20,6 +20,7 @@ class AdminObjectCheckController extends Controller
             'report' => $report,
             'constellationCheck' => $service->constellationCheckStatus(),
             'constellationCheckInProgress' => $service->constellationCheckInProgress(),
+            'suspectObservations' => SuspectObservationController::summary(),
         ]);
     }
 
