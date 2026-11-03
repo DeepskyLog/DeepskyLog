@@ -1,1 +1,1 @@
-<img src="/images/logo2.png" class="rounded-xl" />
+<img src="/images/logo2.png" alt="DeepskyLog" {{ $attributes->merge(['class' => 'rounded-xl']) }} />

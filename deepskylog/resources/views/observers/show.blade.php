@@ -98,7 +98,7 @@
                         <br />
                         <br />
 
-                        <table class="table-auto">
+                        <table class="table-auto observer-details">
                             <!-- Default location -->
                             <tr>
                                 <td>{!! __('Default observing site') !!}</td>
@@ -281,6 +281,7 @@
             <style>
                 .inline-svg svg { width: 100%; height: 100%; display: block; }
                 .inline-svg { width: 100%; height: 100%; }
+                .observer-details td:first-child { padding-right: 1rem; }
                 .two-line-truncate {
                     display: -webkit-box;
                     -webkit-box-orient: vertical;
