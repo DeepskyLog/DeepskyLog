@@ -4,27 +4,28 @@
     <div class="py-6">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-gray-900 shadow-sm sm:rounded-lg p-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                    <a href="{{ route('messages.create') }}" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">{{ __('New Message') }}</a>
-                    <form method="post" action="{{ route('messages.markAllRead') }}" id="mark-all-read-form">
-                        @csrf
-                        <button type="button" id="mark-all-read-btn" class="inline-flex items-center px-3 py-2 bg-gray-600 text-white text-sm font-medium rounded hover:bg-gray-500">{{ __('Mark all read') }}</button>
-                    </form>
-                    <form method="post" action="{{ route('messages.deleteAll') }}" id="delete-all-form" class="ml-2">
-                        @csrf
-                        <button type="button" id="delete-all-btn" class="inline-flex items-center px-3 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700">{{ __('Delete all') }}</button>
-                    </form>
-        </div>
-        <div class="text-sm text-gray-400 flex items-center gap-4">
-            <div>
-                {{ __('Total') }}: <span class="font-medium text-gray-200">{{ $mergedTotal ?? ($totalMessages ?? 0) }}</span>
-                &nbsp;|&nbsp;
-                {{ __('Unread') }}: <span class="font-medium text-yellow-300">{{ $unreadMessages ?? 0 }}</span>
-                &nbsp;|&nbsp;
-                {{ __('Received') }}: <span class="font-medium text-gray-200">{{ $receivedCount ?? 0 }}</span>
-                &nbsp;|&nbsp;
-                {{ __('Sent') }}: <span class="font-medium text-gray-200">{{ $sentGroupsCount ?? 0 }}</span>
+                {{-- Buttons, counts and filters wrap as blocks; a button or a count never breaks inside --}}
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <a href="{{ route('messages.create') }}" class="inline-flex items-center whitespace-nowrap px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">{{ __('New Message') }}</a>
+                        <form method="post" action="{{ route('messages.markAllRead') }}" id="mark-all-read-form">
+                            @csrf
+                            <button type="button" id="mark-all-read-btn" class="inline-flex items-center whitespace-nowrap px-3 py-2 bg-gray-600 text-white text-sm font-medium rounded hover:bg-gray-500">{{ __('Mark all read') }}</button>
+                        </form>
+                        <form method="post" action="{{ route('messages.deleteAll') }}" id="delete-all-form">
+                            @csrf
+                            <button type="button" id="delete-all-btn" class="inline-flex items-center whitespace-nowrap px-3 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700">{{ __('Delete all') }}</button>
+                        </form>
+                    </div>
+        <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-400">
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span class="whitespace-nowrap">{{ __('Total') }}: <span class="font-medium text-gray-200">{{ $mergedTotal ?? ($totalMessages ?? 0) }}</span></span>
+                <span class="text-gray-600" aria-hidden="true">|</span>
+                <span class="whitespace-nowrap">{{ __('Unread') }}: <span class="font-medium text-yellow-300">{{ $unreadMessages ?? 0 }}</span></span>
+                <span class="text-gray-600" aria-hidden="true">|</span>
+                <span class="whitespace-nowrap">{{ __('Received') }}: <span class="font-medium text-gray-200">{{ $receivedCount ?? 0 }}</span></span>
+                <span class="text-gray-600" aria-hidden="true">|</span>
+                <span class="whitespace-nowrap">{{ __('Sent') }}: <span class="font-medium text-gray-200">{{ $sentGroupsCount ?? 0 }}</span></span>
             </div>
             <form method="get" action="" class="flex flex-wrap items-center gap-2">
                 <input type="search" name="q" value="{{ $search }}" placeholder="{{ __('Search messages') }}" aria-label="{{ __('Search messages') }}"
@@ -34,11 +35,11 @@
                     <option value="received" {{ $box === 'received' ? 'selected' : '' }}>{{ __('Received') }}</option>
                     <option value="sent" {{ $box === 'sent' ? 'selected' : '' }}>{{ __('Sent') }}</option>
                 </select>
-                <label class="text-xs text-gray-400 flex items-center gap-2">
+                <label class="text-xs text-gray-400 flex items-center gap-2 whitespace-nowrap">
                     <input type="checkbox" name="unread" value="1" onchange="this.form.submit()" {{ request()->query('unread') == '1' ? 'checked' : '' }} class="h-4 w-4" />
                     <span>{{ __('Only unread') }}</span>
                 </label>
-                <label for="per_page" class="text-xs text-gray-400">{{ __('Per page') }}</label>
+                <label for="per_page" class="text-xs text-gray-400 whitespace-nowrap">{{ __('Per page') }}</label>
                 <select id="per_page" name="per_page" onchange="this.form.submit()" class="bg-gray-800 text-white text-xs rounded px-2 py-1 appearance-none" style="background-image: none;">
                     @foreach([10,20,50,100] as $n)
                         <option value="{{ $n }}" {{ (isset($perPage) && $perPage == $n) ? 'selected' : '' }} class="bg-gray-800 text-white" style="background-color: #0f172a; color: #ffffff;">{{ $n }}</option>
