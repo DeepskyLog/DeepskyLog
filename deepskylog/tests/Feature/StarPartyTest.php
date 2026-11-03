@@ -508,7 +508,13 @@ it('shows the coming starparties on the home page and in the feed', function () 
     starParty($organiser, ['name' => 'Members only', 'visibility' => StarParty::PRIVATE]);
     starParty($organiser, ['name' => 'Far ahead', 'start_date' => today()->addDays(200)->toDateString(), 'end_date' => today()->addDays(200)->toDateString()]);
 
-    $this->get('/')->assertOk()->assertSee('Soon under the stars')->assertDontSee('Members only')->assertDontSee('Far ahead');
+    foreach ([300, 301, 302] as $days) {
+        starParty($organiser, ['name' => "Later party {$days}", 'start_date' => today()->addDays($days)->toDateString(), 'end_date' => today()->addDays($days)->toDateString()]);
+    }
+
+    // However far ahead, the four that start first
+    $this->get('/')->assertOk()->assertSee('Soon under the stars')->assertDontSee('Members only')->assertSee('Far ahead')
+        ->assertSee('Later party 300')->assertSee('Later party 301')->assertDontSee('Later party 302');
     $this->actingAs($organiser)->get('/')->assertOk()->assertSee('Members only');
 
     $this->get(route('feed.star-parties'))->assertOk()

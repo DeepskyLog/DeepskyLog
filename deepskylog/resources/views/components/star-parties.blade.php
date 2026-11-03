@@ -1,6 +1,6 @@
 @props (["parties"])
 
-{{-- The starparties (#315) of the coming weeks on the home page --}}
+{{-- The coming starparties (#315) on the home page, the first to start first --}}
 <x-home-section :title="__('Starparties')" {{ $attributes }}>
     <ul class="divide-y divide-gray-700 px-2">
         @foreach ($parties as $party)

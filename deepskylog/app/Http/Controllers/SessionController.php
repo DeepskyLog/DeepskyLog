@@ -43,9 +43,7 @@ class SessionController extends Controller
 
     private const HOMEPAGE_OBSERVATIONS = 8;
 
-    /** The starparties on the home page: those starting within this many days. */
-    private const HOMEPAGE_STAR_PARTY_DAYS = 60;
-
+    /** The starparties on the home page: the coming ones that start first, however far ahead. */
     private const HOMEPAGE_STAR_PARTIES = 4;
 
     private const HOMEPAGE_SKETCHES = 8;
@@ -1020,11 +1018,10 @@ class SessionController extends Controller
             $newsLocation = null;
         }
 
-        // The starparties of the coming weeks (#315) the observer may see
+        // The coming starparties (#315) the observer may see, the first to start first
         try {
             $starParties = StarParty::visibleTo(Auth::user())
                 ->upcoming()
-                ->where('start_date', '<=', today()->addDays(self::HOMEPAGE_STAR_PARTY_DAYS)->toDateString())
                 ->with('participants')
                 ->orderBy('start_date')
                 ->orderBy('id')
