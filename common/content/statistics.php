@@ -384,6 +384,9 @@ function statistics()
             "count(*)"
         );
     }
+    // Observations without a (valid) date have year 0 or none: they don't start the graph
+    $sql = array_filter($sql, fn ($year) => (int) $year > 0, ARRAY_FILTER_USE_KEY);
+    $sql2 = array_filter($sql2, fn ($year) => (int) $year > 0, ARRAY_FILTER_USE_KEY);
     if (sizeof($sql) == 0) {
         $startYear = min(array_keys($sql2));
     } elseif (sizeof($sql2) == 0) {
