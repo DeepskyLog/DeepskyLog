@@ -115,6 +115,9 @@ function selected_observations()
     if (array_key_exists('query', $_GET) && ($_GET['query'] != '')) {
         include_once __DIR__ . '/../data/data_get_observations.php';
     }
+    // expand is left out: the expand links add their own, and carrying the
+    // current one along gave crawlers an endless supply of distinct URLs
+    // (expand=1&expand=2&..., times every page and filter).
     foreach ($_GET as $key => $value) {
         if (!in_array($key, [
                 'indexAction',
@@ -122,6 +125,7 @@ function selected_observations()
                 'sessionid',
                 'myLanguages',
                 'collapsed',
+                'expand',
         ])) {
             $link2 .= '&amp;'.$key.'='.urlencode($value);
         }
