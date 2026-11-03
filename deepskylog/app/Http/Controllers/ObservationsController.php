@@ -432,6 +432,63 @@ class ObservationsController extends Controller
         return $row ? ['type' => $types[$table], 'table' => $table, 'key' => $row->slug, 'name' => $row->name] : null;
     }
 
+    /**
+     * The table whose objects an observation may be moved to when it is
+     * edited, or null for an observation of a kind that can't be moved (the
+     * Sun and observations of the old site without a target table).
+     */
+    private function editTargetTable(Observation $observation): ?string
+    {
+        if ($observation->target_type === Observation::TYPE_DEEPSKY) {
+            return 'objects';
+        }
+        if ($observation->target_type === Observation::TYPE_COMET) {
+            return 'cometobjects';
+        }
+        $table = (string) $observation->target_table;
+
+        return in_array($table, ['planets', 'moons', 'lunar_features', 'asteroids'], true) ? $table : null;
+    }
+
+    /**
+     * The object of the table a name, alternative name or slug typed on the
+     * edit form gives, as its key and the slug the form is opened with. A
+     * comet or asteroid also matches the start of a single name, so
+     * "C/2020 V2" finds C/2020 V2 (ZTF).
+     *
+     * @return array{key: string, slug: string}|null
+     */
+    private function findEditTarget(string $table, string $value): ?array
+    {
+        $value = trim($value);
+        if ($value === '') {
+            return null;
+        }
+
+        if ($table === 'objects') {
+            $name = Observation::canonicalDeepskyName($value);
+            if ($name === null) {
+                return null;
+            }
+
+            return ['key' => $name, 'slug' => (string) (DB::table('objects')->where('name', $name)->value('slug') ?: $name)];
+        }
+
+        $row = DB::table($table)->where('slug', $value)->first()
+            ?? DB::table($table)->where('name', $value)->first()
+            ?? DB::table($table)->where('slug', Str::slug($value, '-'))->first();
+        if (!$row && in_array($table, ['cometobjects', 'asteroids'], true)) {
+            $matches = DB::table($table)->where('name', 'like', addcslashes($value, '%_\\') . '%')->limit(2)->get();
+            $row = $matches->count() === 1 ? $matches->first() : null;
+        }
+        if (!$row || empty($row->slug)) {
+            return null;
+        }
+
+        // Comets are stored by id, the other tables by slug
+        return ['key' => (string) ($table === 'cometobjects' ? $row->id : $row->slug), 'slug' => (string) $row->slug];
+    }
+
     private function extractObservationSearchFilters(Request $request): array
     {
         $filters = $request->except(['_token', 'page', 'q']);
@@ -2866,19 +2923,26 @@ class ObservationsController extends Controller
         $slug = $selectedUnified->target_key ?? $selectedUnified->target_name ?? null;
         if ($selectedUnified->target_type === Observation::TYPE_DEEPSKY) {
             $slug = DB::table('objects')->where('name', $selectedUnified->target_key)->value('slug') ?? $slug;
-
-            // ?object= moves the observation to another object, e.g. when its
-            // own is not in the database (the form then offers the choice)
-            $chosen = Observation::canonicalDeepskyName($request->query('object'));
-            if ($chosen !== null && $chosen !== $selectedUnified->target_key) {
-                $slug = DB::table('objects')->where('name', $chosen)->value('slug') ?: $chosen;
-                $prefill['edit_previous_object'] = $selectedUnified->target_name;
-            } elseif ($chosen === null && filled($request->query('object'))) {
-                session()->flash('error', __('No object found for') . " '" . $request->query('object') . "'.");
-            }
-            $prefill['edit_url'] = $request->url();
         } elseif ($selectedUnified->target_type === Observation::TYPE_COMET) {
             $slug = DB::table('cometobjects')->where('id', (int) $selectedUnified->target_key)->value('slug') ?? $slug;
+        }
+
+        // ?object= moves the observation to another object of the same kind:
+        // an object that is not in the database, or a wrong comet. The kind
+        // stays, as deep-sky and comet observations keep different details.
+        $table = $this->editTargetTable($selectedUnified);
+        if ($table !== null) {
+            if (filled($request->query('object'))) {
+                $chosen = $this->findEditTarget($table, (string) $request->query('object'));
+                if ($chosen === null) {
+                    session()->flash('error', __('No object found for') . " '" . $request->query('object') . "'.");
+                } elseif ($chosen['key'] !== (string) $selectedUnified->target_key) {
+                    $slug = $chosen['slug'];
+                    $prefill['edit_previous_object'] = $selectedUnified->target_name;
+                }
+            }
+            $prefill['edit_url'] = $request->url();
+            $prefill['edit_target_table'] = $table;
         }
 
         // If this unified observation targets a deepsky object, preload detail fields

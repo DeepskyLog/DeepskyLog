@@ -29,6 +29,26 @@
                         <span class="ml-2 text-sm text-amber-300">{{ __('(was :name)', ['name' => old('edit_previous_object')]) }}</span>
                     @endif
                 </div>
+                @if (old('edit_target_table') && str_starts_with((string) old('edit_url'), url('/observation/')))
+                    {{-- Editing: move the observation to another object of the same kind --}}
+                    <details id="observation-change-object" class="mb-4 rounded border border-gray-700 px-3 py-2">
+                        <summary class="cursor-pointer text-sm text-gray-300">{{ __('Wrong object? Change the object of this observation') }}</summary>
+                        <p class="mt-2 text-sm text-gray-400">
+                            @if (old('edit_target_table') === 'objects')
+                                {{ __('Give the name of another deep-sky object.') }}
+                            @elseif (old('edit_target_table') === 'cometobjects')
+                                {{ __('Give the name of another comet, such as C/2020 V2.') }}
+                            @else
+                                {{ __('Give the name of another object of the same kind.') }}
+                            @endif
+                            {{ __('The form opens again with the stored values of the observation; changes not saved yet are lost. The new object is only stored when you save the observation.') }}
+                        </p>
+                        <form method="GET" action="{{ old('edit_url') }}" class="mt-2 flex flex-wrap items-center gap-2">
+                            <input type="text" name="object" required placeholder="{{ __('Object name') }}" class="rounded border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-gray-100">
+                            <button type="submit" class="rounded bg-gray-700 px-3 py-2 text-sm hover:bg-gray-600">{{ __('Use this object') }}</button>
+                        </form>
+                    </details>
+                @endif
                 @php
                     $isSun = false;
                     if (!empty($resolved['record'])) {
@@ -131,6 +151,12 @@
                 <form method="POST" action="{{ route('observation.store') }}" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="edit_unified_id" value="{{ old('edit_unified_id', '') }}" />
+                    @if (old('edit_unified_id'))
+                        {{-- Kept so the form still offers to change the object after a validation error --}}
+                        <input type="hidden" name="edit_url" value="{{ old('edit_url', '') }}" />
+                        <input type="hidden" name="edit_target_table" value="{{ old('edit_target_table', '') }}" />
+                        <input type="hidden" name="edit_previous_object" value="{{ old('edit_previous_object', '') }}" />
+                    @endif
 
                     @if ($errors->any())
                         <div class="mb-4 text-red-300">
