@@ -32,11 +32,7 @@ class LocationController extends Controller
         $location = Location::where('slug', $location_slug)->where('user_id', $user_id)->firstOrFail();
 
         // Check if there is an image for this location
-        if ($location->picture != null) {
-            $image = '/storage/'.asset($location->picture);
-        } else {
-            $image = '/images/location.png';
-        }
+        $image = \App\Support\UploadedPhoto::url($location->picture, '/images/location.png');
 
         // The cloud forecast of the coming nights, for whoever may see the location, once Open-Meteo answered
         $nightForecast = null;

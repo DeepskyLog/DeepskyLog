@@ -32,4 +32,26 @@ class UploadedPhoto
 
         return $path;
     }
+
+    /**
+     * The URL of a picture stored on the public disk, or $default when there is
+     * none. Tolerates the forms older rows hold: a leading slash or "storage/",
+     * or a full URL.
+     */
+    public static function url(?string $path, ?string $default = null): ?string
+    {
+        $path = trim((string) $path);
+        if ($path === '') {
+            return $default === null ? null : asset($default);
+        }
+        if (preg_match('#^https?://#i', $path)) {
+            return $path;
+        }
+        $path = ltrim($path, '/');
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, strlen('storage/'));
+        }
+
+        return asset('storage/'.$path);
+    }
 }

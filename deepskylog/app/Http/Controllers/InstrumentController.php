@@ -33,11 +33,7 @@ class InstrumentController extends Controller
         $instrument = Instrument::where('slug', $instrument_slug)->where('user_id', $user_id)->firstOrFail();
 
         // Check if there is an image for this instrument
-        if ($instrument->picture != null) {
-            $image = '/storage/'.asset($instrument->picture);
-        } else {
-            $image = '/images/telescope.png';
-        }
+        $image = \App\Support\UploadedPhoto::url($instrument->picture, '/images/telescope.png');
 
         return view(
             'instrument.show',

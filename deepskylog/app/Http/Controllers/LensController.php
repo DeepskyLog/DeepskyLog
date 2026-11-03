@@ -33,11 +33,7 @@ class LensController extends Controller
         $lens = Lens::where('slug', $lens_slug)->where('user_id', $user_id)->firstOrFail();
 
         // Check if there is an image for this lens
-        if ($lens->picture != null) {
-            $image = '/storage/'.asset($lens->picture);
-        } else {
-            $image = '/images/lens.png';
-        }
+        $image = \App\Support\UploadedPhoto::url($lens->picture, '/images/lens.png');
 
         return view(
             'lens.show',

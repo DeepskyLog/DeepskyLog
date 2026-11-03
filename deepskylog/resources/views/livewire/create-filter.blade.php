@@ -240,7 +240,7 @@
                                             <img
                                                 alt="{{ __('Picture of filter') }}"
                                                 class="mt-2 h-40 w-40 object-cover"
-                                                src="{{ '/storage/'.asset($filter->picture) }}">
+                                                src="{{ \App\Support\UploadedPhoto::url($filter->picture) }}">
 
                                         @endif
                                     @endif

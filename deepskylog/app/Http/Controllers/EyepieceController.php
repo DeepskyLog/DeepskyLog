@@ -34,11 +34,7 @@ class EyepieceController extends Controller
         $eyepiece = Eyepiece::where('slug', $eyepiece_slug)->where('user_id', $user_id)->firstOrFail();
 
         // Check if there is an image for this eyepiece
-        if ($eyepiece->picture != null) {
-            $image = '/storage/'.asset($eyepiece->picture);
-        } else {
-            $image = '/images/eyepiece.png';
-        }
+        $image = \App\Support\UploadedPhoto::url($eyepiece->picture, '/images/eyepiece.png');
 
         return view(
             'eyepiece.show',

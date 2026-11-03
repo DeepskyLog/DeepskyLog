@@ -299,7 +299,7 @@
                                     <img
                                         alt="{{ __('Picture of eyepiece') }}"
                                         class="mt-2 h-40 w-40 object-cover"
-                                        src="{{ '/storage/'.asset($eyepiece->picture) }}">
+                                        src="{{ \App\Support\UploadedPhoto::url($eyepiece->picture) }}">
 
                                 @endif
                             @endif

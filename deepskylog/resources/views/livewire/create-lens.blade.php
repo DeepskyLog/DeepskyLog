@@ -211,7 +211,7 @@
                                     <img
                                         alt="{{ __('Picture of lens') }}"
                                         class="mt-2 h-40 w-40 object-cover"
-                                        src="{{ '/storage/'.asset($lens->picture) }}">
+                                        src="{{ \App\Support\UploadedPhoto::url($lens->picture) }}">
 
                                 @endif
                             @endif

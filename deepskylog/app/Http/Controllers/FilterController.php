@@ -33,11 +33,7 @@ class FilterController extends Controller
         $filter = Filter::where('slug', $filter_slug)->where('user_id', $user_id)->firstOrFail();
 
         // Check if there is an image for this filter
-        if ($filter->picture != null) {
-            $image = '/storage/'.asset($filter->picture);
-        } else {
-            $image = '/images/filter.png';
-        }
+        $image = \App\Support\UploadedPhoto::url($filter->picture, '/images/filter.png');
 
         return view(
             'filter.show',

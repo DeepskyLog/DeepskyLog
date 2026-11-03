@@ -104,7 +104,7 @@
                                 @if ($update)
                                     @if ($location->picture)
                                         <img alt="{{ __('Picture of location') }}" class="mt-2 h-40 w-40 object-cover"
-                                            src="{{ '/storage/' . asset($location->picture) }}">
+                                            src="{{ \App\Support\UploadedPhoto::url($location->picture) }}">
                                     @endif
                                 @endif
                                 @if ($photo)

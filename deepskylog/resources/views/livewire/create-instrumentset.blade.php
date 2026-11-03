@@ -227,7 +227,7 @@
                                 <img
                                     alt="{{ __('Picture of instrument set') }}"
                                     class="mt-2 h-40 w-40 object-cover"
-                                    src="{{ '/storage/'.asset($set->picture) }}">
+                                    src="{{ \App\Support\UploadedPhoto::url($set->picture) }}">
 
                             @endif
                         @endif
