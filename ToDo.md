@@ -12,6 +12,7 @@
   - [ ] Names the command cannot resolve: Nu Boo, Zeta Sco, Omega Sco and Xi Cen (two numbered stars each), 42-45 Ori and 64-65 Gem (ranges), Star Abagail, Lorenzin 18, 19 and 22, and the entries without a separation, such as Procyon and 118 Tauri.
   - [ ] About 270 NGC/IC "double stars" are not in the WDS and mostly have no separation or magnitudes.
 - [ ] On real server:
+  - [ ] Comet positions (commit a30f09b2): `php artisan migrate` (`2026_11_03_000010_create_comet_epoch_elements_table`), then `php artisan comets:fetch-epoch-elements` (dry run: the comets and dates it will ask JPL Horizons for; on the development database 185), then `php artisan comets:fetch-epoch-elements --apply` (a few minutes), then `php artisan observations:check-suspect --all` (on the development database the comet observations below the horizon went from 90 to 30). After that the scheduler fetches new ones every Saturday at 05:10.
   - [ ] After a few weeks without problems (deployed on 3 November 2026): drop the old database `deepskylog` and remove its line from `~/scripts/dumpDatabase`; drop `sessionObservations_before_switch`, `sessionObservations_comet_links`, `observation_likes_before_switch` and `observing_list_items_bak_20260923` from `deepskylogLaravel`.
 - [ ] Release new version of pyDeepskyLog
   - [ ] Ready to be released, make sure to check if everything still works with the PiFinder.
