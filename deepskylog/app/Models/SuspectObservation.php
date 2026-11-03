@@ -73,7 +73,7 @@ class SuspectObservation extends Model
         if ($user === null) {
             return false;
         }
-        if ($user->hasAdministratorPrivileges() || $user->isDatabaseExpert()) {
+        if ($user->hasModeratorRole()) {
             return true;
         }
 

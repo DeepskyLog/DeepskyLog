@@ -149,7 +149,7 @@
                         $viewer = auth()->user();
                         $allowAdmin = config('sessions.allow_admin_override', false);
                         $viewerIsOwner = $viewer && ($viewer->username === $session->observerid);
-                        $viewerIsAdmin = $viewer && method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges();
+                        $viewerIsAdmin = $viewer && $viewer->isAdministrator();
                         $showOwnerActions = $viewerIsOwner || ($allowAdmin && $viewerIsAdmin);
                     @endphp
 

@@ -408,7 +408,7 @@ class ClubController extends Controller
     /** Why the observer cannot make another club, or null when they can. */
     private function refusal(User $user): ?string
     {
-        if ($user->hasAdministratorPrivileges()) {
+        if ($user->isAdministrator()) {
             return null;
         }
 

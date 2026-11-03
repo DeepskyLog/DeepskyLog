@@ -662,7 +662,7 @@ Route::get('observation_languages.index', function (Request $request) {
 // The list contains the e-mail addresses of all users, so only administrators
 // get it (any user can create and own a team, so ownership is not enough).
 Route::get('addUserToTeam.index', function (Request $request) {
-    abort_unless($request->user()->hasAdministratorPrivileges(), 403);
+    abort_unless($request->user()->isAdministrator(), 403);
 
     $allUsers = [];
 

@@ -109,7 +109,7 @@ class ObjectFindingNote extends Model
     /** The author, administrators and database experts delete a note. */
     public function canBeDeletedBy(?User $user): bool
     {
-        return $user !== null && ($user->id === $this->user_id || $user->hasAdministratorPrivileges());
+        return $user !== null && ($user->id === $this->user_id || $user->hasModeratorRole());
     }
 
     /** Any other observer likes a note, never its author. */
