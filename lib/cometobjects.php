@@ -26,13 +26,11 @@ class CometObjects
         while (true) {
             $checkSql = "SELECT COUNT(id) as cnt FROM cometobjects WHERE slug = \"" . $slug . "\"";
             $run = $objDatabase->selectRecordset($checkSql);
-            if ($run) {
-                $get = $run->fetch(PDO::FETCH_OBJ);
-                if ($get && intval($get->cnt) === 0) {
-                    break;
-                }
-            } else {
-                // if the check failed for any reason, stop and use current slug
+            // A failed query gives no recordset, or the database layer's
+            // dummy recordset whose fetch() returns false: stop and use the
+            // current slug, else this loops until PHP's time limit.
+            $get = $run ? $run->fetch(PDO::FETCH_OBJ) : false;
+            if (!$get || intval($get->cnt) === 0) {
                 break;
             }
 
