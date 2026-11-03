@@ -153,6 +153,23 @@ it('ranks the faintest objects seen up to an aperture and the observers who saw 
     $this->get('/records/aperture?aperture=0')
         ->assertOk()
         ->assertSee('No objects were reported seen with this aperture yet.');
+
+    // Without a limit on the aperture the 254 mm observation counts too
+    $all = (new ApertureRecords)->ranking(ApertureRecords::ALL);
+    expect(array_column($all, 'name'))->toBe(['NGC 5194A', 'NGC 5195', 'M 51'])
+        ->and($all[1]['observation_id'])->toBe($smallest->id);
+    expect(array_column((new ApertureRecords)->observers(ApertureRecords::ALL), 'mag'))->toBe([12.5, 9.6]);
+
+    $this->get('/records/aperture?aperture=all')
+        ->assertOk()
+        ->assertSee('NGC 5194A')
+        ->assertSee('All apertures')
+        ->assertSee('reported seen with any aperture');
+
+    // An unknown value falls back to the default limit
+    $this->get('/records/aperture?aperture=300')
+        ->assertOk()
+        ->assertDontSee('NGC 5194A');
 });
 
 it('shows the records on the object page with the viewer\'s telescope', function () {

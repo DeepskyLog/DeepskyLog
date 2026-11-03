@@ -73,6 +73,9 @@ class ApertureRecords
 
     public const DEFAULT_LIMIT = 100;
 
+    /** The limit of the ranking without a limit on the aperture. */
+    public const ALL = 'all';
+
     /**
      * Types left out of the ranking: their magnitude does not say how hard
      * they are to see (the primary of a double star, a variable star or a
@@ -122,9 +125,9 @@ class ApertureRecords
      *
      * @return list<array{rank: int, name: string, slug: string, type: string, mag: float, observation_id: int, aperture_mm: float, naked_eye: bool, observer: string, observed_on: string}>
      */
-    public function ranking(int $limit): array
+    public function ranking(int|string $limit): array
     {
-        $limit = self::isLimit($limit) ? $limit : self::DEFAULT_LIMIT;
+        $limit = self::limitFrom($limit);
 
         return Cache::flexible("aperture_records:objects:{$limit}", self::CACHE_SECONDS, fn () => $this->computeRanking($limit));
     }
@@ -136,21 +139,48 @@ class ApertureRecords
      *
      * @return list<array{rank: int, observer: string, name: string, slug: string, type: string, mag: float, observation_id: int, aperture_mm: float, naked_eye: bool, observed_on: string}>
      */
-    public function observers(int $limit): array
+    public function observers(int|string $limit): array
     {
-        $limit = self::isLimit($limit) ? $limit : self::DEFAULT_LIMIT;
+        $limit = self::limitFrom($limit);
 
         return Cache::flexible("aperture_records:observers:{$limit}", self::CACHE_SECONDS, fn () => $this->computeObservers($limit));
     }
 
+    /**
+     * The limits the ranking page offers: those of LIMITS, then ALL.
+     *
+     * @return list<int|string>
+     */
+    public static function options(): array
+    {
+        return [...array_keys(self::LIMITS), self::ALL];
+    }
+
+    /** A limit of options() from a query value, else DEFAULT_LIMIT. */
+    public static function limitFrom(mixed $limit): int|string
+    {
+        if ($limit === self::ALL) {
+            return self::ALL;
+        }
+
+        return self::isLimit($limit) ? (int) $limit : self::DEFAULT_LIMIT;
+    }
+
     public static function isLimit(mixed $limit): bool
     {
+        if ($limit === self::ALL) {
+            return true;
+        }
+
         return is_numeric($limit) && array_key_exists((int) $limit, self::LIMITS) && (string) (int) $limit === (string) $limit;
     }
 
-    /** The label of a limit of LIMITS, in inches or millimetres. */
-    public static function limitLabel(int $limit, bool $inches): string
+    /** The label of a limit of options(), in inches or millimetres. */
+    public static function limitLabel(int|string $limit, bool $inches): string
     {
+        if ($limit === self::ALL) {
+            return __('All apertures');
+        }
         if ($limit === 0 || ! isset(self::LIMITS[$limit])) {
             return __('Naked eye');
         }
@@ -272,17 +302,21 @@ class ApertureRecords
             .' WHEN NOT '.self::ownSkySql()." AND {$location} BETWEEN {$from} AND {$to} THEN {$location} END";
     }
 
-    /** The seen observations with at most the aperture of a limit, of objects with a magnitude. */
-    private function withinLimit(int $limit): QueryBuilder
+    /**
+     * The seen observations with at most the aperture of a limit (any
+     * aperture for ALL), of objects with a magnitude.
+     */
+    private function withinLimit(int|string $limit): QueryBuilder
     {
         return $this->restrict(DB::table('observations'))
-            ->whereRaw(self::apertureSql().' <= ?', [self::LIMITS[$limit][0]])
+            ->when($limit !== self::ALL, fn (QueryBuilder $query) => $query
+                ->whereRaw(self::apertureSql().' <= ?', [self::LIMITS[$limit][0]]))
             ->where('objects.mag', '<', 99)
             ->where('objects.mag', '!=', 0)
             ->whereNotIn('objects.type', self::RANKING_EXCLUDED_TYPES);
     }
 
-    private function computeRanking(int $limit): array
+    private function computeRanking(int|string $limit): array
     {
         $names = $this->withinLimit($limit)
             ->groupBy('objects.name')
@@ -307,7 +341,7 @@ class ApertureRecords
         return self::ranked($rows);
     }
 
-    private function computeObservers(int $limit): array
+    private function computeObservers(int|string $limit): array
     {
         $faintest = $this->withinLimit($limit)
             ->groupBy('observations.observer_username')

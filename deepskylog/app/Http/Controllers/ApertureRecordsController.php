@@ -13,8 +13,7 @@ class ApertureRecordsController extends Controller
 {
     public function index(Request $request, ApertureRecords $records)
     {
-        $limit = $request->query('aperture');
-        $limit = ApertureRecords::isLimit($limit) ? (int) $limit : ApertureRecords::DEFAULT_LIMIT;
+        $limit = ApertureRecords::limitFrom($request->query('aperture'));
 
         $objects = $records->ranking($limit);
         $observers = $records->observers($limit);

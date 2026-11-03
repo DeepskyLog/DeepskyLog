@@ -20,8 +20,7 @@
                 class="inline-flex flex-wrap rounded-lg border border-gray-700 bg-gray-950 p-1"
                 aria-label="{{ __('Aperture') }}"
             >
-                @foreach (array_keys(\App\Services\Observations\ApertureRecords::LIMITS)
-                    as $option)
+                @foreach (\App\Services\Observations\ApertureRecords::options() as $option)
                     <a
                         href="{{ route('records.aperture', ['aperture' => $option]) }}"
                         class="rounded-md px-3 py-2 text-sm font-medium transition {{ $option === $limit ? 'bg-sky-500 text-gray-950' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}"
@@ -48,16 +47,20 @@
                     {{
                         $limit === 0
                             ? __("The faintest deep-sky objects reported seen with the naked eye.")
-                            : __(
-                                "The faintest deep-sky objects reported seen with an aperture of at most :size, each with the observation that saw it with the smallest aperture.",
-                                [
-                                    "size" => $inches
-                                        ? \App\Services\Observations\ApertureRecords::LIMITS[
-                                                $limit
-                                            ][1] . "″"
-                                        : $limit . " mm",
-                                ],
-                            )
+                            : ($limit === \App\Services\Observations\ApertureRecords::ALL
+                                ? __(
+                                    "The faintest deep-sky objects reported seen with any aperture, each with the observation that saw it with the smallest aperture.",
+                                )
+                                : __(
+                                    "The faintest deep-sky objects reported seen with an aperture of at most :size, each with the observation that saw it with the smallest aperture.",
+                                    [
+                                        "size" => $inches
+                                            ? \App\Services\Observations\ApertureRecords::LIMITS[
+                                                    $limit
+                                                ][1] . "″"
+                                            : $limit . " mm",
+                                    ],
+                                ))
                     }} {{
                         __(
                             "Observations the suspect-observation check doubts, and objects fainter than the aperture can show under a very dark sky, are left out; so are double stars, variable stars, supernovae, clusters and asterisms, whose magnitude does not say how hard they are to see.",
