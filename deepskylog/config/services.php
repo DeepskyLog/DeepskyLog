@@ -74,6 +74,12 @@ return [
         'archive_enabled' => (bool) env('WEATHER_HISTORY', true),
     ],
 
+    'horizons' => [
+        // Orbital elements of comets at the epochs of old observations (php artisan comets:fetch-epoch-elements), free without a key
+        'url' => env('HORIZONS_URL', 'https://ssd.jpl.nasa.gov/api/horizons.api'),
+        'enabled' => (bool) env('HORIZONS', true),
+    ],
+
     'seven_timer' => [
         // The seeing forecast of the coming nights (App\Services\Weather\SeeingForecast), free without a key
         'url' => env('SEVEN_TIMER_URL', 'https://www.7timer.info/bin/astro.php'),

@@ -37,5 +37,6 @@
         <env name="WEB_PUSH" value="false"/>
         <env name="POWERGRID_PARTIALS_ENABLED" value="false"/>
         <env name="ASTROFORUM" value="false"/>
+        <env name="HORIZONS" value="false"/>
     </php>
 </phpunit>

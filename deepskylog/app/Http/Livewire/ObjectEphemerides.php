@@ -776,7 +776,7 @@ class ObjectEphemerides extends Component
 			if ($raDeg === null || $decDeg === null) {
 				// Comets: calculate the position from the orbital elements
 				try {
-					$cometElements = CometCoordinates::orbitalElements($obj->name ?? ($obj->designation ?? null));
+					$cometElements = CometCoordinates::orbitalElements($obj->name ?? ($obj->designation ?? null), $date);
 					$comet = $cometElements ? CometCoordinates::target($cometElements) : null;
 					if ($comet) {
 						$coords = CometCoordinates::calculate($comet, $date, $geo_coords, (float) ($userLocation->elevation ?? 0.0));

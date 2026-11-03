@@ -26,6 +26,20 @@ use Illuminate\Support\Facades\Schema;
 class CometCoordinates
 {
     /**
+     * Elements of comets at the epochs of their observations, filled by
+     * `php artisan comets:fetch-epoch-elements`.
+     */
+    public const EPOCH_TABLE = 'comet_epoch_elements';
+
+    /** The columns that describe the orbit, the same in both tables. */
+    public const ORBIT_FIELDS = ['epoch', 'q', 'e', 'i', 'w', 'node', 'Tp'];
+
+    /** From this eccentricity on, an orbit is solved as near-parabolic (see target()). */
+    public const NEAR_PARABOLIC_FROM = 0.99;
+
+    private static ?bool $hasEpochTable = null;
+
+    /**
      * Find the orbital elements of a comet by name, e.g. "12P/Pons-Brooks" or
      * "C/2023 A3 (Tsuchinshan-ATLAS)".
      *
@@ -37,7 +51,69 @@ class CometCoordinates
      * "Nishimura"),
      * and no position is better than the position of another comet.
      */
-    public static function orbitalElements(?string $name): ?object
+    public static function orbitalElements(?string $name, ?Carbon $date = null): ?object
+    {
+        $current = self::currentElements($name);
+
+        return $date === null ? $current : self::atEpoch($current, (string) $name, $date);
+    }
+
+    /**
+     * The elements of `comets_orbital_elements` with the orbit replaced by
+     * that of the row of `comet_epoch_elements` (JPL Horizons) whose epoch is
+     * nearest to the date, when it is nearer than the epoch of the current
+     * elements. The current elements describe today's orbit; a comet that
+     * passed a planet since moved on another one (C/2007 N3 in January 2009
+     * stood 4.6 degrees from where the elements of 2025 put it). The
+     * photometry stays that of the current elements.
+     */
+    public static function atEpoch(?object $current, string $name, Carbon $date): ?object
+    {
+        if (self::$hasEpochTable === null) {
+            self::$hasEpochTable = Schema::hasTable(self::EPOCH_TABLE);
+        }
+        [$designation] = self::splitName((string) ($current->name ?? $name));
+        if (! self::$hasEpochTable || $designation === null) {
+            return $current;
+        }
+
+        $jd = self::julianDay($date);
+        $row = DB::table(self::EPOCH_TABLE)
+            ->where('designation', $designation)
+            ->orderByRaw('ABS(epoch - ?)', [$jd])
+            ->first();
+        if ($row === null) {
+            return $current;
+        }
+        if ($current !== null && is_numeric($current->epoch ?? null)
+            && abs((float) $current->epoch - $jd) <= abs((float) $row->epoch - $jd)) {
+            return $current;
+        }
+
+        $elements = $current !== null ? clone $current : (object) [
+            'name' => $name, 'H' => null, 'n' => null, 'phase_coeff' => null,
+            'n_pre' => null, 'n_post' => null, 'light_curve' => null, 'ref' => $row->source,
+        ];
+        foreach (self::ORBIT_FIELDS as $field) {
+            $elements->{$field} = $row->{$field};
+        }
+        $elements->ref = $row->source;
+
+        return $elements;
+    }
+
+    /**
+     * The Julian day of a moment.
+     */
+    public static function julianDay(Carbon $date): float
+    {
+        return $date->getTimestamp() / 86400.0 + 2440587.5;
+    }
+
+    /**
+     * The current elements of a comet, see orbitalElements().
+     */
+    private static function currentElements(?string $name): ?object
     {
         $name = preg_replace('/\s+/', ' ', trim((string) $name));
         if ($name === '' || ! Schema::hasTable('comets_orbital_elements')) {
@@ -133,7 +209,13 @@ class CometCoordinates
         $w = (float) ($elements->w ?? 0.0);
         $node = (float) ($elements->node ?? 0.0);
 
-        if ($e < 1.0) {
+        // The library's Elliptic loses its precision for an eccentricity close
+        // to 1 (a semi-major axis of thousands of AU): 2' at 0.999, a degree at
+        // 0.9999, tens of degrees beyond (C/2007 N3 with JPL's e of 0.9999993
+        // landed 10 degrees from its place). The near-parabolic solution of
+        // Meeus chapter 35 holds on both sides of 1 and agrees with Elliptic to
+        // 0.4' at 0.99.
+        if ($e < self::NEAR_PARABOLIC_FROM) {
             $target = new Elliptic();
             $target->setOrbitalElements($q / (1.0 - $e), $e, $i, $w, $node, $perihelion);
         } elseif ($e == 1.0) {
@@ -280,7 +362,7 @@ class CometCoordinates
      */
     public static function forName(?string $name, Carbon $date, GeographicalCoordinates $geo, float $height = 0.0): ?EquatorialCoordinates
     {
-        $elements = self::orbitalElements($name);
+        $elements = self::orbitalElements($name, $date);
         $target = $elements ? self::target($elements) : null;
 
         return $target ? self::calculate($target, $date, $geo, $height) : null;

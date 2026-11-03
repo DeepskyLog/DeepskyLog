@@ -101,6 +101,9 @@ class Kernel extends ConsoleKernel
         $schedule->job(new \App\Jobs\ComputeObjectSimilarities())->weeklyOn(1, '03:50');
 
         $schedule->command('astronomy:updateCometPhotometry')->weeklyOn(2, '4:30');
+        // Elements of the comets at the dates of their (old) observations,
+        // before the weekly check of all observations on Sunday
+        $schedule->command('comets:fetch-epoch-elements --apply')->weeklyOn(6, '05:10')->withoutOverlapping();
         // Incremental search index reindex (one-run nightly; safe for production)
         $schedule->command('search:reindex --incremental')
             ->dailyAt('02:00')
