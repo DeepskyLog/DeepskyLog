@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\User;
+use App\Support\MemoryLimit;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -62,6 +63,13 @@ abstract class QueuedPdfJob implements ShouldQueue
      * makes the message unnecessary (markSeen()).
      */
     public const NOTIFY_DELAY_SECONDS = 15;
+
+    /**
+     * The memory a PDF may use: dompdf holds the whole document (the A4
+     * overview atlas of 231 pages takes 700 MB), more than the 128 MB of a
+     * default PHP command line.
+     */
+    public const MEMORY_LIMIT = '2048M';
 
     /** @var array<int, class-string<QueuedPdfJob>> */
     public const KINDS = [GenerateAtlasPdf::class, GenerateObjectSetsPdf::class, GenerateObjectReportPdf::class, GenerateObservationsZip::class, GenerateAccountExport::class];
@@ -374,6 +382,7 @@ abstract class QueuedPdfJob implements ShouldQueue
 
         $this->updateStatus('processing');
         $this->failWhenTheWorkerDies();
+        MemoryLimit::atLeast(static::MEMORY_LIMIT);
 
         App::setLocale($this->locale);
         Carbon::setLocale($this->locale);
