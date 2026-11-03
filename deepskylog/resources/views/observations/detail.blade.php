@@ -337,7 +337,7 @@
                             @php
                                 $viewer = auth()->user();
                                 $viewerIsOwner = ($viewer->username ?? '') === ($obs->observerid ?? $obs->observer_username ?? '');
-                                $viewerIsAdmin = $viewer?->isAdministrator() || (method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges());
+                                $viewerIsAdmin = $viewer?->isAdministrator() || $viewer?->isDatabaseExpert();
                             @endphp
                             @if ($viewerIsOwner || $viewerIsAdmin)
                                 <div class="flex items-center gap-2 mb-6">

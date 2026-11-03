@@ -2474,7 +2474,8 @@ class ObservationsController extends Controller
             // Authorization: only the owner or an administrator may update
             $viewer = $request->user();
             $owns = ($viewer && ($viewer->id && $obs->observer_user_id == $viewer->id || $viewer->username && $obs->observer_username == $viewer->username));
-            $isAdmin = $viewer && (method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges() || $viewer->isAdministrator());
+            // Another observer's observation only in the role of administrator or database expert
+            $isAdmin = $viewer && ($viewer->isAdministrator() || $viewer->isDatabaseExpert());
             if (!$owns && !$isAdmin) {
                 abort(403);
             }
@@ -2819,7 +2820,8 @@ class ObservationsController extends Controller
         }
 
         $owns = ($viewer->id && $selectedUnified->observer_user_id && $viewer->id == $selectedUnified->observer_user_id) || ($viewer->username && $selectedUnified->observer_username && $viewer->username == $selectedUnified->observer_username);
-        $isAdmin = (method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges()) || $viewer->isAdministrator();
+        // Another observer's observation only in the role of administrator or database expert
+        $isAdmin = $viewer->isAdministrator() || $viewer->isDatabaseExpert();
         if (!$owns && !$isAdmin) {
             abort(403);
         }
@@ -3031,7 +3033,8 @@ class ObservationsController extends Controller
         }
 
         $owns = ($viewer->id && $selectedUnified->observer_user_id && $viewer->id == $selectedUnified->observer_user_id) || ($viewer->username && $selectedUnified->observer_username && $viewer->username == $selectedUnified->observer_username);
-        $isAdmin = (method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges()) || $viewer->isAdministrator();
+        // Another observer's observation only in the role of administrator or database expert
+        $isAdmin = $viewer->isAdministrator() || $viewer->isDatabaseExpert();
         if (!$owns && !$isAdmin) {
             abort(403);
         }
