@@ -1,4 +1,5 @@
 <x-app-layout>
+    @include('object.partials.canonical')
     <style>
         /* Prevent horizontal page scroll on the object detail page.
            In flex-row (lg+): min-width:0 keeps the flex item within its

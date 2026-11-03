@@ -4,6 +4,7 @@
             $isSunPageBlade = true;
             $canonicalSlug = $session->slug ?? null;
         @endphp
+        @include('object.partials.canonical')
 
         <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
             <header class="mb-6">

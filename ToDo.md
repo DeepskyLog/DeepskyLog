@@ -5,14 +5,34 @@
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4 -> Ubuntu 26.04 LTS.
 - [ ] Double stars to check by hand (`php artisan objects:fill-double-star-magnitudes -v` lists them):
-  - [ ] HU 559: 41″ and primary 6.4 in DeepskyLog, 0.6″ and primary 9.6 in the WDS (HU 559 BC); probably another pair.
-  - [ ] HJ 748: 4″ and primary 11.2 in DeepskyLog, 6.8″ and primary 8.37 in the WDS.
-  - [ ] STF 1156: the WDS entry lies 31′ from DeepskyLog's position, primary 7.8 against 9.5.
-  - [ ] Fox 256: the WDS entry lies 43′ from DeepskyLog's position, primary 10.9 against 8.52.
   - [ ] Names the command cannot resolve: Nu Boo, Zeta Sco, Omega Sco and Xi Cen (two numbered stars each), 42-45 Ori and 64-65 Gem (ranges), Star Abagail, Lorenzin 18, 19 and 22, and the entries without a separation, such as Procyon and 118 Tauri.
   - [ ] About 270 NGC/IC "double stars" are not in the WDS and mostly have no separation or magnitudes.
 - [ ] On real server:
   - [ ] Comet positions (commit a30f09b2): `php artisan migrate` (`2026_11_03_000010_create_comet_epoch_elements_table`), then `php artisan comets:fetch-epoch-elements` (dry run: the comets and dates it will ask JPL Horizons for; on the development database 185), then `php artisan comets:fetch-epoch-elements --apply` (a few minutes), then `php artisan observations:check-suspect --all` (on the development database the comet observations below the horizon went from 90 to 30). After that the scheduler fetches new ones every Saturday at 05:10.
+  - [ ] Speed (checked on 3 November 2026: a crawler opened ~3,000 object pages an hour under their alternative names, PHP pool of 10 workers full, load up to 18 on 4 cores, swap full). In `/mnt/bigdisk/var/www/test.deepskylog.org/deepskylog`, in this order:
+    - [ ] `git pull` (object pages get `<link rel="canonical">` to the main name, so crawlers stop fetching each object once per alternative name).
+    - [ ] Shorter sessions: the 2.9 million rows (2.9 GB) of `sessions` are a year of guest visits (`SESSION_LIFETIME=525600`). First delete the rows older than 30 days in batches, so the session garbage collection never runs one huge DELETE:
+      `while n=$(mysql -N deepskylogLaravel -e "DELETE FROM sessions WHERE last_activity < UNIX_TIMESTAMP() - 30*86400 LIMIT 20000; SELECT ROW_COUNT();"); [ "$n" != 0 ]; do echo $n; sleep 1; done`
+      then `mysql deepskylogLaravel -e "OPTIMIZE TABLE sessions"`, then `SESSION_LIFETIME=43200` in `.env` (30 days; observers who ticked "Remember me" stay logged in).
+    - [ ] `LOG_LEVEL=warning` in `.env` (production now writes every debug line, 13 MB today).
+    - [ ] `php artisan optimize` (caches config, routes, events and views; `bootstrap/cache` has no `config.php`, so every request reads all config files). From now on run it after every deploy **and after every change to `.env`**: with a cached config, `.env` is no longer read. Undo with `php artisan optimize:clear`. Then `php artisan queue:restart`.
+    - [ ] Cache in Valkey instead of MariaDB (root): `dnf install php-pecl-redis6 && systemctl restart php-fpm`, check with `php -m | grep redis`. Valkey database 0 is used by another site (154,000 keys), and `cache:clear` empties the whole database of the cache, so in `.env`: `CACHE_DRIVER=redis`, `REDIS_DB=4`, `REDIS_CACHE_DB=5` (`REDIS_HOST=127.0.0.1` is there). Then `php artisan optimize`, `php artisan queue:restart`, and after a day `mysql deepskylogLaravel -e "TRUNCATE cache"`. Valkey has no `maxmemory` (policy `noeviction`): watch `valkey-cli info memory`; ask whoever uses database 0 before setting one.
+    - [ ] Compression and asset caching (root): in `/etc/httpd/conf.d/test.deepskylog.org.conf`, in the `:443` VirtualHost (brotli, deflate and headers are loaded, nothing uses them; the old sites' vhosts can get the same block):
+      ```
+      <IfModule mod_brotli.c>
+          AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/xml text/javascript application/javascript application/json application/xml application/rss+xml application/manifest+json image/svg+xml
+      </IfModule>
+      <IfModule mod_deflate.c>
+          AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml text/javascript application/javascript application/json application/xml application/rss+xml application/manifest+json image/svg+xml
+      </IfModule>
+      <LocationMatch "^/build/assets/">
+          Header set Cache-Control "public, max-age=31536000, immutable"
+      </LocationMatch>
+      ```
+      `apachectl configtest && systemctl reload httpd`, check with `curl -sI -H 'Accept-Encoding: br, gzip' https://test.deepskylog.org/ | grep -i content-encoding`.
+    - [ ] Find the crawler (root; the access logs aren't readable for wim): `awk -F'"' '{print $6}' /var/log/httpd/test.deepskylog.org-access_log | sort | uniq -c | sort -rn | head` and the same with `awk '{print $1}'` for the addresses (also the old sites' logs). A crawler that reads robots.txt gets a `Disallow` in `deepskylog/public/robots.txt`; one that doesn't, a block in the vhost or CrowdSec.
+    - [ ] MariaDB (root, `/etc/my.cnf.d/`): `innodb_buffer_pool_size = 2G` (now 1 GB for a 41 GB database; memory is tight, so not more until swap is free), and `slow_query_log = 1`, `long_query_time = 2`. Restart MariaDB at a quiet moment (both sites stop for a few seconds).
+    - [ ] A week later: `sar -q` for the load, `free -h` for the swap. Only then consider `pm.max_children` above 10 in `/etc/php-fpm.d/test.deepskylog.org.conf`.
   - [ ] After a few weeks without problems (deployed on 3 November 2026): drop the old database `deepskylog` and remove its line from `~/scripts/dumpDatabase`; drop `sessionObservations_before_switch`, `sessionObservations_comet_links`, `observation_likes_before_switch` and `observing_list_items_bak_20260923` from `deepskylogLaravel`.
 - [ ] Release new version of pyDeepskyLog
   - [ ] Ready to be released, make sure to check if everything still works with the PiFinder.
