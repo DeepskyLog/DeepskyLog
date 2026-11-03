@@ -176,7 +176,7 @@
                                 @csrf
 
                                 <x-dropdown.item icon="arrow-left-start-on-rectangle" href="{{ route('logout') }}"
-                                    @click.prevent="$root.submit();" label='{{ __('Log Out') }}' />
+                                    @click.prevent="$root.submit();" label="{{ __('Log Out') }}" />
                             </form>
 
                             <!-- Team Management -->
@@ -189,7 +189,7 @@
 
                                 <!-- Team Settings -->
                                 <x-dropdown.item href="{{ route('teams.show', Auth::user()->currentTeam->slug) }}"
-                                    :active="@json(request()->routeIs('teams.show'))" label='{!! __('Team Settings') !!}' />
+                                    :active="request()->routeIs('teams.show')" label="{{ __('Team Settings') }}" />
 
                                 <div class="border-t border-gray-400"></div>
 
