@@ -97,6 +97,7 @@
                     $moonImg = asset("images/moon/m{$frameIndex}.gif");
                 @endphp
 
+                <a href="{{ route('moon.show') }}" title="{{ __('The Moon tonight') }}" class="shrink-0">
                 @if (file_exists(public_path("images/moon/m{$frameIndex}.gif")))
                     <img src="{{ $moonImg }}" alt="{{ __('Moon phase') }}" class="w-20 h-20 object-contain"
                         loading="lazy" data-moon-frame="{{ $frameIndex }}" />
@@ -110,6 +111,7 @@
                         <circle cx="30" cy="30" r="24" fill="none" stroke="#24303a" stroke-width="1" />
                     </svg>
                 @endif
+                </a>
 
                 <div class="ml-3">
                     <div class="text-sm text-gray-200">

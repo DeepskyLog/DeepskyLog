@@ -56,10 +56,13 @@ return [
 
         // Separate store for spatie/laravel-responsecache: clearing the response
         // cache flushes its whole store, which must not take other cached data
-        // (such as the status of queued PDF jobs) with it.
+        // (such as the status of queued PDF jobs) with it. The web server writes it, the
+        // deploy user clears it (responsecache:clear): the directories must be writable
+        // by the group, or the clear fails silently and old pages stay for an hour.
         'responsecache' => [
             'driver' => 'file',
             'path' => storage_path('framework/cache/responsecache'),
+            'permission' => 0775,
         ],
 
         'memcached' => [
