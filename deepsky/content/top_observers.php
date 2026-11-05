@@ -10,7 +10,10 @@ function topobservers()
 	$catalog=$objUtil->checkGetKey('catalog','');
 	if(!(in_array(stripslashes($catalog),$DSOcatalogsLists)))
 	  $catalog="M";
-	$rank=$objObservation->getPopularObserversOverviewCatOrListAllInfo();
+	// Cached for an hour, as the counts in showTopObservers()
+	$rank=SimpleCache::remember('rank_observers:rank',3600,function() use ($objObservation) {
+	  return $objObservation->getPopularObserversOverviewCatOrListAllInfo();
+	});
 	$link=$baseURL."index.php?indexAction=rank_observers&amp;catalog=".urlencode($catalog);
 	echo "<div id=\"main\">";
 	echo "<h4>"._("Most active observers")."</h4>";

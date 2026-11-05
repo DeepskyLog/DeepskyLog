@@ -608,7 +608,39 @@ class Observers
             $catalog = "M";
         }
 
-        $objectsInCatalog = $objObject->getNumberOfObjectsInCatalog($catalog);
+        // The counts run over all observations, so they are cached for an
+        // hour: crawlers walking every catalog overloaded the server.
+        $totals = SimpleCache::remember(
+            'rank_observers:totals', 3600,
+            function () use ($objObservation) {
+                return [
+                    'observations' => $objObservation->getNumberOfDsObservations(),
+                    'drawings' => $objObservation->getNumberOfDsDrawings(),
+                    'observationsLastYear'
+                        => $objObservation->getObservationsLastYear('%'),
+                    'drawingsLastYear' => $objObservation->getDrawingsLastYear('%'),
+                    'differentObjects'
+                        => $objObservation->getNumberOfDifferentObservedDSObjects(),
+                    'drawingsPerObserver' => $objObservation->getDsDrawingsCount(),
+                    'observationsLastYearPerObserver'
+                        => $objObservation->getAllObservationsLastYearCount(),
+                    'drawingsLastYearPerObserver'
+                        => $objObservation->getAllDrawingsLastYearCount(),
+                    'objectsPerObserver' => $objObservation->getNumberOfObjectsCount(),
+                ];
+            }
+        );
+        $catalogCounts = SimpleCache::remember(
+            'rank_observers:catalog:' . $catalog, 3600,
+            function () use ($objObject, $objObservation, $catalog) {
+                return [
+                    'objects' => $objObject->getNumberOfObjectsInCatalog($catalog),
+                    'perObserver' => $objObservation
+                        ->getAllObservedCountFromCatalogOrList($catalog),
+                ];
+            }
+        );
+        $objectsInCatalog = $catalogCounts['objects'];
 
         echo "<thead>";
         echo "<tr>";
@@ -640,13 +672,11 @@ class Observers
         echo "</th>";
         echo "<th>" . _("Different objects") . "</td>";
         echo "</tr>";
-        $numberOfObservations = $objObservation->getNumberOfDsObservations();
-        $numberOfDrawings = $objObservation->getNumberOfDsDrawings();
-        $numberOfObservationsThisYear
-            = $objObservation->getObservationsLastYear('%');
-        $numberOfDrawingsThisYear = $objObservation->getDrawingsLastYear('%');
-        $numberOfDifferentObjects
-            = $objObservation->getNumberOfDifferentObservedDSObjects();
+        $numberOfObservations = $totals['observations'];
+        $numberOfDrawings = $totals['drawings'];
+        $numberOfObservationsThisYear = $totals['observationsLastYear'];
+        $numberOfDrawingsThisYear = $totals['drawingsLastYear'];
+        $numberOfDifferentObjects = $totals['differentObjects'];
         echo "</thead>";
         echo "<tfoot>";
         echo "<tr><td>" . _("Total") . "</td><td></td>"
@@ -661,13 +691,11 @@ class Observers
         $count = 0;
         // We get the full list of observers and observations from sql,
         // don't loop over the observers and do a mysql query always!
-        $allDrawings = $objObservation->getDsDrawingsCount();
-        $allObservationsLastYear
-            = $objObservation->getAllObservationsLastYearCount();
-        $allDrawingsLastYear = $objObservation->getAllDrawingsLastYearCount();
-        $allObjects = $objObservation->getNumberOfObjectsCount();
-        $allObjectsCount
-            = $objObservation->getAllObservedCountFromCatalogOrList($catalog);
+        $allDrawings = $totals['drawingsPerObserver'];
+        $allObservationsLastYear = $totals['observationsLastYearPerObserver'];
+        $allDrawingsLastYear = $totals['drawingsLastYearPerObserver'];
+        $allObjects = $totals['objectsPerObserver'];
+        $allObjectsCount = $catalogCounts['perObserver'];
 
         foreach ($rank as $value) {
             $outputtable .= "<tr>";

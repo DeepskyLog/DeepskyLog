@@ -45,6 +45,7 @@ function preludesA()
     // old columns in place of the old tables (see lib/databaseMux.php).
     $objDatabase = new DatabaseMux($objDatabase_new);
     include_once "lib/util.php";
+    include_once "lib/simpleCache.php";
     $objUtil = new Utils();
     include_once "lib/setup/language.php";
     $objLanguage = new Language();
