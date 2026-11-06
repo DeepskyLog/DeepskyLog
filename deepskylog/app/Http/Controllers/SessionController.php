@@ -940,16 +940,15 @@ class SessionController extends Controller
             ->limit(self::HOMEPAGE_SESSIONS)
             ->get());
 
-        // The newest observations and sketches, refreshed every 5 minutes and when an observation
-        // changes (ObservationObserver::forgetHomepageCaches())
+        // The newest observations and sketches, the last entered first (by id, not by the date
+        // observed, so an old observation entered today shows up too), refreshed every 5 minutes
+        // and when an observation changes (ObservationObserver::forgetHomepageCaches())
         $observations = Cache::remember('welcome_observations', 300, fn () => Observation::whereIn('target_type', self::HOMEPAGE_TARGET_TYPES)
-            ->orderByDesc('observed_on')
             ->orderByDesc('id')
             ->limit(self::HOMEPAGE_OBSERVATIONS)
             ->get());
         $sketches = Cache::remember('welcome_sketches', 300, fn () => Observation::where('has_drawing', true)
             ->whereIn('target_type', self::HOMEPAGE_TARGET_TYPES)
-            ->orderByDesc('observed_on')
             ->orderByDesc('id')
             ->limit(self::HOMEPAGE_SKETCHES)
             ->get());

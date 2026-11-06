@@ -145,6 +145,16 @@ it('shows the newest observations and sketches as a short preview with links to 
         ->assertDontSee('20 newest observations');
 });
 
+it('shows the observations and sketches entered last first, not those observed last', function () {
+    $observer = \App\Models\User::factory()->create();
+    welcomeObservation($observer, 'NGC 7000', '2026-10-30', ['has_drawing' => true, 'drawing_filename' => 'drawings/ngc7000.jpg']);
+    welcomeObservation($observer, 'M 13', '1998-06-15', ['has_drawing' => true, 'drawing_filename' => 'drawings/m13.jpg']);
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSeeInOrder(['Newest observations', 'M 13', 'NGC 7000', 'Newest sketches', 'm13.jpg', 'ngc7000.jpg'], false);
+});
+
 it('shows the sketches of the week and month together', function () {
     $observer = \App\Models\User::factory()->create();
     $week = welcomeObservation($observer, 'M 27', '2026-09-01', ['has_drawing' => true, 'drawing_filename' => 'drawings/m27.jpg']);
