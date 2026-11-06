@@ -37,6 +37,15 @@ function instructions()
     } elseif ($markAsRead) {
         $objObserver->markAsRead($markAsRead);
     }
+    // Back to the same page without markAsRead, so reloading it, the Back
+    // button or a bookmark does not mark the observations added since as
+    // read again.
+    if ($markAsRead && $_SERVER['REQUEST_METHOD'] === 'GET') {
+        $params = $_GET;
+        unset($params['markAsRead']);
+        header('Location: ' . $baseURL . 'index.php' . ($params ? '?' . http_build_query($params) : ''));
+        exit;
+    }
     $theDate = date('Ymd', strtotime('-1 year'));
     if (($objUtil->checkGetKey('indexAction', 'x') == 'x') || (($objUtil->checkGetKey('catalog', 'x') == '%') && ($objUtil->checkGetKey('minyear', 'x') == substr($theDate, 0, 4)) && ($objUtil->checkGetKey('minmonth', 'x') == substr($theDate, 4, 2)) && ($objUtil->checkGetKey('minday', 'x') == substr($theDate, 6, 2)) && (($objUtil->checkGetKey('sort', 'x') == 'x') || (($objUtil->checkGetKey('sort', 'x') == 'observationid') && ($objUtil->checkGetKey('sortdirection', 'x') == 'desc'))))) {
         $lastReadObservation = ($loggedUser ? $objObserver->getLastReadObservation($loggedUser) : -1);

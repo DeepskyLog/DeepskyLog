@@ -117,7 +117,9 @@ function selected_observations()
     }
     // expand is left out: the expand links add their own, and carrying the
     // current one along gave crawlers an endless supply of distinct URLs
-    // (expand=1&expand=2&..., times every page and filter).
+    // (expand=1&expand=2&..., times every page and filter). markAsRead too:
+    // carried along, every click on the page (expand, sort, next page) marked
+    // all observations as read again, also those added since.
     foreach ($_GET as $key => $value) {
         if (!in_array($key, [
                 'indexAction',
@@ -126,6 +128,7 @@ function selected_observations()
                 'myLanguages',
                 'collapsed',
                 'expand',
+                'markAsRead',
         ])) {
             $link2 .= '&amp;'.$key.'='.urlencode($value);
         }
