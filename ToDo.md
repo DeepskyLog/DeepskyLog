@@ -9,6 +9,7 @@
     - [ ] Response cache permissions (found 3 November): `storage/framework/cache/responsecache` and its subdirectories belong to apache without group write (`drwxr-sr-x`), so `php artisan responsecache:clear` as wim removes nothing and reports success. As root: `chmod -R g+w /mnt/bigdisk/var/www/test.deepskylog.org/deepskylog/storage/framework/cache` and `UMask=0002` for php-fpm (`systemctl edit php-fpm`, `[Service]` `UMask=0002`, then `systemctl restart php-fpm`), so new directories stay group-writable; check with `php artisan responsecache:clear && find storage/framework/cache/responsecache -type f | wc -l` (0).
     - [ ] A week later: `sar -q` for the load, `free -h` for the swap. Only then consider `pm.max_children` above 10 in `/etc/php-fpm.d/test.deepskylog.org.conf`.
   - [ ] After a few weeks without problems (deployed on 3 November 2026): drop the old database `deepskylog` and remove its line from `~/scripts/dumpDatabase`; drop `sessionObservations_before_switch`, `sessionObservations_comet_links`, `observation_likes_before_switch` and `observing_list_items_bak_20260923` from `deepskylogLaravel`.
+  - [ ] Old site: pull the fix of "Latest observations" lost by marking them read (`markAsRead` carried along in every link of the observation list) in the old site's checkout on the server.
 - [ ] Release new version of pyDeepskyLog
   - [ ] Ready to be released, make sure to check if everything still works with the PiFinder.
 
