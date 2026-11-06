@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\CometCoordinates;
+use App\Services\Comets\HyperbolicOrbit;
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Targets\Elliptic;
@@ -39,6 +40,7 @@ it('picks the orbit that matches the eccentricity', function () {
     expect(CometCoordinates::target((object) ([...(array) $elements, 'e' => 0.95])))->toBeInstanceOf(Elliptic::class)
         ->and(CometCoordinates::target((object) ([...(array) $elements, 'e' => 1.0])))->toBeInstanceOf(Parabolic::class)
         ->and(CometCoordinates::target((object) ([...(array) $elements, 'e' => 1.0001])))->toBeInstanceOf(NearParabolic::class)
+        ->and(CometCoordinates::target((object) ([...(array) $elements, 'e' => 6.14])))->toBeInstanceOf(HyperbolicOrbit::class)
         ->and(CometCoordinates::target((object) ([...(array) $elements, 'e' => 0.95, 'Tp' => null])))->toBeNull();
 });
 
@@ -172,4 +174,40 @@ it('uses the light curve of aerith.net in parts', function () {
     expect(CometCoordinates::magnitude($comet, Carbon::create(2024, 3, 1, 0, 0, 0, 'UTC')))->toEqualWithDelta(6.529, 0.01)
         // 4.3 + 5 log(1.557525) + 11 log(1.071307): r of 10 days later
         ->and(CometCoordinates::magnitude($comet, Carbon::create(2024, 5, 21, 0, 0, 0, 'UTC')))->toEqualWithDelta(5.591, 0.01);
+});
+
+it('solves the orbit of an interstellar comet', function () {
+    // 3I/ATLAS, MPEC 2026-G41
+    $elements = (object) [
+        'q' => 1.356507, 'e' => 6.139884, 'i' => 175.1129, 'w' => 128.0055, 'node' => 322.1535, 'Tp' => 20251029.4825,
+        'H' => 6.0, 'n' => 10.0,
+    ];
+    $target = CometCoordinates::target($elements);
+
+    // Discovered on 1 July 2025 near 18h08m, -18.7 degrees (the orbit is solved,
+    // not NaN, and in the right part of the sky; the comet moved fast)
+    $position = CometCoordinates::calculate($target, Carbon::parse('2025-07-01 12:00', 'UTC'), new GeographicalCoordinates(0, 0));
+    expect(separationInArcminutes($position->getRA()->getCoordinate(), $position->getDeclination()->getCoordinate(), 18.132, -18.7))->toBeLessThan(30.0);
+
+    // The near-parabolic series gave NaN a year after the perihelion
+    $later = Carbon::parse('2026-11-06', 'UTC');
+    $position = CometCoordinates::calculate($target, $later, new GeographicalCoordinates(0, 0));
+    expect(is_finite($position->getRA()->getCoordinate()))->toBeTrue()
+        ->and(is_finite($position->getDeclination()->getCoordinate()))->toBeTrue()
+        ->and(CometCoordinates::magnitude($target, $later))->toBeGreaterThan(18.0);
+});
+
+it('agrees with the near-parabolic solution for an eccentricity just above 1', function () {
+    $perihelion = Carbon::parse('2025-10-29', 'UTC');
+    $hyperbolic = new HyperbolicOrbit;
+    $hyperbolic->setOrbitalElements(1.2, 1.05, 40.0, 100.0, 200.0, $perihelion);
+    $nearParabolic = new NearParabolic;
+    $nearParabolic->setOrbitalElements(1.2, 1.05, 40.0, 100.0, 200.0, $perihelion);
+
+    foreach ([-300, -30, 0, 30, 300] as $days) {
+        $date = $perihelion->copy()->addDays($days);
+        $a = CometCoordinates::calculate($hyperbolic, $date, new GeographicalCoordinates(0, 0));
+        $b = CometCoordinates::calculate($nearParabolic, $date, new GeographicalCoordinates(0, 0));
+        expect(separationInArcminutes($a->getRA()->getCoordinate(), $a->getDeclination()->getCoordinate(), $b->getRA()->getCoordinate(), $b->getDeclination()->getCoordinate()))->toBeLessThan(0.01);
+    }
 });

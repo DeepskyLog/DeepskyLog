@@ -277,7 +277,7 @@ class TonightsBest
         $seeing = SeeingForecast::forNight((float) $location->latitude, (float) $location->longitude, $night, $timezone, fetch: false);
 
         // v2: a magnitude of 0 is unknown (ContrastReserveCalculator::target()); v4: the field of view; v5: the seeing; v6: the twilight; v7: the lunar features
-        $key = 'tonights_best:v7:'.md5(json_encode([
+        $key = 'tonights_best:v8:'.md5(json_encode([
             $user?->id, $instrument?->id, $location->id, (float) $location->latitude, (float) $location->longitude, $location->horizon, $lensId, $field, $seeing, $night, $timezone, $options, $offset,
             // a new observation changes what the observer has seen
             $user ? DB::table('observations')->where('observer_username', $user->username)->max('id') : null,
@@ -1233,7 +1233,7 @@ class TonightsBest
      */
     public static function bodies(string $night): array
     {
-        return Cache::remember('tonights_best:bodies:v2:'.$night, 6 * 3600, function () use ($night) {
+        return Cache::remember('tonights_best:bodies:v3:'.$night, 6 * 3600, function () use ($night) {
             $date   = Carbon::parse($night, 'UTC')->addDay()->startOfDay();
             $geo    = new GeographicalCoordinates(0.0, 0.0);
             $bodies = [];
@@ -1272,6 +1272,9 @@ class TonightsBest
                         continue;
                     }
                     $coordinates = CometCoordinates::calculate($target, $date, $geo);
+                    if (! is_finite((float) $coordinates->getRA()->getCoordinate()) || ! is_finite((float) $coordinates->getDeclination()->getCoordinate())) {
+                        continue;
+                    }
                     $bodies[]    = [
                         'kind'      => 'comet',
                         'name'      => html_entity_decode((string) $comet->name, ENT_QUOTES | ENT_HTML5, 'UTF-8'),

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Services\Comets\HyperbolicOrbit;
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
@@ -36,6 +37,14 @@ class CometCoordinates
 
     /** From this eccentricity on, an orbit is solved as near-parabolic (see target()). */
     public const NEAR_PARABOLIC_FROM = 0.99;
+
+    /**
+     * From this eccentricity on, an orbit is solved as hyperbolic
+     * (HyperbolicOrbit): the near-parabolic series does not converge for a
+     * clearly hyperbolic orbit (3I/ATLAS, e = 6.1, gave NaN). Up to e = 1.1
+     * both agree to better than 0.0001'.
+     */
+    public const HYPERBOLIC_FROM = 1.01;
 
     private static ?bool $hasEpochTable = null;
 
@@ -214,13 +223,17 @@ class CometCoordinates
         // 0.9999, tens of degrees beyond (C/2007 N3 with JPL's e of 0.9999993
         // landed 10 degrees from its place). The near-parabolic solution of
         // Meeus chapter 35 holds on both sides of 1 and agrees with Elliptic to
-        // 0.4' at 0.99.
+        // 0.4' at 0.99. A clearly hyperbolic orbit gets the hyperbolic
+        // Kepler equation (HyperbolicOrbit, a NearParabolic).
         if ($e < self::NEAR_PARABOLIC_FROM) {
             $target = new Elliptic();
             $target->setOrbitalElements($q / (1.0 - $e), $e, $i, $w, $node, $perihelion);
         } elseif ($e == 1.0) {
             $target = new Parabolic();
             $target->setOrbitalElements($q, $i, $w, $node, $perihelion);
+        } elseif ($e >= self::HYPERBOLIC_FROM) {
+            $target = new HyperbolicOrbit();
+            $target->setOrbitalElements($q, $e, $i, $w, $node, $perihelion);
         } else {
             $target = new NearParabolic();
             $target->setOrbitalElements($q, $e, $i, $w, $node, $perihelion);
@@ -316,7 +329,11 @@ class CometCoordinates
             return null;
         }
 
-        return $target->magnitude($date->copy());
+        $magnitude = $target->magnitude($date->copy());
+
+        // A position the library could not solve gives NaN, which would pass
+        // every "brighter than" test and break the JSON of the pages.
+        return is_finite($magnitude) ? $magnitude : null;
     }
 
     /**
