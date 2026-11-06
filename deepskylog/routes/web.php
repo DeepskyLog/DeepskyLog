@@ -318,6 +318,7 @@ Route::post('/observation/import/{token}/objects', [App\Http\Controllers\Observa
 Route::delete('/observation/import/{token}', [App\Http\Controllers\ObservationImportController::class, 'cancel'])->name('observation.import.cancel')->middleware('auth')->where('token', '[A-Za-z0-9]{40}');
 // Observations (deepsky + comet)
 Route::get('/observations', 'App\Http\Controllers\ObservationsController@index')->name('observations.index');
+Route::post('/observations/mark-read', [App\Http\Controllers\ObservationsController::class, 'markRead'])->name('observations.mark-read')->middleware('auth');
 Route::get('/observations/search', [App\Http\Controllers\ObservationsController::class, 'search'])->name('observations.search');
 Route::get('/observations/search/objects', [App\Http\Controllers\ObservationsController::class, 'searchObjects'])
     ->name('observations.search.objects')

@@ -94,6 +94,17 @@
                             <a href="{{ $followingUrl }}"
                                class="rounded px-3 py-1 text-sm font-medium {{ !empty($following) ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600' }}"
                             >{{ __('What I follow') }}</a>
+                            {{-- Only the observations not read yet (the mark is shared with the old site) --}}
+                            @php
+                                $newParams = \App\Helpers\ListingPagination::query(['new', 'sort']);
+                                if (empty($onlyNew)) {
+                                    $newParams['new'] = 1;
+                                }
+                                $newUrl = url('/observations') . ($newParams ? '?' . http_build_query($newParams) : '');
+                            @endphp
+                            <a href="{{ $newUrl }}"
+                               class="rounded px-3 py-1 text-sm font-medium {{ !empty($onlyNew) ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600' }}"
+                            >{{ __('New') }}@if (!empty($unreadCount)) <span class="ml-1 rounded-full bg-amber-500 px-1.5 text-xs font-semibold text-gray-900">{{ number_format($unreadCount) }}</span>@endif</a>
                         @endauth
                     @else
                         {{-- Non-global pages: keep the deepsky/comet toggle buttons --}}
@@ -116,7 +127,7 @@
                     @endif
                 </div>
                 @php
-                    $currentSort = request()->query('sort', 'observed');
+                    $currentSort = $sort ?? request()->query('sort', 'observed');
                     $sortObservedUrl = url()->current() . '?' . http_build_query(array_merge($listingQuery, ['sort' => 'observed']));
                     $sortIdUrl = url()->current() . '?' . http_build_query(array_merge($listingQuery, ['sort' => 'id']));
                 @endphp
@@ -242,8 +253,24 @@
                             </form>
                         </div>
                     @endif
+                    @php
+                        // The unread markers only on the global listing of a logged-in observer
+                        $showUnread = isset($readMark) && $user == '' && empty($objectFilter);
+                    @endphp
+                    @if ($showUnread && !empty($unreadCount))
+                        <div class="mb-3 flex flex-wrap items-center gap-3 rounded bg-gray-800 px-4 py-2 text-sm text-gray-200">
+                            <span>{{ trans_choice(':count new observation since you last marked them as read.|:count new observations since you last marked them as read.', $unreadCount, ['count' => number_format($unreadCount)]) }}</span>
+                            <form method="POST" action="{{ route('observations.mark-read') }}">
+                                @csrf
+                                <input type="hidden" name="up_to" value="{{ $newestId }}">
+                                <button type="submit" class="rounded bg-amber-500 px-3 py-1 font-semibold text-gray-900 hover:bg-amber-400">{{ __('Mark all read') }}</button>
+                            </form>
+                        </div>
+                    @endif
                     <x-card>
-                        @if ($deepsky->isEmpty() && !empty($following) && empty($followingCount))
+                        @if ($deepsky->isEmpty() && !empty($onlyNew))
+                            <div class="text-center text-gray-300">{{ __('No new observations.') }}</div>
+                        @elseif ($deepsky->isEmpty() && !empty($following) && empty($followingCount))
                             <div class="text-center text-gray-300">{{ __('You do not follow any observers or objects yet. Use the Follow button on the page of an observer or an object.') }}</div>
                         @elseif ($deepsky->isEmpty())
                             <div class="text-center text-gray-300">{{ __('No observations yet.') }}</div>
@@ -252,6 +279,19 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-4 px-5">
                                 @foreach ($deepsky as $observation)
+                                    @if ($showUnread && \App\Services\Observations\ReadObservations::isUnread(auth()->user(), $readMark, $observation))
+                                        <div class="flex flex-wrap items-center gap-3 border-l-4 border-amber-500 pl-3 text-sm">
+                                            <span class="rounded bg-amber-500 px-2 py-0.5 text-xs font-semibold uppercase text-gray-900">{{ __('New') }}</span>
+                                            @if ($currentSort === 'id')
+                                                {{-- Sorted newest id first: this one and all below it --}}
+                                                <form method="POST" action="{{ route('observations.mark-read') }}">
+                                                    @csrf
+                                                    <input type="hidden" name="up_to" value="{{ $observation->id }}">
+                                                    <button type="submit" class="text-gray-400 underline hover:text-gray-200">{{ __('Mark this one and the older ones as read') }}</button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    @endif
                                     <x-observation-deepsky 
                                         :observation="$observation" 
                                     />

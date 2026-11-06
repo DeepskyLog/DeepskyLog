@@ -22,6 +22,7 @@ use App\Models\ObservationComment;
 use App\Models\ObservationTranslation;
 use App\Services\AavsoVariableStars;
 use App\Services\ObservationSearchQuery;
+use App\Services\Observations\ReadObservations;
 use App\Services\Observations\ObservationCardData;
 use App\Services\Observations\ObserverDrawings;
 use App\Services\Observations\SameFieldObjects;
@@ -351,15 +352,21 @@ class ObservationsController extends Controller
             $obsType = 'all';
         }
 
-        $sort = request()->query('sort', 'observed');
+        // ?new=1: only the observations the logged-in user has not read yet,
+        // newest id first unless another order is asked for
+        $onlyNew = request()->boolean('new');
+        $sort = request()->query('sort', $onlyNew ? 'id' : 'observed');
 
         // ?following=1: only the observers and objects the logged-in user follows
         $following = request()->boolean('following');
-        if ($following && !auth()->check()) {
+        if (($following || $onlyNew) && !auth()->check()) {
             return redirect()->guest(route('login'));
         }
 
         $query = $following ? auth()->user()->followedObservations() : Observation::query();
+        if ($onlyNew) {
+            ReadObservations::scopeUnread($query, auth()->user());
+        }
         if ($obsType === 'all') {
             $query->whereIn('target_type', ['deepsky', 'comet', 'planet', 'solarsystem', 'lunar']);
         } elseif ($obsType === 'solarsystem') {
@@ -386,7 +393,27 @@ class ObservationsController extends Controller
             'obsType' => $obsType,
             'following' => $following,
             'followingCount' => $following ? auth()->user()->following()->count() + auth()->user()->followedObjects()->count() : null,
+            'onlyNew' => $onlyNew,
+            'sort' => $sort,
+            // The mark of the observer and the newest id when the page was
+            // made: "Mark all as read" marks up to that id, so observations
+            // added while the page was open stay unread.
+            'readMark' => auth()->check() ? ReadObservations::mark(auth()->user()) : null,
+            'unreadCount' => auth()->check() ? ReadObservations::unreadCount(auth()->user()) : null,
+            'newestId' => auth()->check() ? ReadObservations::newestId() : null,
         ]);
+    }
+
+    /**
+     * Mark the observations up to the posted id as read (POST, so no link,
+     * reload or crawler marks them).
+     */
+    public function markRead(Request $request)
+    {
+        $validated = $request->validate(['up_to' => ['required', 'integer', 'min:0']]);
+        ReadObservations::markReadUpTo($request->user(), (int) $validated['up_to']);
+
+        return redirect()->back(fallback: route('observations.index'));
     }
 
     /**
