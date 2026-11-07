@@ -6,6 +6,8 @@ $inIndex = true;
 require_once 'common/entryexit/preludes.php';
 require_once "lib/setup/vars.php";
 
+if (!$loggedUser) { http_response_code(403); exit; }
+
 atlas();
 
 function atlas()
