@@ -29,6 +29,11 @@ if ((!isset($inIndex)) || (!$inIndex)) {
  */
 class Observations
 {
+    // The rows getDsObservationProperty() read in this request, by id, and
+    // ObservationStore::$writes when they were read.
+    private static $rowCache = array();
+    private static $rowCacheWrites = 0;
+
     /**
      * Adds observations to DeepskyLog from a CSV file.
      *
@@ -909,6 +914,37 @@ Correct observations which have been imported will not be registered for a secon
     public function getDsObservationProperty($id, $property, $defaultvalue = '')
     {
         global $objDatabase;
+        // A page asks for 20 to 30 fields of the same observation, each with
+        // a query of its own: read the row once per request and keep it
+        // until ObservationStore writes an observation.
+        if (is_numeric($id)) {
+            $writes = class_exists('ObservationStore', false)
+                ? ObservationStore::$writes : 0;
+            if ($writes !== self::$rowCacheWrites) {
+                self::$rowCache = array();
+                self::$rowCacheWrites = $writes;
+            }
+            $key = (string) (int) $id;
+            if (!array_key_exists($key, self::$rowCache)) {
+                if (count(self::$rowCache) >= 500) {
+                    self::$rowCache = array();
+                }
+                self::$rowCache[$key] = array_change_key_case(
+                    $objDatabase->selectRecordArray(
+                        "SELECT * FROM observations WHERE id=" . (int) $id
+                    ),
+                    CASE_LOWER
+                );
+            }
+            $row = self::$rowCache[$key];
+            if (!$row) {
+                return $defaultvalue;
+            }
+            $name = strtolower($property);
+            if (array_key_exists($name, $row)) {
+                return ($row[$name] != '') ? $row[$name] : $defaultvalue;
+            }
+        }
         // The view gives its own case of the column name (smallDiameter).
         return $objDatabase->selectSingleValue(
             "SELECT " . $property . " AS propertyvalue FROM observations WHERE id=\"" . $id . "\"",
@@ -2157,12 +2193,26 @@ Correct observations which have been imported will not be registered for a secon
     {
         // returns the number of observations of the observers
         global $objDatabase;
-        return $objDatabase->selectSingleArray(
+        // Counting all observations takes 1 to 3 seconds and every observer
+        // page asks for it to show one rank: keep it an hour in a file.
+        $cacheFile = sys_get_temp_dir() . '/deepskylog_popular_observers.json';
+        if (is_file($cacheFile) && filemtime($cacheFile) > time() - 3600) {
+            $cached = json_decode((string) @file_get_contents($cacheFile), true);
+            if (is_array($cached)) {
+                return $cached;
+            }
+        }
+        $result = $objDatabase->selectSingleArray(
             "SELECT observations.observerid, COUNT(observations.id) "
             . "As Cnt FROM observations where observations.visibility != 7"
             . " GROUP BY observations.observerid ORDER BY Cnt DESC",
             'observerid'
         );
+        $tmp = $cacheFile . '.' . getmypid();
+        if (@file_put_contents($tmp, json_encode($result)) !== false) {
+            @rename($tmp, $cacheFile);
+        }
+        return $result;
     }
 
     /**
