@@ -1,4 +1,4 @@
-@props (["sketch" => null, "use_selection_date" => false])
+@props (["sketch" => null, "use_selection_date" => false, "unreleased" => false])
 <div>
     <div class="mt-3 max-w-xl pr-3">
         @php
@@ -42,6 +42,12 @@
                     : \App\Services\SketchShareText::forWeek($observation);
             }
         @endphp
+
+        @if ($unreleased && $sketch_date)
+            <div class="mb-1 inline-block rounded bg-amber-600 px-2 py-1 text-xs font-semibold text-white">
+                {{ __("Not yet published: shown from :date", ["date" => \Carbon\Carbon::parse($sketch_date)->translatedFormat("j M Y")]) }}
+            </div>
+        @endif
 
         @if ($isComet && ($legacyObservationId || $observation))
             <x-sketch-comet

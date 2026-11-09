@@ -3,8 +3,36 @@
 ## Next steps
 
 - [ ] For the sketch of the month -> also add text for astroforum and facebook / X / ... to select the sketch of the week.
+## Verkiezing DeepskyLog schets van de maand (oktober 2026)
+
+Beste waarnemers,
+
+Tijd om een nieuwe DeepskyLog schets van de maand te kiezen.  Vrijwilligers die willen meehelpen om objecten te kiezen of om de posts voor de DeepskyLog schets van de week en van de maand online te zetten (Facebook, X, Instagram, Bluesky), mogen me altijd contacteren.
+
+De kanshebbers deze maand zijn:
+
+- NGC 7009 door Vedran Vrhovac
+- IC 5271 door Tom Corstjens
+- Pease 1 door Peter Vercauteren
+- M 2 door Khalid Alburaidi
+
+Stemmen kan tot 7 november. 
+
+Dear observers,
+
+Let’s select a new #deepskylog sketch of the month.  The candidates this month are:
+
+- NGC 7009 by Vedran Vrhovac
+- IC 5271 by Tom Corstjens
+- Pease 1 by Peter Vercauteren
+- M 2 by Khalid Alburaidi
+
+Please vote (by leaving a comment) before November 7.
+
+De DeepskyLog schets van september 2026 is de schets geworden van IC 5217 door Jef De Wit. Proficiat Jef!
+
+Meer informatie over deze schets kunnen jullie vinden op [](https://www.deepskylog.org/index.php?indexAction=detail_observation&observation=185037)DeepskyLog.
 - [ ] Search observations / objects -> add option to search for sketch of the week / month (or not).
-- [ ] Database expert / administrator: in the sketch of the week / month page (https://test.deepskylog.org/sketch-of-the-week), also show the sketch of the week / month if it is not yet released.  Make it clear that it is not yet released.
 - [ ] DeepskyLog-goto: Can you also add support for iOptron HAZ 31 mount?
 
 

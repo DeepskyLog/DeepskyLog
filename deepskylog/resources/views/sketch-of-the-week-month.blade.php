@@ -21,6 +21,23 @@
                     </div>
                 @endcan
             @endif
+            @if ($upcoming->isNotEmpty())
+                <div class="mt-4">
+                    <x-card>
+                        <h3 class="px-5 text-lg font-semibold text-amber-400">
+                            {{ __("Chosen, not yet published") }}
+                        </h3>
+                        <p class="px-5 text-sm text-gray-400">
+                            {{ __("Only administrators and database experts see these sketches until their date.") }}
+                        </p>
+                        <div class="flex flex-wrap px-5">
+                            @foreach ($upcoming as $sketch)
+                                <x-sketch :sketch="$sketch" :use_selection_date="true" :unreleased="true" />
+                            @endforeach
+                        </div>
+                    </x-card>
+                </div>
+            @endif
             <div class="mt-2">
                 <x-card>
                     <div class="flex flex-wrap px-5">

@@ -116,3 +116,29 @@ it('hides a sketch of the week until its Sunday', function () {
     $this->get($observation->detailUrl())->assertOk()->assertSee('DeepskyLog Sketch of the Week');
     $this->get(route('observer.show', $observer->slug))->assertOk()->assertSee('DeepskyLog sketches of the week');
 });
+
+it('shows administrators and database experts the sketches of the week not yet published, marked as such', function () {
+    $expert = $this->createUserAndAssignToTeam('Database Experts');
+    addSketchOfTheWeek(sketchObservation(['target_name' => 'M 65']), '2026-10-18');
+    addSketchOfTheWeek(sketchObservation(['target_key' => 'M 66', 'target_name' => 'M 66']), '2026-11-01');
+
+    $this->actingAs($expert)
+        ->get(route('sketch-of-the-week'))
+        ->assertOk()
+        ->assertSee('Chosen, not yet published')
+        ->assertSee('Not yet published: shown from 1 Nov 2026');
+});
+
+it('hides the sketches of the week not yet published from observers and guests', function () {
+    addSketchOfTheWeek(sketchObservation(), '2026-11-01');
+
+    $this->get(route('sketch-of-the-week'))
+        ->assertOk()
+        ->assertDontSee('Chosen, not yet published')
+        ->assertDontSee('Not yet published');
+
+    $this->actingAs(User::factory()->create())
+        ->get(route('sketch-of-the-week'))
+        ->assertOk()
+        ->assertDontSee('Not yet published');
+});
