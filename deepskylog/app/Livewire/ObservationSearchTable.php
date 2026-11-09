@@ -11,6 +11,7 @@ use App\Models\Lens;
 use App\Models\Location;
 use App\Models\Observation;
 use App\Models\User;
+use App\Services\Observations\SketchChoices;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -619,19 +620,11 @@ final class ObservationSearchTable extends PowerGridComponent
             $query->where('observations.has_drawing', true);
         } elseif ($this->drawingState === 'without') {
             $query->where('observations.has_drawing', false);
-        } elseif ($this->drawingState === 'not_sketch_of_the_week') {
-            // Sketches chosen for a later Sunday only count for those who choose them,
-            // so the search does not give the choice away before that Sunday.
-            $canChoose = auth()->user()?->can('add_sketch', User::class) ?? false;
-            $query->where('observations.has_drawing', true)
-                ->whereNotExists(function ($subQuery) use ($canChoose) {
-                    $subQuery->selectRaw('1')
-                        ->from('sketch_of_the_week')
-                        ->whereColumn('sketch_of_the_week.observation_id', 'observations.id');
-                    if (! $canChoose) {
-                        $subQuery->whereDate('sketch_of_the_week.date', '<=', today()->toDateString());
-                    }
-                });
+        } elseif (in_array($this->drawingState, ['sketch_of_the_week', 'sketch_of_the_month', 'sketch_of_the_week_or_month'], true)) {
+            SketchChoices::whereObservation($query, substr($this->drawingState, strlen('sketch_of_the_')));
+        } elseif (in_array($this->drawingState, ['not_sketch_of_the_week', 'not_sketch_of_the_week_or_month'], true)) {
+            $query->where('observations.has_drawing', true);
+            SketchChoices::whereObservation($query, substr($this->drawingState, strlen('not_sketch_of_the_')), false);
         }
         if ($this->observationDescription !== '') {
             $query->whereRaw("COALESCE(observations.description, '') LIKE ?", ['%' . mb_strtolower($this->observationDescription) . '%']);

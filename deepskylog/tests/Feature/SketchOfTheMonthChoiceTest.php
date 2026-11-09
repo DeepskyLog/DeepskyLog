@@ -193,3 +193,67 @@ it('finds the drawings of an object that are no sketch of the week yet', functio
     $this->actingAs($expert);
     expect($found())->toBe([$free->id]);
 });
+
+it('finds the sketches of the week and month in the observation search', function () {
+    $expert = $this->createUserAndAssignToTeam('Database Experts');
+    $plain  = monthSketchObservation('M 65');
+    $week   = monthSketchObservation('M 65');
+    $month  = monthSketchObservation('M 65');
+    $later  = monthSketchObservation('M 65');
+    weekSketch($week, '2026-10-18');
+    weekSketch($month, '2026-09-06');
+    monthSketch($month, '2026-10-08');
+    monthSketch($later, '2026-11-08');
+
+    $found = fn (string $state) => app(ObservationSearchQuery::class)
+        ->observations('M 65', ['drawing_state' => $state])
+        ->orderBy('observations.id')
+        ->pluck('observations.id')
+        ->all();
+
+    expect($found('sketch_of_the_week'))->toBe([$week->id, $month->id])
+        ->and($found('sketch_of_the_month'))->toBe([$month->id])
+        ->and($found('sketch_of_the_week_or_month'))->toBe([$week->id, $month->id])
+        ->and($found('not_sketch_of_the_week_or_month'))->toBe([$plain->id, $later->id]);
+
+    // Those who choose also see the sketch of the month of a later 8th.
+    $this->actingAs($expert);
+    expect($found('sketch_of_the_month'))->toBe([$month->id, $later->id])
+        ->and($found('not_sketch_of_the_week_or_month'))->toBe([$plain->id]);
+});
+
+it('finds the objects with a sketch of the week or month in the object search', function () {
+    foreach (['M 65', 'M 66', 'M 81'] as $name) {
+        $slug = \Illuminate\Support\Str::slug($name);
+        \Illuminate\Support\Facades\DB::table('objects')->insert([
+            'name' => $name, 'slug' => $slug, 'type' => 'GALXY', 'con' => 'LEO', 'ra' => 11.3, 'decl' => 13.0,
+            'mag' => 9.3, 'subr' => 12.4, 'pa' => 174, 'urano' => 0, 'urano_new' => 0, 'sky' => 0, 'millenium' => '',
+            'diam1' => 600.0, 'diam2' => 180.0, 'taki' => '', 'SBObj' => 0.0, 'description' => '', 'psa' => '',
+            'torresB' => '', 'torresBC' => '', 'torresC' => '', 'milleniumbase' => '0', 'DSLDL' => '0', 'DSLDP' => '0',
+            'DSLLL' => '0', 'DSLLP' => '0', 'DSLOL' => '0', 'DSLOP' => '0', 'DeepskyHunter' => '0', 'Interstellarum' => '0',
+            'timestamp' => '2026-01-01 00:00:00',
+        ]);
+        \Illuminate\Support\Facades\DB::table('search_index')->insert([
+            'name' => $name, 'name_normalized' => mb_strtolower($name), 'source_table' => 'objects', 'source_pk' => $slug,
+            'display_name' => $name, 'source_type' => 'GALXY', 'name_unique' => true,
+            'created_at' => now(), 'updated_at' => now(),
+        ]);
+    }
+    weekSketch(monthSketchObservation('M 65'), '2026-10-18');
+    $m66 = monthSketchObservation('M 66');
+    weekSketch($m66, '2026-09-06');
+    monthSketch($m66, '2026-10-08');
+    monthSketchObservation('M 81');
+
+    $found = function (string $sketches) {
+        $table = new \App\Livewire\AdvancedObjectSearchTable();
+        $table->mount(['sketches' => $sketches]);
+
+        return $table->datasource()->orderBy('search_index.name')->pluck('search_index.name')->all();
+    };
+
+    expect($found('week_or_month'))->toBe(['M 65', 'M 66'])
+        ->and($found('week'))->toBe(['M 65', 'M 66'])
+        ->and($found('month'))->toBe(['M 66'])
+        ->and($found('none'))->toBe(['M 81']);
+});

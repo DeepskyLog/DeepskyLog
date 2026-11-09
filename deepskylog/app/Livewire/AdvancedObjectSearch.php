@@ -122,6 +122,15 @@ class AdvancedObjectSearch extends Component
 
     // ── Saved searches ────────────────────────────────────────────────────
     public string $saveName = '';
+
+    // ── Sketch of the week / month (see SketchChoices) ────────────────────
+    public string $sketches = 'week_or_month';
+    public array $sketchesOptions = [
+        'week_or_month' => 'Objects with a sketch of the week or month',
+        'week' => 'Objects with a sketch of the week',
+        'month' => 'Objects with a sketch of the month',
+        'none' => 'Objects without a sketch of the week or month',
+    ];
     public array $nameSearchCatalogs = [];
     public string $nameSearchNumber = '';
     public string $nameText = '';
@@ -341,6 +350,9 @@ class AdvancedObjectSearch extends Component
         $doubleStars = (string) ($filters['double_stars'] ?? '');
         $this->doubleStars = array_key_exists($doubleStars, $this->doubleStarsOptions) ? $doubleStars : 'split';
 
+        $sketches = (string) ($filters['sketches'] ?? '');
+        $this->sketches = array_key_exists($sketches, $this->sketchesOptions) ? $sketches : 'week_or_month';
+
         if (empty($active)) {
             if (!empty($this->constellations))
                 $active[] = 'constellations';
@@ -384,6 +396,8 @@ class AdvancedObjectSearch extends Component
                 $active[] = 'compareObservations';
             if ($doubleStars !== '')
                 $active[] = 'doubleStars';
+            if ($sketches !== '')
+                $active[] = 'sketches';
         }
 
         $this->activeFilters = array_values(array_intersect($this->validFilterTypes(), array_unique($active)));
@@ -436,6 +450,7 @@ class AdvancedObjectSearch extends Component
             'compareObservations' => [$this->compareBy, $this->compareSeen, $this->compareNotSeen, $this->compareSqm, $this->compareSkyDirection]
                 = [ObservationComparison::BY_INSTRUMENT, '', '', '', ObservationComparison::SKY_POOR_NOT_DARK],
             'doubleStars' => $this->doubleStars = 'split',
+            'sketches' => $this->sketches = 'week_or_month',
             default => null,
         };
     }
@@ -462,6 +477,7 @@ class AdvancedObjectSearch extends Component
             'nameText',
             'descriptionText',
             'atlasPage',
+            'sketches',
         ];
         // Comparing observations needs the observer's own observations
         if (Auth::check()) {
@@ -497,6 +513,7 @@ class AdvancedObjectSearch extends Component
             'atlasPage' => __('Atlas page'),
             'compareObservations' => __('Seen with one instrument or location, not yet with another'),
             'doubleStars' => __('Double stars my telescope splits'),
+            'sketches' => __('Sketch of the week / month'),
         ];
     }
 
@@ -646,6 +663,9 @@ class AdvancedObjectSearch extends Component
         }
         if (in_array('doubleStars', $this->activeFilters) && array_key_exists($this->doubleStars, $this->doubleStarsOptions)) {
             $params['double_stars'] = $this->doubleStars;
+        }
+        if (in_array('sketches', $this->activeFilters) && array_key_exists($this->sketches, $this->sketchesOptions)) {
+            $params['sketches'] = $this->sketches;
         }
 
         return $params;

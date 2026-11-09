@@ -104,7 +104,11 @@ class AdvancedObservationSearch extends Component
         'all' => 'All observations',
         'with' => 'Only observations with drawing',
         'without' => 'Only observations without drawing',
+        'sketch_of_the_week_or_month' => 'Only sketches of the week or month',
+        'sketch_of_the_week' => 'Only sketches of the week',
+        'sketch_of_the_month' => 'Only sketches of the month',
         'not_sketch_of_the_week' => 'Only drawings that are no sketch of the week yet',
+        'not_sketch_of_the_week_or_month' => 'Only drawings that are no sketch of the week or month',
     ];
 
     public function mount(array $filters = []): void

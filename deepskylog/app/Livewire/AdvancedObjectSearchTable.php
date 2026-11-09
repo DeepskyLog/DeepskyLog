@@ -12,6 +12,7 @@ use App\Services\ObjectObservationStatistics;
 use App\Services\ObservationComparison;
 use App\Services\DoubleStarResolvability;
 use App\Services\SeasonalVisibility;
+use App\Services\Observations\SketchChoices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\Paginator;
@@ -86,6 +87,8 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     public int $wellPlacedMonth = 0;
     // Double stars the observer's standard telescope splits ('split') or does not split yet ('not_split'), '' = any
     public string $doubleStars = '';
+    // Objects with a sketch of the week and/or month (SketchChoices kinds), or 'none', '' = any
+    public string $sketches = '';
 
     // ── CR / best-mag dedup flags ─────────────────────────────────────────
     public bool $bestMagUpsertedThisLoad = false;
@@ -162,6 +165,8 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         $this->wellPlacedMonth = $month >= 1 && $month <= 12 ? $month : 0;
         $doubleStars = (string) ($filters['double_stars'] ?? '');
         $this->doubleStars = in_array($doubleStars, ['split', 'not_split'], true) ? $doubleStars : '';
+        $sketches = (string) ($filters['sketches'] ?? '');
+        $this->sketches = SketchChoices::isKind($sketches) || $sketches === 'none' ? $sketches : '';
 
         // PowerGrid makes the columns here, which depend on the list (Months, Time).
         parent::mount();
@@ -780,6 +785,13 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                     $query->whereRaw("{$drawn} > 0")->whereRaw("{$drawnByMe} = 0");
                     break;
             }
+        }
+
+        // ── Sketch of the week / month ─────────────────────────────────────
+        if ($this->sketches === 'none') {
+            SketchChoices::whereObject($query, SketchChoices::WEEK_OR_MONTH, false);
+        } elseif ($this->sketches !== '') {
+            SketchChoices::whereObject($query, $this->sketches);
         }
 
         // Per-user cached metrics (contrast reserve / best mag)

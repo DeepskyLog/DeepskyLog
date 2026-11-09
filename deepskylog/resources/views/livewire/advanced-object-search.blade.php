@@ -312,6 +312,15 @@
                             @endforeach
                         </select>
                         <p class="mt-1 text-xs text-gray-500">{{ __('With the aperture of your standard telescope, from the separation and magnitudes of the pair (Dawes limit, wider for a fainter companion), and the companion bright enough under the sky of your standard location. Without a standard telescope nothing is found.') }}</p>
+                    @elseif($filterType === 'sketches')
+                        <label class="block text-xs text-gray-400 mb-1">{{ __('Sketch of the week / month') }}</label>
+                        <select wire:model="sketches"
+                            class="w-full bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            @foreach($sketchesOptions as $value => $label)
+                                <option value="{{ $value }}">{{ __($label) }}</option>
+                            @endforeach
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">{{ __('Deep-sky objects of which a drawing was chosen as sketch of the week or month.') }}</p>
                     @endif
                 </div>
             </div>
