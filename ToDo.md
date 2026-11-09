@@ -2,6 +2,25 @@
 
 ## Next steps
 
+- [ ] There is no link from https://test.deepskylog.org/object/mars to https://test.deepskylog.org/mars-venus, same for venus, jupiter, saturn, moon?  Can you make these links?
+- [ ] Isn't it too optimistic to send me this message?  83% clouds does not mean clear and dark...
+The night of Saturday November 7, 2026 is forecast to be clear and dark at Marollenkapel Hauthem.
+
+Clear and dark 03:30–05:30
+Clouds 83%
+- [ ] Sketch of the week: I want to see the original share buttons of the sketch of the week and of the month as database expert or administrator.  As observer, it can be the same as it is now.  For the database expert:
+As new #deepskylog sketch of the week, we selected this sketch of the Galaxy NGC 128 in Pisces by Esther Hanko.
+More information can be found here:
+
+https://test.deepskylog.org/observation/esther-hanko/2019-09-01/ngc-128
+
+#sketch #sketchoftheweek #deepsky #astronomy #deepskydrawing #sketches 
+- [ ] For the sketch of the month -> also add text for astroforum and facebook / X / ... to select the sketch of the week.
+- [ ] Search observations / objects -> add option to search for sketch of the week / month (or not).
+- [ ] Database expert / administrator: in the sketch of the week / month page (https://test.deepskylog.org/sketch-of-the-week), also show the sketch of the week / month if it is not yet released.  Make it clear that it is not yet released.
+- [ ] DeepskyLog-goto: Can you also add support for iOptron HAZ 31 mount?
+
+
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4 -> Ubuntu 26.04 LTS.
 - [ ] On real server:

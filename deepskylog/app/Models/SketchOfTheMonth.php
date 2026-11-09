@@ -44,17 +44,15 @@ class SketchOfTheMonth extends Model
     }
 
     /**
-     * The 8ths from today on of the months that have no sketch of the month yet.
+     * The 8ths of the months from the current one on that have no sketch of the
+     * month yet. The current month stays on offer after its 8th until it has
+     * one, so a sketch of the month chosen late is still possible.
      *
      * @return array<int, Carbon>
      */
     public static function freeDates(int $count = self::MONTHS_OFFERED): array
     {
-        $today = Carbon::today();
-        $date = $today->copy()->startOfMonth()->day(self::DAY);
-        if ($date->lt($today)) {
-            $date->addMonthNoOverflow();
-        }
+        $date = Carbon::today()->startOfMonth()->day(self::DAY);
 
         $taken = static::query()
             ->whereDate('date', '>=', $date->copy()->startOfMonth()->toDateString())
@@ -76,7 +74,7 @@ class SketchOfTheMonth extends Model
     public static function isFreeDate(Carbon $date): bool
     {
         return $date->day === self::DAY
-            && $date->gte(Carbon::today())
+            && $date->gte(Carbon::today()->startOfMonth())
             && ! static::query()
                 ->whereDate('date', '>=', $date->copy()->startOfMonth()->toDateString())
                 ->whereDate('date', '<=', $date->copy()->endOfMonth()->toDateString())

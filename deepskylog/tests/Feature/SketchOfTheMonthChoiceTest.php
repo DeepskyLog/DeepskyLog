@@ -56,12 +56,30 @@ function monthSketch(Observation $observation, string $date): SketchOfTheMonth
     return $sketch;
 }
 
-it('offers the 8ths from today on of the months without a sketch of the month', function () {
+it('offers the 8ths of the months without a sketch of the month', function () {
+    monthSketch(monthSketchObservation(), '2026-10-08');
     monthSketch(monthSketchObservation(), '2026-12-08');
 
     $dates = array_map(fn ($d) => $d->toDateString(), SketchOfTheMonth::freeDates(3));
 
     expect($dates)->toBe(['2026-11-08', '2027-01-08', '2027-02-08']);
+});
+
+it('keeps offering the 8th of the current month after it until it has a sketch of the month', function () {
+    Carbon::setTestNow('2026-11-09 10:00:00');
+
+    expect(SketchOfTheMonth::freeDates(1)[0]->toDateString())->toBe('2026-11-08')
+        ->and(SketchOfTheMonth::isFreeDate(Carbon::parse('2026-11-08')))->toBeTrue()
+        ->and(SketchOfTheMonth::isFreeDate(Carbon::parse('2026-10-08')))->toBeFalse();
+
+    $expert  = $this->createUserAndAssignToTeam('Database Experts');
+    $october = weekSketch(monthSketchObservation('M 65'), '2026-10-04');
+
+    $this->actingAs($expert)
+        ->post(route('sketch-of-the-month.store'), ['observation_id' => $october->observation_id, 'date' => '2026-11-08'])
+        ->assertOk();
+
+    expect(SketchOfTheMonth::freeDates(1)[0]->toDateString())->toBe('2026-12-08');
 });
 
 it('offers the 8th of the current month up to that day', function () {
@@ -86,6 +104,7 @@ it('shows the candidates of the chosen date on the page', function () {
     $expert = $this->createUserAndAssignToTeam('Database Experts');
     $october  = weekSketch(monthSketchObservation('M 65'), '2026-10-04');
     $november = weekSketch(monthSketchObservation('M 66'), '2026-11-15');
+    monthSketch(monthSketchObservation('M 1'), '2026-10-08');
 
     $this->actingAs($expert)->get(route('sketch-of-the-month.create'))->assertOk();
 
@@ -112,7 +131,7 @@ it('only accepts a sketch of the week of the month before on a free 8th', functi
     expect(SketchOfTheMonth::where('observation_id', $october->observation_id)->exists())->toBeFalse();
 })->with([
     'not the 8th'            => ['2026-11-09', 'date'],
-    'a past 8th'             => ['2026-10-08', 'date'],
+    'an earlier month'       => ['2026-09-08', 'date'],
     'a month with one'       => ['2027-01-08', 'date'],
     'not of the month before' => ['2026-12-08', 'observation_id'],
 ]);

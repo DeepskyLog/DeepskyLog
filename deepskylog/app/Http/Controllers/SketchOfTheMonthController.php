@@ -38,7 +38,7 @@ class SketchOfTheMonthController extends Controller
         // sketches of the week of the month before
         $date = Carbon::parse($request['date'])->startOfDay();
         if (! SketchOfTheMonth::isFreeDate($date)) {
-            throw ValidationException::withMessages(['date' => __('Choose the 8th of a month, today or later, that has no sketch of the month yet.')]);
+            throw ValidationException::withMessages(['date' => __('Choose the 8th of this month or a later one that has no sketch of the month yet.')]);
         }
         if (! SketchOfTheMonth::candidates($date)->contains('observation_id', (int) $request['observation_id'])) {
             throw ValidationException::withMessages(['observation_id' => __('The sketch of the month has to be one of the sketches of the week of the month before.')]);
