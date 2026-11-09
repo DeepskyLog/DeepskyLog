@@ -32,6 +32,7 @@ class ChooseSketchOfTheMonth extends Component
 
         return view('livewire.choose-sketch-of-the-month', [
             'dates' => $dates,
+            'selectedDate' => $date,
             'month' => $date->copy()->startOfMonth()->subMonthNoOverflow(),
             'candidates' => SketchOfTheMonth::candidates($date),
         ]);

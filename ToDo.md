@@ -2,7 +2,7 @@
 
 ## Next steps
 
-- [ ] For the sketch of the month -> also add text for astroforum and facebook / X / ... to select the sketch of the week.
+- [x] For the sketch of the month -> also add text for astroforum and facebook / X / ... to select the sketch of the week.
 ## Verkiezing DeepskyLog schets van de maand (oktober 2026)
 
 Beste waarnemers,
@@ -32,7 +32,6 @@ Please vote (by leaving a comment) before November 7.
 De DeepskyLog schets van september 2026 is de schets geworden van IC 5217 door Jef De Wit. Proficiat Jef!
 
 Meer informatie over deze schets kunnen jullie vinden op [](https://www.deepskylog.org/index.php?indexAction=detail_observation&observation=185037)DeepskyLog.
-- [x] Search observations / objects -> add option to search for sketch of the week / month (or not).
 - [ ] DeepskyLog-goto: Can you also add support for iOptron HAZ 31 mount?
 
 

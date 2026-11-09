@@ -19,6 +19,11 @@
         @php
             \App\Services\Observations\ObservationCardData::instance()->preload($candidates->pluck('observation')->filter());
         @endphp
+        <details class="mb-4 max-w-3xl rounded border border-gray-700 p-3">
+            <summary class="cursor-pointer font-medium">{{ __('Texts for the vote') }}</summary>
+            <x-copy-text :label="__('Astroforum (Dutch)')" :text="\App\Services\SketchShareText::voteAstroforum($selectedDate, $candidates)" :rows="16" wire:key="vote-astroforum-{{ $date }}" />
+            <x-copy-text :label="__('Facebook, X, Instagram, Bluesky (English)')" :text="\App\Services\SketchShareText::voteSocial($selectedDate, $candidates)" :rows="10" wire:key="vote-social-{{ $date }}" />
+        </details>
         <div class="flex flex-wrap">
             @foreach ($candidates as $sketch)
                 <div class="flex flex-col" wire:key="candidate-{{ $sketch->id }}">

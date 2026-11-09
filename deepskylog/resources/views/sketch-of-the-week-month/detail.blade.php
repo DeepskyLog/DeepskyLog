@@ -48,6 +48,12 @@
                                 <a href="{{ $shareUrl }}" class="social-button native-share hover" title="{{ __("Share…") }}" rel="nofollow"><span class="fas fa-share-nodes"></span></a>
                             </div>
                         </div>
+                        @if (! empty($astroforum))
+                            <div class="mt-3 max-w-xl flex-1">
+                                <x-copy-text :label="__('Facebook, X, Instagram, Bluesky (English)')" :text="$share" :rows="10" class="mt-0" />
+                                <x-copy-text :label="__('Astroforum (Dutch)')" :text="$astroforum" :rows="6" />
+                            </div>
+                        @endif
                     </div>
                 </x-card>
             </div>

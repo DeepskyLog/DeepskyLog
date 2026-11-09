@@ -89,6 +89,7 @@ class SketchOfTheMonthController extends Controller
         // Redirect to the sketch of the month page
         return view('/sketch-of-the-week-month/detail', [
             'share' => $text,
+            'astroforum' => SketchShareText::monthAstroforum($observation, $date, $user),
             'observation' => $observation,
             'observation_id' => (int) $request['observation_id'],
             'legacy_observation_id' => (int) $observation->legacy_id,
