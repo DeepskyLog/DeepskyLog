@@ -32,6 +32,15 @@
                 ?? ($observation?->legacy_id
                     ? ($isComet ? 'cometdrawings/' : 'drawings/') . $observation->legacy_id . '.jpg'
                     : null);
+
+            // Administrators and database experts share the announcement of the
+            // sketch of the week/month, the others the card's own text.
+            $shareText = null;
+            if ($observation && auth()->user()?->hasModeratorRole()) {
+                $shareText = $sketch instanceof \App\Models\SketchOfTheMonth
+                    ? \App\Services\SketchShareText::forMonth($observation, \Carbon\Carbon::parse($sketch->date))
+                    : \App\Services\SketchShareText::forWeek($observation);
+            }
         @endphp
 
         @if ($isComet && ($legacyObservationId || $observation))
@@ -45,6 +54,7 @@
                 :observation_date="$observationDate"
                 :sketch_date="$sketch_date"
                 :use_sketch_date="$use_selection_date"
+                :share_text="$shareText"
             />
         @elseif ($legacyObservationId || $observation)
             <x-sketch-deepsky
@@ -57,6 +67,7 @@
                 :observation_date="$observationDate"
                 :sketch_date="$sketch_date"
                 :use_sketch_date="$use_selection_date"
+                :share_text="$shareText"
             />
         @else
             <div class="text-gray-400">

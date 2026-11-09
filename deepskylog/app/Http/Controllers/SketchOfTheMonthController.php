@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Constellation;
 use App\Models\Observation;
-use App\Models\Target;
 use App\Models\SketchOfTheMonth;
 use App\Models\User;
+use App\Services\SketchShareText;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -53,47 +52,9 @@ class SketchOfTheMonthController extends Controller
         $observerUsername = html_entity_decode((string) $observation->observer_username);
         $user = User::where('username', $observerUsername)->firstOrFail();
         $userId = $user->id;
-        $observerSegment = $user->slug ?: $observerUsername;
-        // Create text for Facebook, X and Instagram
-        $carbon_date = Carbon::parse($request['date'])->startOfMonth()->subMonthNoOverflow();
 
-        $monthName = $carbon_date->format('F');
-        $year = $carbon_date->format('Y');
-        $text = 'The #deepskylog sketch of ' . $monthName . ' ' . $year . ' is this sketch of ';
-
-        if ($observation->target_type === 'comet') {
-            $text .= 'comet ' . ($observation->target_name ?? 'unknown object');
-        } else {
-            $objectName = $observation->target_name;
-            $object = $objectName ? Target::where('name', $objectName)->first() : null;
-            $type = $object ? $object->long_type() : null;
-
-            if ($type && strtolower($type) !== 'object') {
-                $text .= 'the ' . $type . ' ';
-            }
-
-            $text .= ($objectName ?? 'unknown object');
-
-            if ($object) {
-                $constellation = Constellation::where('id', $object->con)->first();
-                if ($constellation) {
-                    $text .= ' in ' . $constellation->name;
-                }
-            }
-        }
-        $text .= ' by ' . $user->name . '.';
-        $text .= '
-Congratulations, ' . explode(' ', $user->name)[0] . '!';
-
-        $text .= '
-More information can be found here:
-
-';
-        $text .= $observation->detailUrl($observerSegment);
-
-        $text .= '
-
-#sketch #sketchofthemonth #deepsky #astronomy #deepskydrawing #sketches';
+        // The post for Facebook, X, …
+        $text = SketchShareText::forMonth($observation, $date, $user);
 
         $sketch = new SketchOfTheMonth;
         $sketch->observation_id = (int) $request['observation_id'];

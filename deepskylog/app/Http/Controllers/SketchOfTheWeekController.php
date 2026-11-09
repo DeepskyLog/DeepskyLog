@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Constellation;
 use App\Models\Observation;
-use App\Models\Target;
 use App\Models\SketchOfTheWeek;
 use App\Models\User;
+use App\Services\SketchShareText;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -48,41 +47,9 @@ class SketchOfTheWeekController extends Controller
         $observerUsername = html_entity_decode((string) $observation->observer_username);
         $user = User::where('username', $observerUsername)->firstOrFail();
         $userId = $user->id;
-        $observerSegment = $user->slug ?: $observerUsername;
 
-        // Create text for Facebook, X
-        $text = 'As new #deepskylog sketch of the week, we selected this sketch of ';
-
-        if ($observation->target_type === 'comet') {
-            $text .= 'comet ' . ($observation->target_name ?? 'unknown object');
-        } else {
-            $objectName = $observation->target_name;
-            $object = $objectName ? Target::where('name', $objectName)->first() : null;
-            $type = $object ? $object->long_type() : null;
-
-            if ($type && strtolower($type) !== 'object') {
-                $text .= 'the ' . $type . ' ';
-            }
-
-            $text .= ($objectName ?? 'unknown object');
-
-            if ($object) {
-                $constellation = Constellation::where('id', $object->con)->first();
-                if ($constellation) {
-                    $text .= ' in ' . $constellation->name;
-                }
-            }
-        }
-        $text .= ' by ' . $user->name . '.';
-        $text .= '
-More information can be found here:
-
-';
-        $text .= $observation->detailUrl($observerSegment);
-
-        $text .= '
-
-#sketch #sketchoftheweek #deepsky #astronomy #deepskydrawing #sketches';
+        // The post for Facebook, X, …
+        $text = SketchShareText::forWeek($observation, $user);
 
         $sketch = new SketchOfTheWeek;
         $sketch->observation_id = (int) $request['observation_id'];

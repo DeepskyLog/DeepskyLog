@@ -2,13 +2,6 @@
 
 ## Next steps
 
-- [ ] Sketch of the week: I want to see the original share buttons of the sketch of the week and of the month as database expert or administrator.  As observer, it can be the same as it is now.  For the database expert:
-As new #deepskylog sketch of the week, we selected this sketch of the Galaxy NGC 128 in Pisces by Esther Hanko.
-More information can be found here:
-
-https://test.deepskylog.org/observation/esther-hanko/2019-09-01/ngc-128
-
-#sketch #sketchoftheweek #deepsky #astronomy #deepskydrawing #sketches 
 - [ ] For the sketch of the month -> also add text for astroforum and facebook / X / ... to select the sketch of the week.
 - [ ] Search observations / objects -> add option to search for sketch of the week / month (or not).
 - [ ] Database expert / administrator: in the sketch of the week / month page (https://test.deepskylog.org/sketch-of-the-week), also show the sketch of the week / month if it is not yet released.  Make it clear that it is not yet released.
@@ -29,6 +22,7 @@ https://test.deepskylog.org/observation/esther-hanko/2019-09-01/ngc-128
 
 ### Done
 
+- [X] Sketch of the week / month: administrators and database experts share the announcement of the sketch of the week ("As new #deepskylog sketch of the week, we selected this sketch of the Galaxy NGC 128 in Pisces by Esther Hanko. …" with the link and #sketchoftheweek) or of the month ("The #deepskylog sketch of March 2026 is … Congratulations, …!") with the share buttons of the cards on /sketch-of-the-week and /sketch-of-the-month; observers keep the card's own text.
 - [X] Observing requests: on an object page an observer asks the others to observe it (a note, an optional minimum aperture, open for 1 to 12 months). Every observation of the object by another observer with a large enough instrument, seen or not seen, answers the request, and the observer who asked gets a message (mail, push notification). /observing-requests lists the open requests the observer's standard telescope can probably show (made an observing list in one click), all open requests, and the observer's own with their answers; the home page shows the requests within reach, and Tonight's best and Next for you mark requested objects.
 - [X] Measure your sky: the naked-eye limiting magnitude from a count of the stars inside a figure of bright stars (the bowl of the Big Dipper, the Square of Pegasus, the Southern Cross, …, 19 figures read from the star catalogue), drawn as the observer sees it at the chosen moment, corrected for the extinction at its altitude. The count is saved as a measurement, optionally as the limiting magnitude of the location, and replaces the guessed NELMs of that night in the location's sky history.
 - [X] Personal sky calendar: an iCalendar address on the profile page (with "Subscribe in your calendar app", "Add to Google Calendar" and a button that gives it a new address) that a phone or computer calendar subscribes to, opened with a secret token instead of a login, in the observer's language. It holds the eclipses, lunar occultations, conjunctions and shadows on Jupiter and Saturn of the news from their local begin to end as seen from the standard location (only those that can be seen there), oppositions, elongations, meteor showers and comets as a day, the nights forecast clear and dark there with the clear and dark hours, the starparties the observer organises or comes or may come to, the nights of their own observing lists with planned times, and the start and end of the challenges they joined (the start of the others open to them).

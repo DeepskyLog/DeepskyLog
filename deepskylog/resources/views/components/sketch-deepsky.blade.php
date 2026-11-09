@@ -12,7 +12,8 @@
     "observation" => null,
     "object" => null,
     "likes_count" => null,
-    "liked" => null
+    "liked" => null,
+    "share_text" => null
 ])
 <div>
     @php
@@ -253,13 +254,20 @@
             $shareDesc  = __("Look at this sketch of ") . ($objectName ?? __("Unknown")) . __(" by ") . $observer_name . __(" on #deepskylog");
             $shareTags  = "#sketch #astronomy #astrosketching";
             $shareText  = $shareDesc . "\n\n" . $shareUrl . "\n\n" . $shareTags;
+            // The announcement of a sketch of the week/month (x-sketch, for administrators
+            // and database experts) is the whole post, link and hashtags included.
+            $shareBody  = $shareDesc . "\n\n" . $shareTags;
+            if (filled($share_text)) {
+                $shareText = $share_text;
+                $shareBody = $share_text;
+            }
             $twitterHref  = "https://twitter.com/intent/tweet?text=" . rawurlencode($shareText);
             $facebookHref = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlencode($shareUrl);
             $whatsappHref = "https://wa.me/?text=" . rawurlencode($shareText);
-            $mailtoHref   = "mailto:?subject=" . rawurlencode($shareDesc) . "&body=" . rawurlencode($shareDesc . "\n\n" . $shareUrl);
+            $mailtoHref   = "mailto:?subject=" . rawurlencode($shareDesc) . "&body=" . (filled($share_text) ? rawurlencode($share_text) : rawurlencode($shareDesc . "\n\n" . $shareUrl));
         @endphp
-        <div id="social-buttons" data-share data-share-image="{{ $imgSrc }}" data-share-title="{{ $shareDesc }}" data-share-text="{{ $shareDesc . "\n\n" . $shareTags }}" data-share-url="{{ $shareUrl }}">
-            <a href="{{ $facebookHref }}" class="social-button hover" data-share-text="{{ $shareDesc . "\n\n" . $shareTags }}" rel="follow"><span class="fab fa-facebook-square"></span></a>
+        <div id="social-buttons" data-share data-share-image="{{ $imgSrc }}" data-share-title="{{ $shareDesc }}" data-share-text="{{ $shareBody }}" data-share-url="{{ $shareUrl }}">
+            <a href="{{ $facebookHref }}" class="social-button hover" data-share-text="{{ $shareBody }}" rel="follow"><span class="fab fa-facebook-square"></span></a>
             <a href="{{ $twitterHref }}" class="social-button hover" rel="follow"><span class="fab fa-square-x-twitter"></span></a>
             <a href="{{ $shareUrl }}" class="social-button hover" id="clip" title="{{ __("Copy link") }}" rel="nofollow noopener noreferrer"><span class="fas fa-share"></span></a>
             <a href="{{ $mailtoHref }}" class="social-button hover" rel="nofollow"><span class="fas fa-envelope"></span></a>
