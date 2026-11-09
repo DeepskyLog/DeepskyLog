@@ -282,7 +282,7 @@ class NightForecast
     {
         $result = [
             'night' => $night, 'dark' => null, 'moon' => null, 'hours' => [], 'cloud' => null, 'clear_minutes' => 0,
-            'clear' => null, 'clear_dark' => null, 'clear_dark_minutes' => 0, 'dew' => false, 'dew_from' => null, 'heater_from' => null, 'seeing' => null, 'verdict' => 'no_dark',
+            'clear' => null, 'clear_dark' => null, 'clear_dark_minutes' => 0, 'dark_minutes' => 0, 'dew' => false, 'dew_from' => null, 'heater_from' => null, 'seeing' => null, 'verdict' => 'no_dark',
             'start' => null, 'end' => null, 'timezone' => $timezone, 'temperatures' => [],
         ];
 
@@ -367,6 +367,7 @@ class NightForecast
         $minutes                      = fn (callable $test) => intdiv(array_sum(array_map(fn (array $hour) => $test($hour) ? $hour['until'] - $hour['from'] : 0, $result['hours'])), 60);
         $result['clear_minutes']      = $minutes($clear);
         $result['clear_dark_minutes'] = $minutes($dark);
+        $result['dark_minutes']       = $minutes(fn (array $hour) => ! $hour['moon'] && ! $hour['twilight']);
 
         $result['verdict'] = match (true) {
             ($result['clear_dark']['minutes'] ?? 0) >= self::MIN_CLEAR_MINUTES     => 'clear_dark',

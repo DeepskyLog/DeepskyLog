@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\SendClearNightAlerts;
 use App\Livewire\LocationTable;
 use App\Livewire\NightListWizard;
 use App\Models\Instrument;
@@ -290,6 +291,22 @@ it('sends one message for a clear, dark night', function () {
 
     Carbon::setTestNow(Carbon::parse('2026-11-09 15:00', 'Europe/Brussels'));
     $this->artisan('forecast:send-clear-night-alerts --apply')->expectsOutput('Messages sent: 0');
+});
+
+it('sends no message for a short clear gap in a cloudy night', function () {
+    // Only two hours before dawn on 10 November clear: clear_dark, but 83% cloud on average
+    Carbon::setTestNow(Carbon::parse('2026-11-09 14:00', 'Europe/Brussels'));
+    $from  = Carbon::parse('2026-11-10 02:00', 'UTC')->getTimestamp();
+    $until = Carbon::parse('2026-11-10 03:00', 'UTC')->getTimestamp();
+    fakeForecast(fn (int $t) => $t >= $from && $t <= $until ? 0 : 100);
+    forecastObserver();
+
+    $night = forecastNight('2026-11-09');
+    expect($night['verdict'])->toBe('clear_dark')
+        ->and($night['clear_dark']['minutes'])->toBeLessThan(SendClearNightAlerts::ALERT_MIN_CLEAR_MINUTES)
+        ->and(SendClearNightAlerts::worthAlert($night))->toBeFalse();
+
+    $this->artisan('forecast:send-clear-night-alerts --apply')->expectsOutput('Messages sent: 0')->assertSuccessful();
 });
 
 it('sends no message before noon, after dark, for a cloudy night or without the setting', function () {

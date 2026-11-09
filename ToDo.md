@@ -2,11 +2,6 @@
 
 ## Next steps
 
-- [ ] Isn't it too optimistic to send me this message?  83% clouds does not mean clear and dark...
-The night of Saturday November 7, 2026 is forecast to be clear and dark at Marollenkapel Hauthem.
-
-Clear and dark 03:30–05:30
-Clouds 83%
 - [ ] Sketch of the week: I want to see the original share buttons of the sketch of the week and of the month as database expert or administrator.  As observer, it can be the same as it is now.  For the database expert:
 As new #deepskylog sketch of the week, we selected this sketch of the Galaxy NGC 128 in Pisces by Esther Hanko.
 More information can be found here:

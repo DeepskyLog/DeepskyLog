@@ -39,6 +39,12 @@ class SendClearNightAlerts extends Command
     /** The other sites looked at, at most this far (km) from the standard location. */
     public const RADIUS_KM = 250;
 
+    /** A clear, dark stretch this long (minutes) is always worth a message. */
+    public const ALERT_MIN_CLEAR_MINUTES = 180;
+
+    /** A shorter one only when at least this part of the dark hours without Moon or twilight is clear. */
+    public const ALERT_MIN_CLEAR_FRACTION = 0.5;
+
     protected $signature = 'forecast:send-clear-night-alerts
         {--apply : Send the messages}
         {--any-time : Also look at observers before noon or after dark at their location}';
@@ -87,7 +93,7 @@ class SendClearNightAlerts extends Command
                 $sites = SiteComparison::compare($user, [$night], SiteComparison::MODE_DEEPSKY, true, self::RADIUS_KM);
                 $clear = array_values(array_filter(
                     SiteComparison::ranked($sites, $night),
-                    fn (array $site) => $site['nights'][$night]['forecast']['verdict'] === 'clear_dark',
+                    fn (array $site) => self::worthAlert($site['nights'][$night]['forecast']),
                 ));
                 if ($clear === []) {
                     return;
@@ -115,6 +121,29 @@ class SendClearNightAlerts extends Command
     }
 
     /**
+     * Whether a night is worth a message: the verdict clear_dark (one clear,
+     * dark stretch of NightForecast::MIN_CLEAR_MINUTES) is enough to call a
+     * night clear in a table, but a two-hour gap in a night that is cloudy
+     * on average is easily a gap of the model, and few observers go out for
+     * it. So the stretch has to be ALERT_MIN_CLEAR_MINUTES long, or most of
+     * the dark hours have to be clear (a short spring night).
+     *
+     * @param  array<string, mixed>  $forecast  as NightForecast::night() gives it
+     */
+    public static function worthAlert(array $forecast): bool
+    {
+        if ($forecast['verdict'] !== 'clear_dark') {
+            return false;
+        }
+        if (($forecast['clear_dark']['minutes'] ?? 0) >= self::ALERT_MIN_CLEAR_MINUTES) {
+            return true;
+        }
+        $dark = $forecast['dark_minutes'] ?? 0;
+
+        return $dark > 0 && ($forecast['clear_dark_minutes'] ?? 0) >= self::ALERT_MIN_CLEAR_FRACTION * $dark;
+    }
+
+    /**
      * @param  array<string, mixed>  $best  the best clear site, as SiteComparison::compare() gives it
      * @param  array<string, mixed>|null  $home  the standard location when it is not the best site
      * @param  list<array<string, mixed>>  $others  the other clear sites, best first
@@ -133,7 +162,7 @@ class SendClearNightAlerts extends Command
 
             $body = '<p>'.e(__('The night of :date is forecast to be clear and dark at :location.', ['date' => $date, 'location' => $location], $locale)).'</p><ul>';
             $body .= '<li>'.e(__('Clear and dark :from–:until', $forecast['clear_dark'], $locale)).'</li>';
-            $body .= '<li>'.e(__('Clouds :percent%', ['percent' => $forecast['cloud']], $locale)).'</li>';
+            $body .= '<li>'.e(__('Clouds :percent% on average over the dark hours', ['percent' => $forecast['cloud']], $locale)).'</li>';
             $body .= '<li>'.e($forecast['moon'] ? __('Moon :fraction%, up :from–:until', $forecast['moon'], $locale) : __('No Moon', [], $locale)).'</li>';
             if ($dew = NightForecast::dewLabel($forecast, $locale)) {
                 $body .= '<li>'.e($dew).'</li>';
