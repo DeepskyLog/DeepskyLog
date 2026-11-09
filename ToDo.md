@@ -2,7 +2,6 @@
 
 ## Next steps
 
-- [ ] There is no link from https://test.deepskylog.org/object/mars to https://test.deepskylog.org/mars-venus, same for venus, jupiter, saturn, moon?  Can you make these links?
 - [ ] Isn't it too optimistic to send me this message?  83% clouds does not mean clear and dark...
 The night of Saturday November 7, 2026 is forecast to be clear and dark at Marollenkapel Hauthem.
 
