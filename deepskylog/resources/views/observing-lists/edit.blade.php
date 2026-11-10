@@ -13,7 +13,7 @@
                     <div class="mb-4">
                         <label for="name" class="block text-sm font-medium text-gray-300 mb-1">{{ __('Name') }} <span class="text-red-400">*</span></label>
                         <input type="text" id="name" name="name" maxlength="255" required
-                               value="{{ old('name', $list->name) }}"
+                               value="{{ old('name', html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')) }}"
                                class="w-full bg-gray-800 border border-gray-600 rounded-md text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('name') border-red-500 @enderror">
                         @error('name')
                             <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
