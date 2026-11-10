@@ -673,90 +673,34 @@ Route::get('/object/sun', function () {
         'slug' => 'sun',
     ];
 
-    // Compute unified modern observation counts (observations table, not legacy)
+    // Observations of the Sun (stored as target_table planets, key sun; some
+    // older ones as objects), with the viewer's own counts and last dates
     $totalObservations = null;
     $drawings = null;
     $yourObservations = null;
     $yourDrawings = null;
+    $lastObservationDate = null;
+    $lastDrawingDate = null;
     try {
-        if (class_exists(\App\Models\Observation::class)) {
-            $possibleKeys = [];
-            if (!empty($session->slug))
-                $possibleKeys[] = (string) $session->slug;
-            if (!empty($session->name))
-                $possibleKeys[] = (string) $session->name;
-            if (!empty($session->id))
-                $possibleKeys[] = (string) $session->id;
-            $possibleKeys = array_values(array_unique(array_filter($possibleKeys)));
+        $sunObservations = fn() => \App\Models\Observation::whereIn('target_table', ['planets', 'objects'])
+            ->whereIn('target_key', ['sun', 'Sun']);
+        $totalObservations = $sunObservations()->count();
+        $drawings = $sunObservations()->where('has_drawing', 1)->count();
 
-            if (!empty($possibleKeys)) {
-                $lowerKeys = array_map(fn($k) => mb_strtolower((string) $k), $possibleKeys);
-                $possibleKeys = array_values(array_unique(array_merge($possibleKeys, $lowerKeys)));
-
-                // objects
-                $unifiedObjectsCount = \App\Models\Observation::where('target_table', 'objects')
-                    ->whereIn('target_key', $possibleKeys)
-                    ->count();
-
-                $unifiedObjectsDrawings = \App\Models\Observation::where('target_table', 'objects')
-                    ->whereIn('target_key', $possibleKeys)
-                    ->where('has_drawing', 1)
-                    ->count();
-
-                $totalObservations = (int) ($totalObservations ?? 0) + (int) $unifiedObjectsCount;
-                $drawings = (int) ($drawings ?? 0) + (int) $unifiedObjectsDrawings;
-
-                if (\Illuminate\Support\Facades\Auth::check()) {
-                    $yourUnifiedObs = \App\Models\Observation::where('target_table', 'objects')
-                        ->whereIn('target_key', $possibleKeys)
-                        ->where('observer_user_id', \Illuminate\Support\Facades\Auth::user()->id)
-                        ->count();
-
-                    $yourUnifiedDraws = \App\Models\Observation::where('target_table', 'objects')
-                        ->whereIn('target_key', $possibleKeys)
-                        ->where('observer_user_id', \Illuminate\Support\Facades\Auth::user()->id)
-                        ->where('has_drawing', 1)
-                        ->count();
-
-                    $yourObservations = (int) ($yourObservations ?? 0) + (int) $yourUnifiedObs;
-                    $yourDrawings = (int) ($yourDrawings ?? 0) + (int) $yourUnifiedDraws;
-                }
-
-                // planets (Sun)
-                $unifiedPlanetCount = \App\Models\Observation::where('target_table', 'planets')
-                    ->whereIn('target_key', $possibleKeys)
-                    ->count();
-
-                $unifiedPlanetDrawings = \App\Models\Observation::where('target_table', 'planets')
-                    ->whereIn('target_key', $possibleKeys)
-                    ->where('has_drawing', 1)
-                    ->count();
-
-                $totalObservations = (int) ($totalObservations ?? 0) + (int) $unifiedPlanetCount;
-                $drawings = (int) ($drawings ?? 0) + (int) $unifiedPlanetDrawings;
-
-                if (\Illuminate\Support\Facades\Auth::check()) {
-                    $yourUnifiedPlanetObs = \App\Models\Observation::where('target_table', 'planets')
-                        ->whereIn('target_key', $possibleKeys)
-                        ->where('observer_user_id', \Illuminate\Support\Facades\Auth::user()->id)
-                        ->count();
-
-                    $yourUnifiedPlanetDraws = \App\Models\Observation::where('target_table', 'planets')
-                        ->whereIn('target_key', $possibleKeys)
-                        ->where('observer_user_id', \Illuminate\Support\Facades\Auth::user()->id)
-                        ->where('has_drawing', 1)
-                        ->count();
-
-                    $yourObservations = (int) ($yourObservations ?? 0) + (int) $yourUnifiedPlanetObs;
-                    $yourDrawings = (int) ($yourDrawings ?? 0) + (int) $yourUnifiedPlanetDraws;
-                }
-            }
+        if ($authUser = \Illuminate\Support\Facades\Auth::user()) {
+            $yours = fn() => $sunObservations()->where('observer_user_id', $authUser->id);
+            $yourObservations = $yours()->count();
+            $yourDrawings = $yours()->where('has_drawing', 1)->count();
+            $lastObsRaw = $yours()->max('observed_on');
+            $lastObservationDate = $lastObsRaw ? \Carbon\Carbon::parse($lastObsRaw) : null;
+            $lastDrawingRaw = $yours()->where('has_drawing', 1)->max('observed_on');
+            $lastDrawingDate = $lastDrawingRaw ? \Carbon\Carbon::parse($lastDrawingRaw) : null;
         }
     } catch (\Throwable $_) {
         // ignore
     }
 
-    return view('object.sun-page', ['session' => $session, 'ephemerides' => $payload, 'totalObservations' => $totalObservations, 'drawings' => $drawings, 'yourObservations' => $yourObservations, 'yourDrawings' => $yourDrawings]);
+    return view('object.sun-page', compact('session', 'totalObservations', 'drawings', 'yourObservations', 'yourDrawings', 'lastObservationDate', 'lastDrawingDate') + ['ephemerides' => $payload]);
 })->name('object.show.sun')->middleware('doNotCacheResponse');
 
 // Create object multi-step wizard (must be before /object/{slug} so 'create' isn't captured as a slug)
