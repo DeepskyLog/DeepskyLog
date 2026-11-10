@@ -93,7 +93,7 @@
                     @if (Auth::user()->id == $set->user_id)
                         @foreach($set->instruments->where('active', 1) as $instrument)
                             @if ($instrument->focal_length_mm > 0 && $instrument->fixedMagnification == 0)
-                                <h2 class="text-xl font-bold mt-6">{{ $instrument->fullName() }}</h2>
+                                <h2 class="text-xl font-bold mt-6">{{ html_entity_decode($instrument->fullName()) }}</h2>
                                 <br/>
 
                                 <h3 class="text-lg font-semibold">{{ __('Without lenses') }}</h3>

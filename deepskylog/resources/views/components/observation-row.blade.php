@@ -90,7 +90,7 @@
                     )
                 }}
                 @if ($instrument)
-                    &middot; {{ $instrument->fullName() }}
+                    &middot; {{ html_entity_decode($instrument->fullName()) }}
                 @endif
             </span>
         </div>
