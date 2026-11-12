@@ -261,9 +261,15 @@ describe('AstrArome', function () {
         $night = SeeingForecast::forNight(50.85, 4.35, SF_NIGHT, 'Europe/Brussels');
         expect($night)->toBe(['index' => 3.9, 'class' => 'steady', 'arcsec' => '1.1″', 'source' => 'astrarome']);
         Http::assertSent(fn (Request $request) => str_contains($request->url(), '/api/point')
-            && $request['lat']                === '50.7500' && $request['lon'] === '4.2500'
+            && $request['lat']                === '50.8500' && $request['lon'] === '4.3500'
             && $request->header('User-Agent') === [SeeingForecast::USER_AGENT]);
         Http::assertSent(fn (Request $request) => str_contains($request->url(), '/api/runs/latest'));
+
+        // a cell of 0.05°: a site 10 km away is asked for itself
+        SeeingForecast::points(50.80, 4.25);
+        Http::assertSent(fn (Request $request) => str_contains($request->url(), '/api/point') && $request['lat'] === '50.8000' && $request['lon'] === '4.2500');
+        SeeingForecast::points(50.86, 4.36);
+        expect(Http::recorded(fn (Request $request) => str_contains($request->url(), '/api/point'))->count())->toBe(2);
 
         // beyond its reach 7Timer
         expect(SeeingForecast::forNight(50.85, 4.35, '2026-11-11', 'Europe/Brussels')['source'])->toBe('7timer');

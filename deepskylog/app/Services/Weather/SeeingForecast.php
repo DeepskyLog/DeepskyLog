@@ -31,7 +31,9 @@ use Illuminate\Support\Facades\Log;
  * NightForecast shows it per night and TonightsBest favours them on a
  * steady night.
  *
- * Cached per cell of GRID degrees. With $fetch false a forecast that is not
+ * Cached per cell of GRID degrees (7Timer, from the coarse GFS model) and
+ * AROME_GRID degrees (AstrArome, from a model of 1.3 km; about 5 km, which
+ * Clément agreed to: one point per cell, not an average). With $fetch false a forecast that is not
  * cached yet (or an AstrArome run that may be outdated) is fetched after the
  * response (defer()).
  */
@@ -55,6 +57,8 @@ class SeeingForecast
     private const POINT_SECONDS = 5400;
 
     private const GRID = 0.25;
+
+    private const AROME_GRID = 0.05;
 
     private const CACHE_SECONDS = 3 * 3600;
 
@@ -344,11 +348,9 @@ class SeeingForecast
             return null;
         }
 
-        $latitude  = round(round($latitude / self::GRID) * self::GRID, 2);
-        $longitude = round(round($longitude / self::GRID) * self::GRID, 2);
-
-        $seven = self::sevenTimerPoints($latitude, $longitude, $fetch);
-        $arome = self::aromePoints($latitude, $longitude, $fetch);
+        $cell  = fn (float $degrees, float $grid) => round(round($degrees / $grid) * $grid, 2);
+        $seven = self::sevenTimerPoints($cell($latitude, self::GRID), $cell($longitude, self::GRID), $fetch);
+        $arome = self::aromePoints($cell($latitude, self::AROME_GRID), $cell($longitude, self::AROME_GRID), $fetch);
         if ($seven === null && $arome === null) {
             return null;
         }
