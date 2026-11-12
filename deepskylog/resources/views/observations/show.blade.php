@@ -130,8 +130,30 @@
                     $currentSort = $sort ?? request()->query('sort', 'observed');
                     $sortObservedUrl = url()->current() . '?' . http_build_query(array_merge($listingQuery, ['sort' => 'observed']));
                     $sortIdUrl = url()->current() . '?' . http_build_query(array_merge($listingQuery, ['sort' => 'id']));
+
+                    // Cards or a compact list (App\Services\Observations\ObservationListView),
+                    // for the listings of observations, not those of drawings
+                    $listViewAvailable = !$isDrawingsPath && empty($drawingsOnly) && $mode !== 'comet';
+                    $listView = $listViewAvailable
+                        && \App\Services\Observations\ObservationListView::current(request(), auth()->user()) === \App\Services\Observations\ObservationListView::LIST;
+                    $viewCardsUrl = url()->current() . '?' . http_build_query(array_merge(\App\Helpers\ListingPagination::query(['view']), ['view' => 'cards']));
+                    $viewListUrl = url()->current() . '?' . http_build_query(array_merge(\App\Helpers\ListingPagination::query(['view']), ['view' => 'list']));
                 @endphp
                 <div class="flex flex-wrap items-center gap-2">
+                    @if ($listViewAvailable)
+                        <div class="inline-flex overflow-hidden rounded" role="group" aria-label="{{ __('Show the observations as') }}">
+                            <a href="{{ $viewCardsUrl }}"
+                                class="inline-flex items-center px-3 py-2 {{ !$listView ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600' }}"
+                                @if (!$listView) aria-current="true" @endif>
+                                {{ __('Cards') }}
+                            </a>
+                            <a href="{{ $viewListUrl }}"
+                                class="inline-flex items-center px-3 py-2 {{ $listView ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600' }}"
+                                @if ($listView) aria-current="true" @endif>
+                                {{ __('List') }}
+                            </a>
+                        </div>
+                    @endif
                     @if ($user instanceof \App\Models\User && auth()->user()?->is($user) && empty($objectFilter) && empty($drawingsOnly) && !$isDrawingsPath)
                         <a href="{{ route('observations.zip', ['observer' => $user->slug]) }}"
                             class="inline-flex items-center px-3 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-500">
@@ -277,6 +299,9 @@
                         @else
                             <h3 class="mb-3 text-lg font-semibold text-gray-200">{{ __('All observations') }}
                             </h3>
+                            @if ($listView)
+                                @include('observations.partials.list', ['observations' => $deepsky, 'showUnread' => $showUnread, 'readMark' => $readMark ?? null, 'currentSort' => $currentSort])
+                            @else
                             <div class="grid grid-cols-1 gap-4 px-5">
                                 @foreach ($deepsky as $observation)
                                     @if ($showUnread && \App\Services\Observations\ReadObservations::isUnread(auth()->user(), $readMark, $observation))
@@ -297,6 +322,7 @@
                                     />
                                 @endforeach
                             </div>
+                            @endif
                             <div class="mt-4">{{ $deepsky->links() }}</div>
                         @endif
                     </x-card>
