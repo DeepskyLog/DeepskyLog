@@ -685,7 +685,7 @@ class ObservingListController extends Controller
             $q = trim($request->input('search_query'));
             if (strlen($q) > 0) {
                 [, $rows] = app(SearchExportController::class)
-                    ->resolveRows(Request::create('/search', 'GET', ['q' => $q]));
+                    ->resolveRows(Request::create('/search', 'GET', ['q' => $q] + ($request->boolean('unseen') ? ['unseen' => 1] : [])));
                 $objectNames = collect($rows)
                     ->map(fn ($row) => $row->obj_name ?? $row->name ?? $row->display_name ?? null)
                     ->filter()

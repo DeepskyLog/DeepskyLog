@@ -18,10 +18,14 @@ class SearchResults extends Component
     public ?string $title = null;
     public bool $canModifyActiveList = false;
     public bool $fixedResultsMode = false;
+    // "Not yet seen by me" (?unseen=1): only the objects the observer has not
+    // observed yet, in the table, its exports and "Add all to active list".
+    public bool $unseenByMe = false;
 
-    public function mount($q = '', $objectRefs = [], $title = null, $observationSearch = null)
+    public function mount($q = '', $objectRefs = [], $title = null, $observationSearch = null, $unseenByMe = false)
     {
         $this->q = $q;
+        $this->unseenByMe = (bool) $unseenByMe && auth()->check();
         $this->objectRefs = is_array($objectRefs) ? $objectRefs : [];
         $this->observationSearch = is_array($observationSearch) ? $observationSearch : null;
         $this->title = is_string($title) && $title !== '' ? $title : null;

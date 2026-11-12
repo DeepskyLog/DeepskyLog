@@ -44,6 +44,10 @@ class SearchResultsTable extends PowerGridComponent
     // number of objects can be far too large to pass around as $objectRefs.
     #[Locked]
     public ?array $observationSearch = null;
+    // Only the objects the logged-in observer has not observed yet (the
+    // "Not yet seen by me" toggle of the search results page, ?unseen=1).
+    #[Locked]
+    public bool $unseenByMe = false;
     public ?int $previewInstrumentId = null;
     public ?int $previewLensId = null;
     public ?int $previewEyepieceId = null;
@@ -281,6 +285,12 @@ class SearchResultsTable extends PowerGridComponent
         try {
             ObjectObservationStatistics::join($query, Auth::user()?->username);
             $select .= ', ' . ObjectObservationStatistics::selectList();
+
+            // Objects without statistics (planets, comets, ...) are kept:
+            // only the deep-sky objects have the observer's counts.
+            if ($this->unseenByMe && Auth::check()) {
+                $query->whereRaw(ObjectObservationStatistics::expressions()['your_observations'] . ' = 0');
+            }
         } catch (\Throwable $_) {
             // ignore statistics failures
         }

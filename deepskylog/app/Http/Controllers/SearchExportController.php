@@ -493,6 +493,7 @@ class SearchExportController extends Controller
         $this->bootSearchComponent($component);
         $component->q = trim((string) $request->query('q', ''));
         $component->objectRefs = $this->normalizeObjectRefs($request->query('object_refs', []));
+        $component->unseenByMe = $request->boolean('unseen') && auth()->check();
 
         return $component;
     }
@@ -516,7 +517,7 @@ class SearchExportController extends Controller
 
     private function extractAdvancedFilters(Request $request): array
     {
-        $filters = $request->except(['_token', 'page', 'q', 'object_refs']);
+        $filters = $request->except(['_token', 'page', 'q', 'object_refs', 'unseen']);
 
         return array_filter($filters, function ($value): bool {
             if (is_array($value)) {

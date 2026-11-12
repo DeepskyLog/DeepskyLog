@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\Session;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,13 @@ class QuickSearch extends Component
     // logged-in observers) "New observation" for the typed name, below the
     // suggestions as well, which would otherwise cover those buttons.
     public $observationActions = false;
+    // "Only objects not yet seen by me": the search goes to the results page
+    // with ?unseen=1 (or, without a name, to the advanced search with that
+    // observing status), never straight to an object. Logged in only, and
+    // not when picking the object of a new observation. Kept in the session,
+    // as the quick search is on every page.
+    #[Session]
+    public bool $unseenOnly = false;
     // In add_observation mode: the session (id) whose date and location the
     // observation form starts with, from the reminder of a session without
     // observations.
@@ -835,8 +843,34 @@ class QuickSearch extends Component
             : redirect()->route('observation.create', ['slug' => $q]);
     }
 
+    /**
+     * Whether the search is limited to the objects the observer has not seen.
+     */
+    private function searchesUnseen(): bool
+    {
+        return $this->unseenOnly && $this->mode !== 'add_observation' && auth()->check();
+    }
+
+    /**
+     * The search with an empty box: the advanced search form, with the
+     * "not seen by me" status when asked.
+     */
+    public function searchAdvanced()
+    {
+        return redirect()->route('search.advanced', $this->searchesUnseen() ? ['observing_status' => 'unseen_by_me'] : []);
+    }
+
     public function submit()
     {
+        if ($this->searchesUnseen()) {
+            if (trim($this->query ?? '') === '' && $this->redirectToAdvancedWhenEmpty) {
+                return $this->searchAdvanced();
+            }
+
+            // The results page: an exact match may be an object already seen.
+            return redirect()->route('search.results', ['q' => $this->query, 'unseen' => 1]);
+        }
+
         $original = $this->searchedQuery();
         if ($original === '') {
             return redirect()->route('search.results', ['q' => $this->query]);

@@ -167,6 +167,53 @@ it('filters the advanced object search on the unified observation statistics', f
         ->and($names('drawn_by_others_not_me'))->toBe(['NGC 7001']);
 });
 
+it('lists only the objects not yet seen by me in the search results with ?unseen=1', function () {
+    $me = User::factory()->create(['name' => 'Me', 'username' => 'me-observer', 'slug' => 'me-observer']);
+    $other = User::factory()->create(['name' => 'Other', 'username' => 'other-observer', 'slug' => 'other-observer']);
+
+    insertStatisticsSearchObject('NGC 7000', 'ngc-7000');
+    insertStatisticsSearchObject('NGC 7001', 'ngc-7001');
+    insertStatisticsSearchObject('NGC 7002', 'ngc-7002');
+
+    foreach ([[$me, 'NGC 7000'], [$other, 'NGC 7001']] as [$user, $name]) {
+        Observation::create([
+            'observer_username' => $user->username,
+            'observer_user_id' => $user->id,
+            'observed_on' => '2026-01-01',
+            'target_type' => 'deepsky',
+            'target_table' => 'objects',
+            'target_key' => $name,
+            'target_name' => $name,
+            'has_drawing' => false,
+            'legacy_source' => null,
+        ]);
+    }
+
+    $this->actingAs($me);
+
+    $names = function (bool $unseen): array {
+        $table = new SearchResultsTable();
+        $table->boot();
+        $table->q = 'NGC 700';
+        $table->unseenByMe = $unseen;
+
+        return $table->datasource()->get()->pluck('display_name')->sort()->values()->all();
+    };
+
+    expect($names(false))->toBe(['NGC 7000', 'NGC 7001', 'NGC 7002'])
+        ->and($names(true))->toBe(['NGC 7001', 'NGC 7002']);
+
+    // The exports take the same filter from the query string.
+    $request = \Illuminate\Http\Request::create('/search', 'GET', ['q' => 'NGC 700', 'unseen' => 1]);
+    [$component, $rows] = app(\App\Http\Controllers\SearchExportController::class)->resolveRows($request);
+    expect($component)->toBeInstanceOf(SearchResultsTable::class)
+        ->and(collect($rows)->pluck('display_name')->sort()->values()->all())->toBe(['NGC 7001', 'NGC 7002']);
+
+    $this->get(route('search.results', ['q' => 'NGC 700', 'unseen' => 1]))
+        ->assertOk()
+        ->assertSee('Not yet seen by me');
+});
+
 /**
  * The statistics of one object as the correlated subqueries on the
  * observations gave them before they were kept in tables.
@@ -369,4 +416,42 @@ it('links the seen count of the nearby objects table to the observations of the 
         ->toBe('<a class="hover:underline" href="' . route('observations.object', ['slug' => 'ngc-7001']) . '">2</a>')
         ->and($seen((object) ['name' => 'NGC 7002', 'total_observations' => 0]))->toBe('0')
         ->and($seen((object) ['name' => 'NGC 7003']))->toBe('0');
+});
+
+it('searches only the objects not yet seen by me from the quick search', function () {
+    $me = User::factory()->create(['name' => 'Me', 'username' => 'me-observer', 'slug' => 'me-observer']);
+    insertStatisticsSearchObject('NGC 7000', 'ngc-7000');
+
+    // An exact name goes to the results page, where the object may be filtered out.
+    \Livewire\Livewire::actingAs($me)
+        ->test(\App\Http\Livewire\QuickSearch::class, ['redirectToAdvancedWhenEmpty' => true])
+        ->assertSee('Only objects not yet seen by me')
+        ->set('unseenOnly', true)
+        ->set('query', 'NGC 7000')
+        ->call('submit')
+        ->assertRedirect(route('search.results', ['q' => 'NGC 7000', 'unseen' => 1]));
+
+    // Without a name: the advanced search with that observing status.
+    \Livewire\Livewire::actingAs($me)
+        ->test(\App\Http\Livewire\QuickSearch::class, ['redirectToAdvancedWhenEmpty' => true])
+        ->set('unseenOnly', true)
+        ->call('searchAdvanced')
+        ->assertRedirect(route('search.advanced', ['observing_status' => 'unseen_by_me']));
+
+    // Unticked, the exact name still opens the object.
+    \Livewire\Livewire::actingAs($me)
+        ->test(\App\Http\Livewire\QuickSearch::class)
+        ->set('unseenOnly', false)
+        ->set('query', 'NGC 7000')
+        ->call('submit')
+        ->assertRedirect(route('object.show', ['slug' => 'ngc-7000']));
+
+    // Guests get neither the checkbox nor the filter.
+    auth()->logout();
+    \Livewire\Livewire::test(\App\Http\Livewire\QuickSearch::class)
+        ->assertDontSee('Only objects not yet seen by me')
+        ->set('unseenOnly', true)
+        ->set('query', 'NGC 7000')
+        ->call('submit')
+        ->assertRedirect(route('object.show', ['slug' => 'ngc-7000']));
 });

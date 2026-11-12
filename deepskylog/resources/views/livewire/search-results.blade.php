@@ -10,10 +10,24 @@
         @if (! $fixedResultsMode)
         <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
             @auth
+                <a href="{{ route('search.results', array_filter(['q' => $q, 'unseen' => $unseenByMe ? null : 1], fn ($v) => $v !== null && $v !== '')) }}"
+                    class="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-md border transition focus:outline-none focus:ring-2 focus:ring-indigo-400 {{ $unseenByMe ? 'bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700' : 'border-gray-600 text-gray-200 hover:bg-gray-700' }}"
+                    role="switch" aria-checked="{{ $unseenByMe ? 'true' : 'false' }}"
+                    title="{{ __('Only show the objects you have not observed yet') }}">
+                    <span class="inline-flex h-4 w-4 items-center justify-center rounded border {{ $unseenByMe ? 'border-white bg-white text-indigo-600' : 'border-gray-400' }}" aria-hidden="true">
+                        @if ($unseenByMe)
+                            <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-8 8a1 1 0 01-1.4 0l-4-4a1 1 0 111.4-1.4L8 12.6l7.3-7.3a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>
+                        @endif
+                    </span>
+                    <span>{{ __('Not yet seen by me') }}</span>
+                </a>
                 @if ($canModifyActiveList)
                 <form method="POST" action="{{ route('observing-list.active.batch-add') }}">
                     @csrf
                     <input type="hidden" name="search_query" value="{{ $q }}">
+                    @if ($unseenByMe)
+                        <input type="hidden" name="unseen" value="1">
+                    @endif
                     <button type="submit"
                         class="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-md bg-green-700 text-white hover:bg-green-600 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                         title="{{ __('Add all search results to your active observing list') }}">
@@ -33,6 +47,9 @@
                 }
                 if (!empty($objectRefs ?? [])) {
                     $exportParams['object_refs'] = $objectRefs;
+                }
+                if ($unseenByMe) {
+                    $exportParams['unseen'] = 1;
                 }
 
                 $exportNamesBase = route('search.names.pdf', $exportParams);
@@ -82,7 +99,7 @@
     </div>
 
     <div class="w-full">
-        <livewire:search-results-table :q="$q" :object-refs="$objectRefs" :observation-search="$observationSearch" />
+        <livewire:search-results-table :q="$q" :object-refs="$objectRefs" :observation-search="$observationSearch" :unseen-by-me="$unseenByMe" />
     </div>
 </div>
 

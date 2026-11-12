@@ -106,7 +106,7 @@ class SearchController extends Controller
     public function results(Request $request)
     {
         $q = trim($request->get('q', ''));
-        return view('search.results', ['q' => $q]);
+        return view('search.results', ['q' => $q, 'unseenByMe' => $request->boolean('unseen')]);
     }
 
     /**
