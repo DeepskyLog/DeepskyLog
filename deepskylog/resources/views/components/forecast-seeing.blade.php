@@ -1,6 +1,6 @@
 @props (["seeing"])
 
-{{-- The seeing of a night (App\Services\Weather\SeeingForecast::between()) as a badge, the arcseconds in the tooltip --}}
+{{-- The seeing of a night (App\Services\Weather\SeeingForecast::between()) as a badge with the arcseconds, the source in the tooltip --}}
 <span
     {{
         $attributes->merge([
@@ -14,5 +14,5 @@
         \App\Services\Weather\SeeingForecast::label(
             $seeing["class"],
         )
-    }}</span
+    }} &middot; {{ $seeing["arcsec"] }}</span
 >

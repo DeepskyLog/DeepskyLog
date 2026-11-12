@@ -324,6 +324,7 @@ describe('AstrArome', function () {
 
         $this->view('components.night-forecast-nights', ['nights' => [$night], 'listLinks' => false])
             ->assertSee('AstrArome')
+            ->assertSee('Poor seeing &middot; 2.6″', false)
             ->assertSee('Seeing 2.6″', false)
             ->assertDontSee('7Timer!');
     });
