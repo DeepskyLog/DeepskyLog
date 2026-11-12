@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Livewire\Concerns\SortsEmptyLast;
+use App\Livewire\Concerns\SortsStably;
 use App\Models\Eyepiece;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -18,6 +19,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 final class EyepieceTable extends PowerGridComponent
 {
     use SortsEmptyLast;
+    use SortsStably;
 
     public bool $multiSort = false;
 

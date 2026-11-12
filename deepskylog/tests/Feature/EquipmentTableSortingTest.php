@@ -15,6 +15,8 @@ use Database\Factories\EyepieceFactory;
 use Database\Factories\FilterFactory;
 use Database\Factories\InstrumentFactory;
 use Database\Factories\LensFactory;
+use Database\Factories\LocationFactory;
+use App\Livewire\LocationTable;
 use Livewire\Livewire;
 
 /**
@@ -131,3 +133,29 @@ test('the number columns put the cells shown empty last', function () {
         ->call('sortBy', 'field_stop_mm')
         ->assertSeeInOrder(['Wide stop', 'Narrow stop', 'Unknown stop']);
 });
+
+test('the equipment tables sort the rows with the same Active value on their name', function (string $component, string $factory) {
+    // Created out of alphabetical order, so the id order is not the name order.
+    foreach (['Delta item' => true, 'Bravo item' => false, 'Alpha item' => true, 'Charlie item' => false] as $name => $active) {
+        $factory::new()->create([
+            'user_id' => $this->user->id,
+            'observer' => $this->user->username,
+            'name' => $name,
+            'active' => $active,
+        ]);
+    }
+
+    Livewire::test($component)
+        ->call('sortBy', 'active')
+        ->assertOk()
+        ->assertSeeInOrder(['Bravo item', 'Charlie item', 'Alpha item', 'Delta item'])
+        ->call('sortBy', 'active')
+        ->assertOk()
+        ->assertSeeInOrder(['Alpha item', 'Delta item', 'Bravo item', 'Charlie item']);
+})->with([
+    'instruments' => [InstrumentTable::class, InstrumentFactory::class],
+    'eyepieces' => [EyepieceTable::class, EyepieceFactory::class],
+    'lenses' => [LensTable::class, LensFactory::class],
+    'filters' => [FilterTable::class, FilterFactory::class],
+    'locations' => [LocationTable::class, LocationFactory::class],
+]);

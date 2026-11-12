@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\SortsStably;
 use App\Models\Country;
 use App\Models\Location;
 use App\Services\Weather\NightForecast;
@@ -20,6 +21,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 final class LocationTable extends PowerGridComponent
 {
+    use SortsStably;
 
     public bool $multiSort = false;
 

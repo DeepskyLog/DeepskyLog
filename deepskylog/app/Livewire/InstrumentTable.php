@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Livewire\Concerns\SortsEmptyLast;
+use App\Livewire\Concerns\SortsStably;
 use App\Models\Instrument;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -20,6 +21,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 class InstrumentTable extends PowerGridComponent
 {
     use SortsEmptyLast;
+    use SortsStably;
 
     public bool $multiSort = false;
 
