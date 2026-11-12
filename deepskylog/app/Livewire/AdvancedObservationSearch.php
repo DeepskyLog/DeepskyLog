@@ -547,7 +547,14 @@ class AdvancedObservationSearch extends Component
             return;
         }
 
-        $this->redirect(route('search.observations.advanced.results', $params));
+        // Give the form page the criteria in its URL first, so the browser's
+        // Back button returns to the filled-in form instead of an empty one.
+        $flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES;
+        $this->js(sprintf(
+            "history.replaceState(history.state, '', %s); window.location.assign(%s)",
+            json_encode(route('search.observations.advanced', $params), $flags),
+            json_encode(route('search.observations.advanced.results', $params), $flags)
+        ));
     }
 
     private function buildParams(): array

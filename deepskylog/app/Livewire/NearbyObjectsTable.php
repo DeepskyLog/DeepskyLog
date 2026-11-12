@@ -30,6 +30,7 @@ use App\Models\UserTableSetting;
  */
 class NearbyObjectsTable extends PowerGridComponent
 {
+    use \App\Livewire\Concerns\ExportsInTableOrder;
 
     public string $tableName = 'nearby-objects-table';
     public string $primaryKey = 'id';

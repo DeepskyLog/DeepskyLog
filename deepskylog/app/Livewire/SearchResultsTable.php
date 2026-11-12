@@ -29,6 +29,7 @@ use App\Services\ObservationSearchQuery;
 #[Lazy]
 class SearchResultsTable extends PowerGridComponent
 {
+    use \App\Livewire\Concerns\ExportsInTableOrder;
     use LimitsExportRows;
 
     public string $tableName = 'search-results-table';

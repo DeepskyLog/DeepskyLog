@@ -33,6 +33,7 @@ use App\Jobs\ComputeContrastReserveForObject;
 #[Lazy]
 class AdvancedObjectSearchTable extends PowerGridComponent
 {
+    use \App\Livewire\Concerns\ExportsInTableOrder;
     use LimitsExportRows;
 
     public string $tableName = 'advanced-search-results-table';

@@ -10,7 +10,7 @@ it('offers the sketch filter in the object search and passes it on', function ()
         ->assertSee('Objects without a sketch of the week or month')
         ->set('sketches', 'none')
         ->call('search')
-        ->assertRedirectContains('sketches=none');
+        ->assertSearchGoesToContaining('sketches=none');
 });
 
 it('offers the sketches of the week and month in the drawing filter of the observation search', function () {
@@ -19,5 +19,5 @@ it('offers the sketches of the week and month in the drawing filter of the obser
         ->assertSee('Only sketches of the month')
         ->set('drawingState', 'sketch_of_the_month')
         ->call('search')
-        ->assertRedirectContains('drawing_state=sketch_of_the_month');
+        ->assertSearchGoesToContaining('drawing_state=sketch_of_the_month');
 });

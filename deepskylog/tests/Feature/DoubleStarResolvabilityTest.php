@@ -208,7 +208,10 @@ it('offers the double star filter in the search form to observers', function () 
         ->call('addFilter', 'doubleStars')
         ->set('doubleStars', 'not_split')
         ->call('search')
-        ->assertRedirect(route('search.advanced.results', ['double_stars' => 'not_split']));
+        ->assertSearchGoesTo(
+            route('search.advanced.results', ['double_stars' => 'not_split']),
+            route('search.advanced', ['double_stars' => 'not_split'])
+        );
 });
 
 it('gives a double star no contrast reserve', function () {

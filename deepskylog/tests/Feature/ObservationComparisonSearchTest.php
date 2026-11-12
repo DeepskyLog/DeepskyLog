@@ -151,9 +151,10 @@ it('puts the comparison in the query string of the results', function () {
         ->set('compareSeen', '1')
         ->set('compareNotSeen', '2')
         ->call('search')
-        ->assertRedirect(route('search.advanced.results', [
-            'compare_by' => 'instrument', 'compare_seen' => '1', 'compare_not_seen' => '2',
-        ]));
+        ->assertSearchGoesTo(
+            route('search.advanced.results', ['compare_by' => 'instrument', 'compare_seen' => '1', 'compare_not_seen' => '2']),
+            route('search.advanced', ['compare_by' => 'instrument', 'compare_seen' => '1', 'compare_not_seen' => '2'])
+        );
 });
 
 it('refuses an incomplete comparison', function () {

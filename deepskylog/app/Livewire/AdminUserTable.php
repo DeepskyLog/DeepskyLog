@@ -18,6 +18,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 final class AdminUserTable extends PowerGridComponent
 {
+    use \App\Livewire\Concerns\ExportsInTableOrder;
 
     public bool $multiSort = true;
 

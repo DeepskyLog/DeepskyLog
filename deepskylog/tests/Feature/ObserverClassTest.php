@@ -166,7 +166,10 @@ it('offers the class in the advanced observation search and passes it on', funct
         ->assertSet('activeFilters', ['observerClass'])
         ->assertSet('observerClasses', ['A'])
         ->call('search')
-        ->assertRedirect(route('search.observations.advanced.results', ['observer_classes' => ['A'], 'activeFilters' => ['observerClass']]));
+        ->assertSearchGoesTo(
+            route('search.observations.advanced.results', ['observer_classes' => ['A'], 'activeFilters' => ['observerClass']]),
+            route('search.observations.advanced', ['observer_classes' => ['A'], 'activeFilters' => ['observerClass']])
+        );
 });
 
 it('shows a changed class on the home page at once', function () {

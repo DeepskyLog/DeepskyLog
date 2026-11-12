@@ -15,6 +15,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 final class PopularSessionsTable extends PowerGridComponent
 {
+    use \App\Livewire\Concerns\ExportsInTableOrder;
     use LimitsExportRows;
 
     public string $tableName = 'popular-sessions';

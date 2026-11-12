@@ -7,4 +7,10 @@ use PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v5\ExportToXLS as
 class ExportToXLS extends PowerGridExportToXLS
 {
     use EscapesFormulas;
+    use WritesOwnFile;
+
+    protected function extension(): string
+    {
+        return 'xlsx';
+    }
 }

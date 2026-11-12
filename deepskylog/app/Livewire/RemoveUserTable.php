@@ -18,6 +18,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 final class RemoveUserTable extends PowerGridComponent
 {
+    use \App\Livewire\Concerns\ExportsInTableOrder;
 
     public string $tableName = 'RemoveUserTable';
 

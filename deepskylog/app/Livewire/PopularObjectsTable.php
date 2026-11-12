@@ -20,6 +20,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
  */
 final class PopularObjectsTable extends PowerGridComponent
 {
+    use \App\Livewire\Concerns\ExportsInTableOrder;
     use LimitsExportRows;
 
     public string $tableName = 'popular-objects';

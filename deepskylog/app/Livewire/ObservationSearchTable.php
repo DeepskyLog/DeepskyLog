@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 final class ObservationSearchTable extends PowerGridComponent
 {
+    use \App\Livewire\Concerns\ExportsInTableOrder;
     use LimitsExportRows;
 
     private const IMPORT_EXPORT_HEADERS = [

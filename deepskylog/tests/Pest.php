@@ -46,3 +46,26 @@ function something()
 {
     // ..
 }
+
+/*
+ * The advanced searches (AdvancedObjectSearch, AdvancedObservationSearch) go
+ * to their results with JavaScript, after giving the form page the criteria in
+ * its URL: assert that both URLs are in that script.
+ */
+Livewire\Features\SupportTesting\Testable::macro('assertSearchGoesTo', function (string $resultsUrl, string $formUrl) {
+    $flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES;
+    $script = collect($this->effects['xjs'] ?? [])->pluck('expression')->implode("\n");
+
+    PHPUnit\Framework\Assert::assertStringContainsString('history.replaceState(history.state, \'\', '.json_encode($formUrl, $flags).')', $script);
+    PHPUnit\Framework\Assert::assertStringContainsString('window.location.assign('.json_encode($resultsUrl, $flags).')', $script);
+
+    return $this;
+});
+
+Livewire\Features\SupportTesting\Testable::macro('assertSearchGoesToContaining', function (string $part) {
+    $script = collect($this->effects['xjs'] ?? [])->pluck('expression')->implode("\n");
+
+    PHPUnit\Framework\Assert::assertMatchesRegularExpression('/window\\.location\\.assign\\("[^"]*'.preg_quote($part, '/').'/', $script);
+
+    return $this;
+});

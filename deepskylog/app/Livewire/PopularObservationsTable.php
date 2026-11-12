@@ -17,6 +17,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 final class PopularObservationsTable extends PowerGridComponent
 {
+    use \App\Livewire\Concerns\ExportsInTableOrder;
     use LimitsExportRows;
 
     public string $tableName = 'popular-observations';

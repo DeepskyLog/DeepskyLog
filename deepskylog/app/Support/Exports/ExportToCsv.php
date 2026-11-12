@@ -7,4 +7,10 @@ use PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v5\ExportToCsv as
 class ExportToCsv extends PowerGridExportToCsv
 {
     use EscapesFormulas;
+    use WritesOwnFile;
+
+    protected function extension(): string
+    {
+        return 'csv';
+    }
 }

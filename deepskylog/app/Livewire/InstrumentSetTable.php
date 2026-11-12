@@ -18,6 +18,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 #[Lazy]
 class InstrumentSetTable extends PowerGridComponent
 {
+    use \App\Livewire\Concerns\ExportsInTableOrder;
 
     public bool $multiSort = false;
 
