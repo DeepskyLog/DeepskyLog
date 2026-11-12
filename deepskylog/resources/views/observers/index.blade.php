@@ -164,7 +164,8 @@
     <div class="py-6">
         <div class="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
             <div id="observers-results" class="overflow-hidden rounded-xl border border-gray-700 bg-gray-900 shadow-xl">
-                <div class="overflow-x-auto">
+                {{-- At most the height of the window, so the horizontal scrollbar stays in view when the columns do not fit --}}
+                <div class="max-h-[80vh] overflow-auto">
                     @php
                         $sortableColumns = [
                             'rank' => __('Rank'),
@@ -188,7 +189,7 @@
                         ];
                     @endphp
                     <table class="min-w-full divide-y divide-gray-700 text-sm">
-                        <thead class="bg-gray-800/90 text-left text-xs uppercase tracking-wider text-gray-300">
+                        <thead class="sticky top-0 z-10 bg-gray-800 text-left text-xs uppercase text-gray-300">
                             <tr>
                                 @foreach ($sortableColumns as $column => $label)
                                     @php
@@ -200,7 +201,7 @@
                                         $textAlign = $column === 'name' ? 'text-left' : 'text-right';
                                         $query = array_merge(request()->query(), ['sort' => $column, 'direction' => $nextDirection]);
                                     @endphp
-                                    <th class="px-4 py-3 {{ $textAlign }}">
+                                    <th class="px-2 py-2 sm:px-3 align-bottom {{ $textAlign }}">
                                         <a
                                             href="{{ route('observers.index', $query) }}"
                                             class="inline-flex items-center gap-1 hover:text-white {{ $textAlign === 'text-right' ? 'justify-end' : '' }}"
@@ -215,25 +216,25 @@
                         <tbody class="divide-y divide-gray-800 bg-gray-950/70 text-gray-100">
                             @forelse ($observerRows as $row)
                                 <tr class="hover:bg-gray-900/80">
-                                    <td class="px-4 py-3 text-gray-400">{{ $row['rank'] }}</td>
-                                    <td class="px-4 py-3">
+                                    <td class="px-2 py-2 sm:px-3 text-gray-400">{{ $row['rank'] }}</td>
+                                    <td class="px-2 py-2 sm:px-3">
                                         <a href="{{ route('observer.show', ['observer' => $row['slug']]) }}" class="font-medium text-blue-300 hover:text-blue-200 hover:underline">
                                             {{ $row['name'] }}
                                         </a>
                                     </td>
-                                    <td class="px-4 py-3 text-right tabular-nums">{{ number_format($row['observations_count']) }}</td>
-                                    <td class="px-4 py-3 text-right tabular-nums">{{ number_format($row['drawings_count']) }}</td>
-                                    <td class="px-4 py-3 text-right tabular-nums">{{ number_format($row['observations_last_year']) }}</td>
-                                    <td class="px-4 py-3 text-right tabular-nums">{{ number_format($row['drawings_last_year']) }}</td>
-                                    <td class="px-4 py-3 text-right tabular-nums">{{ number_format($row['different_objects_count']) }}</td>
-                                    <td class="px-4 py-3 text-right tabular-nums">
+                                    <td class="px-2 py-2 sm:px-3 text-right tabular-nums">{{ number_format($row['observations_count']) }}</td>
+                                    <td class="px-2 py-2 sm:px-3 text-right tabular-nums">{{ number_format($row['drawings_count']) }}</td>
+                                    <td class="px-2 py-2 sm:px-3 text-right tabular-nums">{{ number_format($row['observations_last_year']) }}</td>
+                                    <td class="px-2 py-2 sm:px-3 text-right tabular-nums">{{ number_format($row['drawings_last_year']) }}</td>
+                                    <td class="px-2 py-2 sm:px-3 text-right tabular-nums">{{ number_format($row['different_objects_count']) }}</td>
+                                    <td class="px-2 py-2 sm:px-3 text-right tabular-nums">
                                         <a
                                             href="{{ route('observer.catalog', ['observer' => $row['slug'], 'source' => $selectedSource['key']]) }}"
                                             class="font-semibold text-lime-400 hover:text-lime-300 hover:underline"
                                         >
                                             {{ number_format($row['selected_source_count']) }}
                                         </a>
-                                        <span class="ml-1 text-xs text-gray-400">({{ number_format($row['selected_source_percentage'], 1) }}%)</span>
+                                        <span class="block text-xs text-gray-400">({{ number_format($row['selected_source_percentage'], 1) }}%)</span>
                                     </td>
                                 </tr>
                             @empty
