@@ -129,7 +129,7 @@ class NightForecast
         }
         $seeing = SeeingForecast::points($latitude, $longitude, $fetch);
 
-        $key = 'night_forecast:nights:v5:'.md5(json_encode([round($latitude, 4), round($longitude, 4), round($elevation), $timezone, $nights, $hourly['fetched_at'], $seeing['fetched_at'] ?? null]));
+        $key = 'night_forecast:nights:v6:'.md5(json_encode([round($latitude, 4), round($longitude, 4), round($elevation), $timezone, $nights, $hourly['fetched_at'], $seeing['fetched_at'] ?? null]));
 
         return Cache::remember($key, self::CACHE_SECONDS, function () use ($hourly, $seeing, $latitude, $longitude, $elevation, $timezone, $nights) {
             $result = [];
@@ -326,6 +326,7 @@ class NightForecast
                 'heater'      => $dew || ($temperature !== null && $dewPoint !== null && $temperature - $dewPoint <= self::HEATER_SPREAD),
                 'wind'        => (int) round($hourly['wind_speed_10m'][$i] ?? 0),
                 'seeing'      => SeeingForecast::at($seeing, $timestamp),
+                'seeing_arcsec' => SeeingForecast::arcsecAt($seeing, $timestamp),
                 'twilight'    => $window->twilight !== 'astronomical'
                     && TwilightSky::sunAltitude(intdiv($from + $until, 2), $latitude, $longitude) > TwilightSky::ASTRONOMICAL,
             ];

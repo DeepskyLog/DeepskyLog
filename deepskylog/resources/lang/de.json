@@ -2945,6 +2945,7 @@
     "seeing": "seeing",
     "Seeing :arcsec": "Seeing :arcsec",
     "Seeing :arcsec (7Timer index :index of 8)": "Seeing :arcsec (7Timer-Index :index von 8)",
+    "Seeing :arcsec (AstrArome, AROME model of Météo-France)": "Seeing :arcsec (AstrArome, AROME-Modell von Météo-France)",
     "Seeing by :link": "Seeing von :link",
     "Seeing forecast: :seeing (:arcsec).": "Seeing-Vorhersage: :seeing (:arcsec).",
     "Seen": "Gesehen",

@@ -86,6 +86,15 @@ return [
         'enabled' => (bool) env('SEEING_FORECAST', true),
     ],
 
+    'astrarome' => [
+        // The hourly seeing forecast of AstrArome in the AROME domain (App\Services\Weather\SeeingForecast), free without a key, used with
+        // the permission of its author (Clément Brustel), who asked for at most about one request per second and a new request only for a new run
+        'url' => env('ASTRAROME_URL', 'https://seeingthesky.com'),
+        'enabled' => (bool) env('ASTRAROME', true),
+        // Milliseconds between two requests
+        'delay' => (int) env('ASTRAROME_DELAY_MS', 1000),
+    ],
+
     'aavso' => [
         // The variable star index and latest estimates of the AAVSO (App\Services\AavsoVariableStars), free without a key
         'url' => env('AAVSO_VSX_URL', 'https://vsx.aavso.org/index.php'),

@@ -33,11 +33,6 @@
                 )
             }}
         @endif
-        {!!
-            __("Seeing by :link", [
-                "link" =>
-                    '<a href="https://www.7timer.info/" class="text-blue-400 hover:underline" rel="noopener" target="_blank">7Timer!</a>',
-            ])
-        !!}
+        {!! \App\Services\Weather\SeeingForecast::credit([$best["seeing"]["source"] ?? "7timer"]) !!}
     </p>
 @endif

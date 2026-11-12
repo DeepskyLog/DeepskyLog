@@ -57,5 +57,5 @@
         </div>
     @endforeach
 
-    <x-forecast-credit />
+    <x-forecast-credit :seeing-sources="\App\Services\Weather\SeeingForecast::sourcesOf($nights)" />
 </div>

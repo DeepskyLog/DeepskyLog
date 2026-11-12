@@ -33,6 +33,7 @@
         <env name="WEATHER_FORECAST" value="false"/>
         <env name="WEATHER_HISTORY" value="false"/>
         <env name="SEEING_FORECAST" value="false"/>
+        <env name="ASTRAROME" value="false"/>
         <env name="AAVSO" value="false"/>
         <env name="WEB_PUSH" value="false"/>
         <env name="POWERGRID_PARTIALS_ENABLED" value="false"/>
