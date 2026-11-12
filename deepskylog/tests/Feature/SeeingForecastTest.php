@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Database\Factories\InstrumentFactory;
 use Database\Factories\LocationFactory;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -298,6 +299,13 @@ describe('AstrArome', function () {
         [$run, $arcsec] = ['2026-11-09T18:00:00Z', 2.2];
         expect(SeeingForecast::forNight(50.85, 4.35, SF_NIGHT, 'Europe/Brussels')['arcsec'])->toBe('2.2″')
             ->and($points())->toBe(2);
+    });
+
+    it('reads the cached run as Redis gives it back, as a string', function () {
+        fakeArome(fn () => 1.1);
+        Cache::put('seeing_forecast:astrarome:run', (string) Carbon::parse('2026-11-09T12:00:00Z')->getTimestamp(), 900);
+
+        expect(SeeingForecast::forNight(50.85, 4.35, SF_NIGHT, 'Europe/Brussels')['source'])->toBe('astrarome');
     });
 
     it('keeps 7Timer outside its domain and does not ask there again', function () {

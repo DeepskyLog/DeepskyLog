@@ -455,7 +455,8 @@ class SeeingForecast
     {
         $run = Cache::get(self::AROME_RUN_KEY);
         if ($run !== null || ! $fetch || Cache::has(self::AROME_PAUSE_KEY)) {
-            return is_int($run) ? $run : null;
+            // Redis gives a number back as a string
+            return is_numeric($run) ? (int) $run : null;
         }
 
         $response = self::aromeRequest('/api/runs/latest');
