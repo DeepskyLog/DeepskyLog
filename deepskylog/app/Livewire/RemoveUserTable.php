@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\ExportsInTableOrder;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -18,12 +20,13 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 final class RemoveUserTable extends PowerGridComponent
 {
-    use \App\Livewire\Concerns\ExportsInTableOrder;
+    use ExportsInTableOrder;
 
     public string $tableName = 'RemoveUserTable';
 
     /**
-     * The relations of a user that keep the account from being removed.
+     * The relations of a user that make the removal ask for the username:
+     * removing the account also removes all of these.
      */
     private const OWNED_RELATIONS = [
         'locations', 'instruments', 'eyepieces', 'filters', 'lenses',
@@ -51,8 +54,12 @@ final class RemoveUserTable extends PowerGridComponent
     public function datasource(): Builder
     {
         // One EXISTS subquery per relation in the page query, instead of nine
-        // queries per row in canBeRemoved().
-        return User::query()->withExists(self::OWNED_RELATIONS);
+        // queries per row in hasData(); the counts are shown in the table and
+        // the confirmation.
+        return User::query()
+            ->withExists(self::OWNED_RELATIONS)
+            ->withExists(['teams as is_staff' => fn ($q) => $q->whereIn('teams.id', [Team::ADMINISTRATORS, Team::DATABASE_EXPERTS])])
+            ->withCount(['observations', 'instruments', 'observingLists']);
     }
 
     public function relationSearch(): array
@@ -99,6 +106,12 @@ final class RemoveUserTable extends PowerGridComponent
                 ->searchable()
                 ->sortable(),
 
+            Column::make(__('Observations'), 'observations_count'),
+
+            Column::make(__('Instruments'), 'instruments_count'),
+
+            Column::make(__('Observing lists'), 'observing_lists_count'),
+
             Column::action('Action'),
         ];
     }
@@ -115,9 +128,26 @@ final class RemoveUserTable extends PowerGridComponent
 
     public function actions(User $row): array
     {
+        $button = Button::add('destroy');
+
+        if ($this->hasData($row)) {
+            // Livewire's prompt compares the answer with the text after the
+            // bar as it stands (PowerGrid's confirmPrompt() puts spaces
+            // around it, so no answer would ever match); usernames hold no
+            // bar. '\n' is turned into a new line by Livewire.
+            $message = __('Removing :username also removes everything they recorded (observations: :observations, instruments: :instruments, observing lists: :lists), with their eyepieces, filters, lenses, locations, sessions, drawings, comments and likes. This cannot be undone.', [
+                'username' => $row->username,
+                'observations' => (int) $row->observations_count,
+                'instruments' => (int) $row->instruments_count,
+                'lists' => (int) $row->observing_lists_count,
+            ]).'\n\n'.__('Type the username to confirm:').' '.$row->username;
+            $button->attributes(['wire:confirm.prompt' => str_replace('|', '', $message).'|'.$row->username]);
+        } else {
+            $button->confirm(__('Are you sure you want to remove the user account?'));
+        }
+
         return [
-            Button::add('destroy')
-                ->confirm(__('Are you sure you want to remove the user account?'))
+            $button
                 ->slot(__('Delete'))
                 ->id()
                 ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
@@ -135,8 +165,10 @@ final class RemoveUserTable extends PowerGridComponent
     }
 
     /**
-     * A user can only be removed when it is not the first account or the
-     * administrator itself, and has nothing of its own in DeepskyLog.
+     * Any account can be removed, with everything the observer recorded,
+     * except the first account, the administrator's own (the profile page
+     * has its own Delete Account) and the members of the Administrators and
+     * Database Experts teams: take them out of that team first.
      */
     private function canBeRemoved(User $user): bool
     {
@@ -144,17 +176,30 @@ final class RemoveUserTable extends PowerGridComponent
             return false;
         }
 
+        if (! array_key_exists('is_staff', $user->getAttributes())) {
+            $user->loadExists(['teams as is_staff' => fn ($q) => $q->whereIn('teams.id', [Team::ADMINISTRATORS, Team::DATABASE_EXPERTS])]);
+        }
+
+        return ! $user->getAttribute('is_staff');
+    }
+
+    /**
+     * Whether the account holds anything of its own, so that removing it
+     * removes more than the account.
+     */
+    private function hasData(User $user): bool
+    {
         foreach (self::OWNED_RELATIONS as $relation) {
-            $attribute = Str::snake($relation) . '_exists';
+            $attribute = Str::snake($relation).'_exists';
             if (! array_key_exists($attribute, $user->getAttributes())) {
                 $user->loadExists($relation);
             }
             if ($user->getAttribute($attribute)) {
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     public function destroy($id): void
@@ -166,8 +211,10 @@ final class RemoveUserTable extends PowerGridComponent
             return;
         }
 
-        // Jetstream's action also removes the team memberships, owned teams,
-        // tokens, connected accounts, profile photo and instrument sets
+        // The action of Delete Account on the profile page: removes the
+        // observations (with drawings, likes and comments), sessions,
+        // equipment, locations, observing lists, messages to them, team
+        // memberships, tokens and settings, and refreshes the statistics
         app(DeletesUsers::class)->delete($user);
     }
 

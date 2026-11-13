@@ -2,9 +2,10 @@
 
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Livewire\CreateInstrument;
-use App\Livewire\CreateLocation;
 use App\Livewire\InstrumentTable;
 use App\Livewire\LocationTable;
+use App\Livewire\ObservationConditions;
+use App\Livewire\RemoveUserTable;
 use App\Models\Instrument;
 use App\Models\InstrumentSet;
 use App\Models\Location;
@@ -13,6 +14,7 @@ use Database\Factories\InstrumentFactory;
 use Database\Factories\LocationFactory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use Laravel\Jetstream\Contracts\DeletesUsers;
 use Livewire\Livewire;
 use Tests\Support\CreateLocationCountingLookups;
 
@@ -171,7 +173,7 @@ it('removes a user through the Jetstream action, including instrument sets', fun
     $set = InstrumentSet::factory()->create(['user_id' => $user->id]);
     $user->createToken('test');
 
-    app(\Laravel\Jetstream\Contracts\DeletesUsers::class)->delete($user);
+    app(DeletesUsers::class)->delete($user);
 
     expect(User::find($user->id))->toBeNull()
         ->and(InstrumentSet::find($set->id))->toBeNull()
@@ -183,7 +185,7 @@ it('does not let a non-administrator remove users', function () {
     $victim = User::factory()->create();
     $this->actingAs(User::factory()->create());
 
-    (new \App\Livewire\RemoveUserTable)->destroy($victim->id);
+    (new RemoveUserTable)->destroy($victim->id);
 
     expect(User::find($victim->id))->not->toBeNull();
 });
@@ -195,7 +197,7 @@ it('takes the NELM of the observer (with the fstOffset) from the location of an 
     ]);
     $this->actingAs($user);
 
-    $component = Livewire::test(\App\Livewire\ObservationConditions::class)
+    $component = Livewire::test(ObservationConditions::class)
         ->call('onLocationSelected', $location->id);
 
     expect((float) $component->get('nelm'))->toEqualWithDelta(5.9, 0.001)
@@ -203,27 +205,49 @@ it('takes the NELM of the observer (with the fstOffset) from the location of an 
         ->and((float) $component->get('sqm'))->toEqualWithDelta($location->getSqm(), 0.01);
 });
 
-it('only removes users without anything of their own', function () {
+it('removes users with everything of their own, but not user 1, the administrator or staff', function () {
     $admin = $this->createUserAndAssignToTeam('Administrators');
+    $otherAdmin = User::factory()->create();
+    $otherAdmin->teams()->attach($this->getTeamFromString('Administrators'));
+    $expert = User::factory()->create();
+    $expert->teams()->attach($this->getTeamFromString('Database Experts'));
     $withSketch = User::factory()->create();
     DB::table('sketch_of_the_week')->insert(['observation_id' => 1, 'user_id' => $withSketch->id, 'date' => '2026-01-01']);
-    $withMonthSketch = User::factory()->create();
-    DB::table('sketch_of_the_month')->insert(['observation_id' => 1, 'user_id' => $withMonthSketch->id, 'date' => '2026-01-01']);
     $withLocation = User::factory()->create();
     LocationFactory::new()->create(['user_id' => $withLocation->id, 'observer' => $withLocation->username]);
     $withInstrument = User::factory()->create();
-    InstrumentFactory::new()->create(['user_id' => $withInstrument->id, 'observer' => $withInstrument->username]);
+    $instrument = InstrumentFactory::new()->create(['user_id' => $withInstrument->id, 'observer' => $withInstrument->username]);
     $empty = User::factory()->create();
     InstrumentSet::factory()->create(['user_id' => $empty->id]);
 
     $this->actingAs($admin);
-    $table = new \App\Livewire\RemoveUserTable;
-    foreach ([$withSketch, $withMonthSketch, $withLocation, $withInstrument, $empty, $admin] as $user) {
+    $table = new RemoveUserTable;
+    foreach ([$withSketch, $withLocation, $withInstrument, $empty, $admin, $otherAdmin, $expert] as $user) {
         $table->destroy($user->id);
     }
 
-    expect(User::whereIn('id', [$withSketch->id, $withMonthSketch->id, $withLocation->id, $withInstrument->id, $admin->id])->count())->toBe(5)
-        ->and(User::find($empty->id))->toBeNull();
+    expect(User::whereIn('id', [$withSketch->id, $withLocation->id, $withInstrument->id, $empty->id])->count())->toBe(0)
+        ->and(User::whereIn('id', [$admin->id, $otherAdmin->id, $expert->id])->count())->toBe(3)
+        ->and(DB::table('sketch_of_the_week')->count())->toBe(0)
+        ->and(Location::where('user_id', $withLocation->id)->exists())->toBeFalse()
+        ->and(Instrument::find($instrument->id))->toBeNull();
+});
+
+it('asks for the username before removing an observer with data', function () {
+    $admin = $this->createUserAndAssignToTeam('Administrators');
+    $withInstrument = User::factory()->create(['username' => 'deepsky_fan']);
+    InstrumentFactory::new()->create(['user_id' => $withInstrument->id, 'observer' => $withInstrument->username]);
+    $expert = User::factory()->create();
+    $expert->teams()->attach($this->getTeamFromString('Database Experts'));
+
+    $html = Livewire::actingAs($admin)->test(RemoveUserTable::class)->html();
+
+    expect($html)->toContain('wire:confirm.prompt=')
+        ->toContain('|deepsky_fan"')
+        ->toContain('instruments: 1,')
+        // Only the observer has a delete button: not the administrator
+        // themselves, nor the database expert
+        ->and(substr_count($html, '$dispatch(&#039;destroy&#039;'))->toBe(1);
 });
 
 it('shows a hidden location to everyone, but its coordinates only to the owner', function () {
