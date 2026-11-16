@@ -200,3 +200,31 @@ it('sends the warning in the language of the observer', function () {
     $html = (new InactiveAccountWarning($user, now()->addMonth()))->locale('nl')->render();
     expect($html)->toContain('wordt verwijderd op')->toContain(e($user->username));
 });
+
+it('tells the administrators which accounts it deleted, once per run', function () {
+    $team = $this->getTeamFromString('Administrators');
+    $admin = User::factory()->create();
+    $admin->teams()->attach($team);
+    $admin->switchTeam($team);
+
+    $user = registeredMonthsAgo(30);
+    $other = registeredMonthsAgo(30);
+
+    prune();
+    $this->travel(24)->days();
+    prune();
+    expect(Message::where('receiver', $admin->username)->count())->toBe(0);
+
+    $this->travel(8)->days();
+    prune();
+
+    $messages = Message::where('receiver', $admin->username)->get();
+    expect($messages)->toHaveCount(1)
+        ->and($messages[0]->subject)->toContain('2')
+        ->and($messages[0]->message)->toContain(e($user->username))
+        ->and($messages[0]->message)->toContain(e($other->email));
+
+    // Nothing more when nothing is deleted
+    prune();
+    expect(Message::where('receiver', $admin->username)->count())->toBe(1);
+});

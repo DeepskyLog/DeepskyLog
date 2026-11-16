@@ -33,6 +33,11 @@ class Kernel extends ConsoleKernel
         // locations, so the national rankings and filters include them.
         $schedule->command('users:fill-country --apply')->dailyAt('03:45')->withoutOverlapping();
 
+        // The administrators get the observers who registered since the day
+        // before in one message (after users:fill-country, so the countries
+        // are there).
+        $schedule->command('users:send-registration-digest --apply')->dailyAt('07:15')->withoutOverlapping();
+
         // The daily message with the new observations of the observers
         // someone follows, for those who asked for it on the profile page.
         $schedule->command('follows:send-digest --apply')->dailyAt('07:00')->withoutOverlapping();

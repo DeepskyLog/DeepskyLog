@@ -7,6 +7,7 @@ use App\Models\ClubMember;
 use App\Models\StarPartyParticipant;
 use App\Models\Team;
 use App\Models\User;
+use App\Services\AdministratorMessages;
 use Carbon\CarbonInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,7 +37,8 @@ use Throwable;
  * warning, so accounts already older than the period get the full month), and
  * a week before. Only an account that got both is deleted, with Jetstream's
  * DeleteUser action, the same as an observer deleting their own account.
- * The command runs daily, so the warnings go out on time.
+ * The command runs daily, so the warnings go out on time. The administrators
+ * get one DeepskyLog message per run listing the accounts it deleted.
  */
 class PruneInactiveUsers extends Command
 {
@@ -89,10 +91,15 @@ class PruneInactiveUsers extends Command
 
     private int $failed = 0;
 
+    /** @var list<array> the accountRow() of each account deleted in this run */
+    private array $deleted = [];
+
     public function handle(DeletesUsers $deleter): int
     {
         $this->apply = (bool) $this->option('apply');
         $months = (int) $this->option('months');
+        $this->failed = 0;
+        $this->deleted = [];
 
         if ($months < 1) {
             $this->error('--months has to be at least 1.');
@@ -149,9 +156,16 @@ class PruneInactiveUsers extends Command
             self::inactive($months)
                 ->whereNotNull('inactivity_final_warning_at')
                 ->where('inactivity_deletion_at', '<=', now()),
-            fn (User $user) => $deleter->delete($user),
+            function (User $user) use ($deleter) {
+                $row = AdministratorMessages::accountRow($user, link: false);
+                // Loaded on its own: DeleteUser loads its relations lazily.
+                $deleter->delete(User::findOrFail($user->id));
+                $this->deleted[] = $row;
+            },
             fn (User $user) => $user->inactivity_deletion_at
         );
+
+        $this->notifyAdministrators($months);
 
         return $this->failed ? self::FAILURE : self::SUCCESS;
     }
@@ -187,6 +201,24 @@ class PruneInactiveUsers extends Command
                 report($e);
             }
         }
+    }
+
+    /**
+     * One message to the administrators with the accounts deleted in this run.
+     */
+    private function notifyAdministrators(int $months): void
+    {
+        if ($this->deleted === []) {
+            return;
+        }
+
+        $count = count($this->deleted);
+        $sent = AdministratorMessages::send(
+            fn (string $locale) => trans_choice('{1} DeepskyLog deleted an inactive account|[2,*] DeepskyLog deleted :count inactive accounts', $count, ['count' => $count], $locale),
+            fn (string $locale) => '<p>'.e(trans_choice('{1} This account recorded nothing within :months months after registration and was deleted after two warnings by e-mail:|[2,*] These accounts recorded nothing within :months months after registration and were deleted after two warnings by e-mail:', $count, ['months' => $months], $locale)).'</p>'
+                .AdministratorMessages::accountList($this->deleted, $locale)
+        );
+        $this->info("Administrators told of the deleted accounts: {$sent}");
     }
 
     private function sendWarning(User $user, CarbonInterface $date): void

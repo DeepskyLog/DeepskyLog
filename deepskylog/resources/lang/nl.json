@@ -4234,5 +4234,12 @@
     "{1} Show the magnification given with a Barlow lens or reducer|[2,*] Show the :count magnifications given with a Barlow lens or reducer": "{1} Toon de vergroting met een Barlowlens of reducer|[2,*] Toon de :count vergrotingen met een Barlowlens of reducer",
     "{1} The observation import of :observer added 1 object to the database. Please check it:|[2,*] The observation import of :observer added :count objects to the database. Please check them:": "{1} De import van waarnemingen van :observer heeft 1 object aan de database toegevoegd. Kijk het na:|[2,*] De import van waarnemingen van :observer heeft :count objecten aan de database toegevoegd. Kijk ze na:",
     "Removing :username also removes everything they recorded (observations: :observations, instruments: :instruments, observing lists: :lists), with their eyepieces, filters, lenses, locations, sessions, drawings, comments and likes. This cannot be undone.": "Als je :username verwijdert, wordt ook alles verwijderd wat die waarnemer heeft ingevoerd (waarnemingen: :observations, instrumenten: :instruments, waarneemlijsten: :lists), met de oculairs, filters, lenzen, locaties, sessies, tekeningen, commentaren en likes. Dit kan niet ongedaan gemaakt worden.",
-    "Type the username to confirm:": "Typ de gebruikersnaam om te bevestigen:"
+    "Type the username to confirm:": "Typ de gebruikersnaam om te bevestigen:",
+    "{1} A new observer registered on DeepskyLog|[2,*] :count new observers registered on DeepskyLog": "{1} Een nieuwe waarnemer registreerde zich op DeepskyLog|[2,*] :count nieuwe waarnemers registreerden zich op DeepskyLog",
+    "{1} This observer registered since the last message:|[2,*] These :count observers registered since the last message:": "{1} Deze waarnemer registreerde zich sinds het vorige bericht:|[2,*] Deze :count waarnemers registreerden zich sinds het vorige bericht:",
+    "and :count more.": "en nog :count.",
+    "Manage the observers": "Waarnemers beheren",
+    "{1} DeepskyLog deleted an inactive account|[2,*] DeepskyLog deleted :count inactive accounts": "{1} DeepskyLog verwijderde een inactief account|[2,*] DeepskyLog verwijderde :count inactieve accounts",
+    "{1} This account recorded nothing within :months months after registration and was deleted after two warnings by e-mail:|[2,*] These accounts recorded nothing within :months months after registration and were deleted after two warnings by e-mail:": "{1} Dit account registreerde niets binnen :months maanden na de registratie en werd verwijderd na twee waarschuwingen per e-mail:|[2,*] Deze accounts registreerden niets binnen :months maanden na de registratie en werden verwijderd na twee waarschuwingen per e-mail:",
+    "registered :date": "geregistreerd op :date"
 }
