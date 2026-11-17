@@ -1382,13 +1382,13 @@ try {
                                             $nedUrl = "https://ned.ipac.caltech.edu/byname?objname=$encName";
                                             $wikipediaUrl = "https://en.wikipedia.org/wiki/Special:Search?search=$encName";
                                             // Add Aladin Lite pointing to the object name when available
-                                            $aladinUrl = "https://aladin.u-strasbg.fr/AladinLite/?target=$encName";
+                                            $aladinUrl = "https://aladin.cds.unistra.fr/AladinLite/?target=$encName";
                                         } elseif ($hasCoords) {
                                             // Fallback: point Aladin Lite to coordinates when no name is available
                                             $raParam = rawurlencode($session->ra ?? '');
                                             $decParam = rawurlencode($session->decl ?? '');
                                             if (!empty($raParam) && !empty($decParam)) {
-                                                $aladinUrl = "https://aladin.u-strasbg.fr/AladinLite/?ra={$raParam}&dec={$decParam}";
+                                                $aladinUrl = "https://aladin.cds.unistra.fr/AladinLite/?ra={$raParam}&dec={$decParam}";
                                             }
                                         }
 

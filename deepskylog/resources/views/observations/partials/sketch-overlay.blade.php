@@ -191,7 +191,7 @@
         }
         function aladinLoaded() {
             if (window.A && typeof window.A.aladin === 'function') return Promise.resolve();
-            var base = 'https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/';
+            var base = 'https://aladin.cds.unistra.fr/AladinLite/api/v2/latest/';
             var css = document.createElement('link');
             css.rel = 'stylesheet';
             css.href = base + 'aladin.min.css';

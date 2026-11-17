@@ -93,12 +93,12 @@
                 $simbadUrl = "https://simbad.cds.unistra.fr/simbad/sim-id?Ident=$encName";
                 $nedUrl = "https://ned.ipac.caltech.edu/byname?objname=$encName";
                 $wikipediaUrl = "https://en.wikipedia.org/wiki/Special:Search?search=$encName";
-                $aladinUrl = "https://aladin.u-strasbg.fr/AladinLite/?target=$encName";
+                $aladinUrl = "https://aladin.cds.unistra.fr/AladinLite/?target=$encName";
             } elseif ($hasCoords) {
                 $raParam = rawurlencode($session->ra ?? '');
                 $decParam = rawurlencode($session->decl ?? '');
                 if (!empty($raParam) && !empty($decParam)) {
-                    $aladinUrl = "https://aladin.u-strasbg.fr/AladinLite/?ra={$raParam}&dec={$decParam}";
+                    $aladinUrl = "https://aladin.cds.unistra.fr/AladinLite/?ra={$raParam}&dec={$decParam}";
                 }
             }
         @endphp
