@@ -2005,7 +2005,7 @@ class Objects
         // Loaded asynchronously, so the page doesn't wait for the Aladin server (or hang when it is down)
         echo '    <script type="text/javascript">';
         echo '      (function () {';
-        echo '        var base = "https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/";';
+        echo '        var base = "https://aladin.cds.unistra.fr/AladinLite/api/v2/latest/";';
         echo '        var css = document.createElement("link");';
         echo '        css.rel = "stylesheet";';
         echo '        css.href = base + "aladin.min.css";';
