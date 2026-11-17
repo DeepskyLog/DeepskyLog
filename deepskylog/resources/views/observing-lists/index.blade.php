@@ -112,6 +112,29 @@
                     {{ __('Mark up to :count of your own or subscribed lists with "Working on" to keep them at hand here, at the eyepiece and in the list choices.', ['count' => \App\Models\ObservingListPin::MAX_PER_USER]) }}
                 </p>
 
+                {{-- The observer's general note on what they are working on --}}
+                <div class="mb-4 rounded-lg border border-amber-700/40 bg-gray-800 px-4 py-3">
+                    @if (filled($workingOnNote))
+                        <p class="text-sm text-amber-200/90 whitespace-pre-line break-words">{{ $workingOnNote }}</p>
+                    @endif
+                    <details @if (blank($workingOnNote)) open @endif>
+                        <summary class="cursor-pointer list-none text-xs text-gray-400 hover:text-gray-200 [&::-webkit-details-marker]:hidden {{ blank($workingOnNote) ? 'hidden' : 'mt-1' }}">
+                            {{ __('Edit note') }}
+                        </summary>
+                        <form method="POST" action="{{ route('observing-lists.working-on-note') }}" class="space-y-2 {{ filled($workingOnNote) ? 'mt-2' : '' }}">
+                            @csrf
+                            <label for="working-on-note" class="block text-xs font-semibold text-gray-300">{{ __('What are you working on?') }}</label>
+                            <textarea id="working-on-note" name="note" rows="3" maxlength="{{ \App\Models\ObservingListPin::GENERAL_NOTE_LENGTH }}"
+                                placeholder="{{ __('For example: sketch every object of the Messier and Caldwell catalogs') }}"
+                                class="w-full rounded border border-gray-600 bg-gray-900 px-2 py-1 text-sm text-gray-100 placeholder-gray-500 focus:border-amber-500 focus:ring-amber-500">{{ $workingOnNote }}</textarea>
+                            <div class="flex items-center gap-2">
+                                <button type="submit" class="text-xs px-2 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded">{{ __('Save note') }}</button>
+                                <span class="text-xs text-gray-500">{{ __('Only you see this note.') }}</span>
+                            </div>
+                        </form>
+                    </details>
+                </div>
+
                 @if ($pinnedLists->isEmpty())
                     <p class="text-gray-400 text-sm">
                         {{ empty($search) ? __('You are not working on any list yet.') : __('None of the lists you are working on match.') }}
@@ -120,8 +143,8 @@
                     <ul class="divide-y divide-gray-700 bg-gray-800 border border-gray-700 rounded-lg">
                         @foreach ($pinnedLists as $list)
                             @php $isActive = $activeList && $activeList->id === $list->id; @endphp
-                            <li class="flex flex-wrap items-center justify-between gap-2 px-4 py-2">
-                                <div class="min-w-0">
+                            <li class="flex flex-wrap items-start justify-between gap-2 px-4 py-2">
+                                <div class="min-w-0 flex-1">
                                     <a href="{{ route('observing-list.show', $list) }}" class="font-semibold text-white hover:underline">{{ html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
                                     @if ($list->owner_user_id !== auth()->id() && $list->owner)
                                         <span class="text-xs text-gray-500">{{ __('by') }} {{ $list->owner->name }}</span>
@@ -130,6 +153,7 @@
                                     @if ($isActive)
                                         <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-700 text-blue-100">{{ __('Active') }}</span>
                                     @endif
+                                    @include('observing-lists.partials.pin-note', ['list' => $list, 'note' => $pinNotes[$list->id] ?? null])
                                 </div>
                                 <div class="flex items-center gap-2">
                                     @if ($list->items_count > 0)
@@ -146,7 +170,7 @@
                                             </button>
                                         </form>
                                     @endif
-                                    @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => true, 'compact' => true])
+                                    @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => true, 'compact' => true, 'note' => $pinNotes[$list->id] ?? null])
                                 </div>
                             </li>
                         @endforeach
@@ -204,7 +228,7 @@
                                        class="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded">
                                         {{ __('Edit') }}
                                     </a>
-                                    @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => in_array($list->id, $pinnedIds, true), 'compact' => true])
+                                    @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => in_array($list->id, $pinnedIds, true), 'compact' => true, 'note' => $pinNotes[$list->id] ?? null])
                                 </div>
                             </article>
                         @endforeach
@@ -260,7 +284,7 @@
                                        class="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded">
                                         {{ __('View') }}
                                     </a>
-                                    @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => in_array($list->id, $pinnedIds, true), 'compact' => true])
+                                    @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => in_array($list->id, $pinnedIds, true), 'compact' => true, 'note' => $pinNotes[$list->id] ?? null])
                                     <form method="POST" action="{{ route('observing-list.unsubscribe', $list) }}">
                                         @csrf
                                         <button type="submit"

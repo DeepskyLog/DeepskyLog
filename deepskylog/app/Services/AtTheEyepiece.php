@@ -97,9 +97,10 @@ class AtTheEyepiece
      * with times for tonight or a later night (or the night before), the
      * earliest first; "other" all the others, most recently changed first.
      * The active list comes first in its group, then the lists the observer
-     * is working on (ObservingListPin).
+     * is working on (ObservingListPin); "notes" holds the observer's notes on
+     * those, keyed on the list id, "workingOnNote" their general note.
      *
-     * @return array{planned: Collection<int, ObservingList>, other: Collection<int, ObservingList>, tonight: string}
+     * @return array{planned: Collection<int, ObservingList>, other: Collection<int, ObservingList>, tonight: string, notes: array<int, string>, workingOnNote: ?string}
      */
     public static function lists(User $user, ?Carbon $now = null): array
     {
@@ -133,6 +134,8 @@ class AtTheEyepiece
                 ->sortBy(fn (ObservingList $list) => $activeFirst($list))
                 ->values(),
             'tonight' => $tonight,
+            'notes' => ObservingListPin::notesFor($user->id),
+            'workingOnNote' => ObservingListPin::generalNoteFor($user->id),
         ];
     }
 

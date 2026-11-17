@@ -4,19 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
 /**
  * An observing list an observer is working on ("Working on"): their own list
  * or a public list they subscribed to, at most MAX_PER_USER. Only for the
  * observer: it counts for nothing else (not the popularity of a list).
+ * The observer can add a note of their own (plain text, at most NOTE_LENGTH):
+ * what the list is for, which instrument, which sky. Next to those, one
+ * general note on what they are working on ("sketch every Messier object"),
+ * the user_preferences row GENERAL_NOTE_PREFERENCE.
  */
 class ObservingListPin extends Model
 {
     public const MAX_PER_USER = 20;
 
+    public const NOTE_LENGTH = 500;
+
+    public const GENERAL_NOTE_PREFERENCE = 'working_on_note';
+
+    public const GENERAL_NOTE_LENGTH = 2000;
+
     protected $fillable = [
         'user_id',
         'observing_list_id',
+        'note',
     ];
 
     public function user(): BelongsTo
@@ -63,6 +75,66 @@ class ObservingListPin extends Model
         self::create(['user_id' => $user->id, 'observing_list_id' => $list->id]);
 
         return true;
+    }
+
+    /**
+     * The notes of the lists the observer is working on, keyed on the list id
+     * (only the lists with a note).
+     *
+     * @return array<int, string>
+     */
+    public static function notesFor(?int $userId): array
+    {
+        if (! $userId) {
+            return [];
+        }
+
+        return self::where('user_id', $userId)
+            ->whereNotNull('note')
+            ->pluck('note', 'observing_list_id')
+            ->mapWithKeys(fn ($note, $id) => [(int) $id => (string) $note])
+            ->all();
+    }
+
+    /**
+     * Sets the note of a list the observer is working on (empty removes it).
+     * False when the list is not one they are working on.
+     */
+    public static function setNote(User $user, ObservingList $list, ?string $note): bool
+    {
+        $note = trim(str_replace(["\r\n", "\r"], "\n", (string) $note));
+
+        return self::where('user_id', $user->id)
+            ->where('observing_list_id', $list->id)
+            ->update(['note' => $note === '' ? null : $note, 'updated_at' => now()]) > 0;
+    }
+
+    /** The observer's general note on what they are working on, null when none. */
+    public static function generalNoteFor(?int $userId): ?string
+    {
+        if (! $userId) {
+            return null;
+        }
+        $note = DB::table('user_preferences')->where('user_id', $userId)->where('key', self::GENERAL_NOTE_PREFERENCE)->value('value');
+
+        return $note === null || $note === '' ? null : (string) $note;
+    }
+
+    /** Sets the observer's general note (empty removes it). */
+    public static function setGeneralNote(User $user, ?string $note): void
+    {
+        $note = trim(str_replace(["\r\n", "\r"], "\n", (string) $note));
+        $query = DB::table('user_preferences')->where('user_id', $user->id)->where('key', self::GENERAL_NOTE_PREFERENCE);
+        if ($note === '') {
+            $query->delete();
+
+            return;
+        }
+        DB::table('user_preferences')->upsert(
+            [['user_id' => $user->id, 'key' => self::GENERAL_NOTE_PREFERENCE, 'value' => $note, 'created_at' => now(), 'updated_at' => now()]],
+            ['user_id', 'key'],
+            ['value', 'updated_at']
+        );
     }
 
     public static function unpin(User $user, ObservingList $list): void

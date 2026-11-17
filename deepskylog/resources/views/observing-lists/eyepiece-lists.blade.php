@@ -36,6 +36,7 @@
         .meta { display: block; margin-top: .15rem; font-size: .9rem; color: #9ca3af; }
         .badge { display: inline-block; margin-left: .4rem; padding: 0 .4rem; border: 1px solid #b91c1c; border-radius: .3rem; font-size: .75rem; font-weight: 600; color: #fca5a5; vertical-align: middle; }
         .muted { color: #9ca3af; font-size: .9rem; }
+        .note { display: block; margin-top: .3rem; font-size: .9rem; color: #fcd34d; white-space: pre-line; overflow-wrap: anywhere; }
         .row { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.5rem; }
     </style>
 </head>
@@ -47,6 +48,9 @@
 
     <main>
         <p class="muted">{{ __('Choose the observing list to take to the telescope.') }}</p>
+        @if (filled($workingOnNote))
+            <p class="note">{{ $workingOnNote }}</p>
+        @endif
 
         @foreach (['planned' => __('Planned'), 'other' => __('Other lists')] as $group => $heading)
             @if ($$group->isNotEmpty())
@@ -70,6 +74,9 @@
                                         $list->owner_user_id !== $user->id ? __('by :name', ['name' => html_entity_decode((string) $list->owner?->name)]) : null,
                                     ])) }}
                                 </span>
+                                @if (filled($notes[$list->id] ?? null))
+                                    <span class="note">{{ $notes[$list->id] }}</span>
+                                @endif
                             </a>
                         </li>
                     @endforeach

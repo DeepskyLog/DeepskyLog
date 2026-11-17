@@ -117,3 +117,58 @@ it('orders option lists with the worked-on lists first', function () {
     expect(ObservingListPin::first([999 => 'x', $list->id => 'Pinned'], $this->user->id))
         ->toBe([$list->id => 'Pinned', 999 => 'x']);
 });
+
+it('keeps a note of the observer on a list they work on', function () {
+    $list = pinList($this->user, 'Messier');
+    ObservingListPin::pin($this->user, $list);
+
+    $this->actingAs($this->user)
+        ->post(route('observing-list.pin-note', $list), ['note' => "  Sketch them all\r\nwith the 8\"  "])
+        ->assertSessionHas('success');
+    expect(ObservingListPin::notesFor($this->user->id))->toBe([$list->id => "Sketch them all\nwith the 8\""]);
+
+    // Shown to the observer on /observing-lists, the list page and at the eyepiece
+    $this->actingAs($this->user)->get(route('observing-lists.index'))->assertSee('Sketch them all');
+    $this->actingAs($this->user)->get(route('observing-list.show', $list))->assertSee('Sketch them all');
+    expect(AtTheEyepiece::lists($this->user->fresh())['notes'])->toHaveKey($list->id);
+
+    // Found by the search of /observing-lists
+    $this->actingAs($this->user)->get(route('observing-lists.index', ['search' => 'sketch']))
+        ->assertViewHas('pinnedLists', fn ($lists) => $lists->pluck('id')->all() === [$list->id]);
+
+    // Not to anyone else
+    $this->actingAs($this->other)->get(route('observing-list.show', $list))->assertDontSee('Sketch them all');
+
+    // Too long, then emptied
+    $this->actingAs($this->user)->post(route('observing-list.pin-note', $list), ['note' => str_repeat('x', ObservingListPin::NOTE_LENGTH + 1)])
+        ->assertSessionHasErrors('note');
+    $this->actingAs($this->user)->post(route('observing-list.pin-note', $list), ['note' => ' '])->assertRedirect();
+    expect(ObservingListPin::notesFor($this->user->id))->toBe([]);
+});
+
+it('refuses a note on a list the observer does not work on', function () {
+    $list = pinList($this->user, 'Caldwell');
+
+    $this->actingAs($this->user)->post(route('observing-list.pin-note', $list), ['note' => 'binoculars'])->assertNotFound();
+    expect(ObservingListPin::count())->toBe(0);
+});
+
+it('keeps one general note on what the observer is working on', function () {
+    $this->actingAs($this->user)
+        ->post(route('observing-lists.working-on-note'), ['note' => "Sketch every Messier object\r\n"])
+        ->assertSessionHas('success');
+    expect(ObservingListPin::generalNoteFor($this->user->id))->toBe('Sketch every Messier object');
+
+    // Replaced, not added
+    $this->actingAs($this->user)->post(route('observing-lists.working-on-note'), ['note' => 'Sketch every Caldwell object']);
+    expect(DB::table('user_preferences')->where('user_id', $this->user->id)->where('key', ObservingListPin::GENERAL_NOTE_PREFERENCE)->count())->toBe(1);
+
+    $this->actingAs($this->user)->get(route('observing-lists.index'))->assertSee('Sketch every Caldwell object');
+    $this->actingAs($this->other)->get(route('observing-lists.index'))->assertDontSee('Sketch every Caldwell object');
+    expect(AtTheEyepiece::lists($this->user->fresh())['workingOnNote'])->toBe('Sketch every Caldwell object');
+
+    $this->actingAs($this->user)->post(route('observing-lists.working-on-note'), ['note' => str_repeat('x', ObservingListPin::GENERAL_NOTE_LENGTH + 1)])
+        ->assertSessionHasErrors('note');
+    $this->actingAs($this->user)->post(route('observing-lists.working-on-note'), ['note' => '']);
+    expect(ObservingListPin::generalNoteFor($this->user->id))->toBeNull();
+});

@@ -95,9 +95,10 @@ class ObservingListController extends Controller
             ->with('owner:id,name,slug')
             ->withCount('items');
         if ($search !== '') {
-            $pinnedListsQuery->where(function ($q) use ($search, $objectNames) {
+            $pinnedListsQuery->where(function ($q) use ($search, $objectNames, $user) {
                 $q->where('name', 'like', '%' . $search . '%')
-                    ->orWhereHas('items', fn ($items) => $items->whereIn('object_name', $objectNames));
+                    ->orWhereHas('items', fn ($items) => $items->whereIn('object_name', $objectNames))
+                    ->orWhereHas('pins', fn ($pins) => $pins->where('user_id', $user->id)->where('note', 'like', '%' . $search . '%'));
             });
         }
         $order = array_flip($pinnedIds);
@@ -111,6 +112,8 @@ class ObservingListController extends Controller
             'subscribedLists' => $subscribedLists,
             'pinnedLists' => $pinnedLists,
             'pinnedIds' => $pinnedIds,
+            'pinNotes' => ObservingListPin::notesFor($user->id),
+            'workingOnNote' => ObservingListPin::generalNoteFor($user->id),
             'activeList' => $activeList,
             'search' => $search,
         ]);
@@ -223,7 +226,8 @@ class ObservingListController extends Controller
         $isSubscribed = $user ? $list->isSubscribedBy($user) : false;
         $isLiked = $user ? $list->isLikedBy($user) : false;
         $isActive = $user ? $this->activeListService->isActive($user, $list) : false;
-        $isPinned = $list->isPinnedBy($user);
+        $pin = $user ? $list->pins()->where('user_id', $user->id)->first() : null;
+        $isPinned = $pin !== null;
 
         // The seasonal planner: the months the objects are well placed, and
         // ?month= to show only those well placed in that month.
@@ -243,6 +247,7 @@ class ObservingListController extends Controller
             'isLiked' => $isLiked,
             'isActive' => $isActive,
             'isPinned' => $isPinned,
+            'pinNote' => $pin?->note,
         ]);
     }
 
@@ -417,6 +422,36 @@ class ObservingListController extends Controller
         }
 
         return redirect()->back()->with('success', __('Added to "Working on".'));
+    }
+
+    /**
+     * Set the user's own note on a list they are working on.
+     */
+    public function pinNote(Request $request, ObservingList $list): RedirectResponse
+    {
+        $data = $request->validate([
+            'note' => ['nullable', 'string', 'max:' . ObservingListPin::NOTE_LENGTH],
+        ]);
+
+        if (!ObservingListPin::setNote(auth()->user(), $list, $data['note'] ?? null)) {
+            abort(404);
+        }
+
+        return redirect()->back()->with('success', __('Note saved.'));
+    }
+
+    /**
+     * Set the user's general note on what they are working on.
+     */
+    public function workingOnNote(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'note' => ['nullable', 'string', 'max:' . ObservingListPin::GENERAL_NOTE_LENGTH],
+        ]);
+
+        ObservingListPin::setGeneralNote(auth()->user(), $data['note'] ?? null);
+
+        return redirect()->back()->with('success', __('Note saved.'));
     }
 
     /**

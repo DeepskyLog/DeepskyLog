@@ -1,6 +1,8 @@
-{{-- "Working on" toggle (ObservingListPin): $list, $pinned; $compact for the cards of /observing-lists --}}
-@php $compact = $compact ?? false; @endphp
-<form method="POST" action="{{ route($pinned ? 'observing-list.unpin' : 'observing-list.pin', $list) }}">
+{{-- "Working on" toggle (ObservingListPin): $list, $pinned; $compact for the cards of /observing-lists;
+     $note asks to confirm before removing a list with a note, which goes with it --}}
+@php $compact = $compact ?? false; $note = $note ?? null; @endphp
+<form method="POST" action="{{ route($pinned ? 'observing-list.unpin' : 'observing-list.pin', $list) }}"
+    @if ($pinned && filled($note)) onsubmit="return confirm(@js(__('Remove from "Working on"? Your note on this list is removed too.')))" @endif>
     @csrf
     <button type="submit"
         title="{{ $pinned ? __('Remove from "Working on"') : __('Add to "Working on"') }}"

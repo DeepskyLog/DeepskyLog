@@ -54,6 +54,13 @@
                                 <a href="{{ route('clubs.lists.progress', [$club, $list]) }}" class="text-blue-400 hover:underline">{{ __('Who has seen what') }}</a>
                             </p>
                         @endforeach
+                        {{-- The viewer's own note on a list they are working on --}}
+                        @if ($isPinned)
+                            <div class="mt-2 max-w-xl">
+                                <span class="text-xs font-semibold uppercase tracking-wide text-amber-400">{{ __('Working on') }}</span>
+                                @include('observing-lists.partials.pin-note', ['list' => $list, 'note' => $pinNote])
+                            </div>
+                        @endif
                     </div>
 
                     {{-- Action buttons --}}
@@ -81,9 +88,9 @@
 
                             {{-- "Working on" (owner, or a subscriber of a public list) --}}
                             @can('pin', $list)
-                                @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => $isPinned])
+                                @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => $isPinned, 'note' => $pinNote])
                             @elseif ($isPinned)
-                                @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => true])
+                                @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => true, 'note' => $pinNote])
                             @endcan
 
                             {{-- At the eyepiece (AtTheEyepieceController), for a list with objects --}}

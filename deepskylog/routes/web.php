@@ -998,6 +998,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('observing-list.pin');
     Route::post('/observing-list/{list}/unpin', [App\Http\Controllers\ObservingListController::class, 'unpin'])
         ->name('observing-list.unpin');
+    Route::post('/observing-list/{list}/pin/note', [App\Http\Controllers\ObservingListController::class, 'pinNote'])
+        ->name('observing-list.pin-note');
+    Route::post('/observing-lists/working-on/note', [App\Http\Controllers\ObservingListController::class, 'workingOnNote'])
+        ->name('observing-lists.working-on-note');
 
     // Subscribe to public list
     Route::post('/observing-list/{list}/subscribe', [App\Http\Controllers\ObservingListController::class, 'subscribe'])
