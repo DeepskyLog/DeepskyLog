@@ -993,6 +993,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/observing-list/{list}/set-active', [App\Http\Controllers\ObservingListController::class, 'setActive'])
         ->name('observing-list.set-active');
 
+    // "Working on": the user's own lists and subscribed lists they work on
+    Route::post('/observing-list/{list}/pin', [App\Http\Controllers\ObservingListController::class, 'pin'])
+        ->name('observing-list.pin');
+    Route::post('/observing-list/{list}/unpin', [App\Http\Controllers\ObservingListController::class, 'unpin'])
+        ->name('observing-list.unpin');
+
     // Subscribe to public list
     Route::post('/observing-list/{list}/subscribe', [App\Http\Controllers\ObservingListController::class, 'subscribe'])
         ->name('observing-list.subscribe');

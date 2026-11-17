@@ -14,6 +14,7 @@ use App\Models\Observation;
 use App\Models\ObservationSession;
 use App\Models\ObservingList;
 use App\Models\ObservingListItem;
+use App\Models\ObservingListPin;
 use App\Models\ObservingListSubscription;
 use App\Models\User;
 use App\Services\Import\CsvObservationImporter;
@@ -95,7 +96,8 @@ class AtTheEyepiece
      * public lists they subscribed to, with objects. "planned" holds the lists
      * with times for tonight or a later night (or the night before), the
      * earliest first; "other" all the others, most recently changed first.
-     * The active list comes first in its group.
+     * The active list comes first in its group, then the lists the observer
+     * is working on (ObservingListPin).
      *
      * @return array{planned: Collection<int, ObservingList>, other: Collection<int, ObservingList>, tonight: string}
      */
@@ -119,7 +121,9 @@ class AtTheEyepiece
 
         $since = Carbon::parse($tonight)->subDays(self::PLANNED_DAYS_BACK)->toDateString();
         $planned = fn (ObservingList $list) => $list->timed_count > 0 && $list->planned_night && $list->planned_night->toDateString() >= $since;
-        $activeFirst = fn (ObservingList $list) => $list->id === (int) $user->active_observing_list_id ? 0 : 1;
+        // The active list first, then the lists the observer is working on
+        $pinned = array_flip(ObservingListPin::idsFor($user->id));
+        $activeFirst = fn (ObservingList $list) => $list->id === (int) $user->active_observing_list_id ? 0 : (isset($pinned[$list->id]) ? 1 : 2);
 
         return [
             'planned' => $lists->filter($planned)

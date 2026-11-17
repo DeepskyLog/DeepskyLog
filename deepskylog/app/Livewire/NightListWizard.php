@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Location;
 use App\Models\ObservingList;
+use App\Models\ObservingListPin;
 use App\Services\NightWindow;
 use App\Services\TonightsBest;
 use App\Support\EphemerisDate;
@@ -235,6 +236,9 @@ class NightListWizard extends Component
             ->concat($user->subscribedObservingLists()->get(['observing_lists.id', 'observing_lists.name']))
             ->unique('id')
             ->sortBy(fn (ObservingList $list) => Str::lower((string) $list->name));
+        // The lists the observer is working on first
+        $pinned = array_flip(ObservingListPin::idsFor($user->id));
+        $lists = $lists->sortBy(fn (ObservingList $list) => isset($pinned[$list->id]) ? 0 : 1);
         foreach ($lists as $list) {
             $options['list:'.$list->id] = __('Observing list: :name', ['name' => html_entity_decode((string) $list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')]);
         }

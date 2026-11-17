@@ -76,8 +76,9 @@ class DeleteUser implements DeletesUsers
             DB::table('observing_list_items')
                 ->where('added_by_user_id', $user->id)
                 ->update(['added_by_user_id' => DB::raw('(select owner_user_id from observing_lists where observing_lists.id = observing_list_items.observing_list_id)')]);
-            // The lists themselves, with their items, comments, likes and
-            // subscriptions (cascading foreign keys)
+            // The lists themselves, with their items, comments, likes,
+            // subscriptions and "Working on" marks (cascading foreign keys)
+            DB::table('observing_list_pins')->where('user_id', $user->id)->delete();
             DB::table('observing_lists')->where('owner_user_id', $user->id)->delete();
 
             // Equipment and locations, after the instrument sets that use them

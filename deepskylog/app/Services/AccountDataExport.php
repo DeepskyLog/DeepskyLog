@@ -147,6 +147,7 @@ class AccountDataExport
             'observing_list_comments' => DB::table('observing_list_comments')->where('user_id', $id)->orderBy('id'),
             'observing_list_likes' => DB::table('observing_list_likes')->where('user_id', $id),
             'observing_list_subscriptions' => DB::table('observing_list_subscriptions')->where('user_id', $id),
+            'observing_list_pins' => DB::table('observing_list_pins')->where('user_id', $id),
 
             'messages' => DB::table('messages')->where(fn ($query) => $query->where('receiver', $username)->orWhere('sender', $username))->orderBy('id'),
             'messages_read' => DB::table('messages_read')->where('receiver', $username),

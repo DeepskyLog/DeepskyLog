@@ -10,6 +10,7 @@ use App\Services\TonightsBest;
 use App\Support\EphemerisDate;
 use App\Models\ObservingListComment;
 use App\Models\ObservingListItem;
+use App\Models\ObservingListPin;
 use App\Models\Observation;
 use App\Models\Target;
 use App\Models\User;
@@ -86,12 +87,30 @@ class ObservingListController extends Controller
             ->paginate(15, ['*'], 'subscribed_page')
             ->withQueryString();
 
+        // The lists the observer is working on, all of them (at most
+        // ObservingListPin::MAX_PER_USER), most recently marked first
+        $pinnedIds = ObservingListPin::idsFor($user->id);
+        $pinnedListsQuery = ObservingList::query()
+            ->whereIn('id', $pinnedIds)
+            ->with('owner:id,name,slug')
+            ->withCount('items');
+        if ($search !== '') {
+            $pinnedListsQuery->where(function ($q) use ($search, $objectNames) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhereHas('items', fn ($items) => $items->whereIn('object_name', $objectNames));
+            });
+        }
+        $order = array_flip($pinnedIds);
+        $pinnedLists = $pinnedListsQuery->get()->sortBy(fn (ObservingList $list) => $order[$list->id] ?? PHP_INT_MAX)->values();
+
         // Get active list (with items count for the banner)
         $activeList = $this->activeListService->getActiveList($user);
 
         return view('observing-lists.index', [
             'ownedLists' => $ownedLists,
             'subscribedLists' => $subscribedLists,
+            'pinnedLists' => $pinnedLists,
+            'pinnedIds' => $pinnedIds,
             'activeList' => $activeList,
             'search' => $search,
         ]);
@@ -204,6 +223,7 @@ class ObservingListController extends Controller
         $isSubscribed = $user ? $list->isSubscribedBy($user) : false;
         $isLiked = $user ? $list->isLikedBy($user) : false;
         $isActive = $user ? $this->activeListService->isActive($user, $list) : false;
+        $isPinned = $list->isPinnedBy($user);
 
         // The seasonal planner: the months the objects are well placed, and
         // ?month= to show only those well placed in that month.
@@ -222,6 +242,7 @@ class ObservingListController extends Controller
             'isSubscribed' => $isSubscribed,
             'isLiked' => $isLiked,
             'isActive' => $isActive,
+            'isPinned' => $isPinned,
         ]);
     }
 
@@ -381,6 +402,34 @@ class ObservingListController extends Controller
     }
 
     /**
+     * Mark a list as one the user is working on ("Working on").
+     */
+    public function pin(ObservingList $list): RedirectResponse
+    {
+        $user = auth()->user();
+
+        if (!$user->can('pin', $list)) {
+            throw new AuthorizationException();
+        }
+
+        if (!ObservingListPin::pin($user, $list)) {
+            return redirect()->back()->with('error', __('You can work on at most :count lists at a time. Remove one from "Working on" first.', ['count' => ObservingListPin::MAX_PER_USER]));
+        }
+
+        return redirect()->back()->with('success', __('Added to "Working on".'));
+    }
+
+    /**
+     * Remove a list from the lists the user is working on.
+     */
+    public function unpin(ObservingList $list): RedirectResponse
+    {
+        ObservingListPin::unpin(auth()->user(), $list);
+
+        return redirect()->back()->with('success', __('Removed from "Working on".'));
+    }
+
+    /**
      * Subscribe to a public observing list.
      */
     public function subscribe(Request $request, ObservingList $list): RedirectResponse
@@ -408,6 +457,7 @@ class ObservingListController extends Controller
         }
 
         $list->subscribers()->detach($user->id);
+        ObservingListPin::unpin($user, $list);
 
         if ($this->activeListService->isActive($user, $list)) {
             $this->activeListService->clearActiveList($user);

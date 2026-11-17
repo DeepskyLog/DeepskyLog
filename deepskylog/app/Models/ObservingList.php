@@ -43,10 +43,11 @@ class ObservingList extends Model
     protected static function booted(): void
     {
         // A private list is only for its owner: nobody else stays subscribed
-        // to it or keeps it as active list.
+        // to it, works on it or keeps it as active list.
         static::updated(function (ObservingList $list) {
             if ($list->wasChanged('public') && !$list->public) {
                 $list->subscriptions()->delete();
+                $list->pins()->where('user_id', '<>', $list->owner_user_id)->delete();
                 app(ActiveObservingListService::class)->clearForOthers($list);
             }
         });
@@ -166,6 +167,22 @@ class ObservingList extends Model
     public function likes(): HasMany
     {
         return $this->hasMany(ObservingListLike::class);
+    }
+
+    /**
+     * The marks of the observers working on this list ("Working on").
+     */
+    public function pins(): HasMany
+    {
+        return $this->hasMany(ObservingListPin::class, 'observing_list_id');
+    }
+
+    /**
+     * Whether the observer marked this list as one they are working on.
+     */
+    public function isPinnedBy(?User $user): bool
+    {
+        return $user !== null && $this->pins()->where('user_id', $user->id)->exists();
     }
 
     /**

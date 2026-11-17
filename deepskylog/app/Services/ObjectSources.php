@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ObservingList;
+use App\Models\ObservingListPin;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -61,10 +62,13 @@ class ObjectSources
             ->with('owner:id,name')
             ->get(['observing_lists.id', 'observing_lists.name', 'observing_lists.slug', 'observing_lists.owner_user_id']);
 
+        $pinned = array_flip(ObservingListPin::idsFor($viewer->id));
         $listSources = $ownedLists
             ->concat($subscribedLists)
             ->unique('id')
             ->sortBy(fn(ObservingList $list) => Str::lower((string) $list->name))
+            // The lists the viewer is working on first
+            ->sortBy(fn(ObservingList $list) => isset($pinned[$list->id]) ? 0 : 1)
             ->values()
             ->map(function (ObservingList $list) use ($viewer) {
                 $name = html_entity_decode((string) $list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');

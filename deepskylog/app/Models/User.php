@@ -1323,6 +1323,19 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * The observing lists this user is working on ("Working on", ObservingListPin).
+     */
+    public function pinnedObservingLists()
+    {
+        return $this->belongsToMany(
+            ObservingList::class,
+            'observing_list_pins',
+            'user_id',
+            'observing_list_id'
+        )->withTimestamps();
+    }
+
+    /**
      * Get all observing lists accessible to this user (owned + subscribed).
      */
     public function getAccessibleObservingLists()

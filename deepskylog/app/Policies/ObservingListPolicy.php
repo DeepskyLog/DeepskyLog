@@ -146,6 +146,15 @@ class ObservingListPolicy
     }
 
     /**
+     * Determine if the user can mark the list as one they are working on:
+     * their own list, or a public list they subscribed to.
+     */
+    public function pin(User $user, ObservingList $list): bool
+    {
+        return $user->id === $list->owner_user_id || ($list->public && $list->isSubscribedBy($user));
+    }
+
+    /**
      * Determine if the user can make the list public.
      */
     public function makePublic(User $user, ObservingList $list): bool

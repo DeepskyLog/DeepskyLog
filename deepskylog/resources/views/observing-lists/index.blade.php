@@ -105,6 +105,55 @@
                 </div>
             @endif
 
+            {{-- The lists the observer is working on (ObservingListPin) --}}
+            <section>
+                <h3 class="text-lg font-semibold text-gray-200 mb-1">{{ __('Working on') }}</h3>
+                <p class="text-xs text-gray-400 mb-4">
+                    {{ __('Mark up to :count of your own or subscribed lists with "Working on" to keep them at hand here, at the eyepiece and in the list choices.', ['count' => \App\Models\ObservingListPin::MAX_PER_USER]) }}
+                </p>
+
+                @if ($pinnedLists->isEmpty())
+                    <p class="text-gray-400 text-sm">
+                        {{ empty($search) ? __('You are not working on any list yet.') : __('None of the lists you are working on match.') }}
+                    </p>
+                @else
+                    <ul class="divide-y divide-gray-700 bg-gray-800 border border-gray-700 rounded-lg">
+                        @foreach ($pinnedLists as $list)
+                            @php $isActive = $activeList && $activeList->id === $list->id; @endphp
+                            <li class="flex flex-wrap items-center justify-between gap-2 px-4 py-2">
+                                <div class="min-w-0">
+                                    <a href="{{ route('observing-list.show', $list) }}" class="font-semibold text-white hover:underline">{{ html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                                    @if ($list->owner_user_id !== auth()->id() && $list->owner)
+                                        <span class="text-xs text-gray-500">{{ __('by') }} {{ $list->owner->name }}</span>
+                                    @endif
+                                    <span class="ml-2 text-xs text-gray-400">{{ $list->items_count }} {{ __('objects') }}</span>
+                                    @if ($isActive)
+                                        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-700 text-blue-100">{{ __('Active') }}</span>
+                                    @endif
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    @if ($list->items_count > 0)
+                                        <a href="{{ route('observing-list.eyepiece', $list) }}"
+                                           class="text-xs px-2 py-1 bg-red-800 hover:bg-red-700 text-white rounded">
+                                            {{ __('At the eyepiece') }}
+                                        </a>
+                                    @endif
+                                    @if (!$isActive)
+                                        <form method="POST" action="{{ route('observing-list.set-active', $list) }}">
+                                            @csrf
+                                            <button type="submit" class="text-xs px-2 py-1 bg-blue-700 hover:bg-blue-600 text-white rounded">
+                                                {{ __('Set active') }}
+                                            </button>
+                                        </form>
+                                    @endif
+                                    @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => true, 'compact' => true])
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </section>
+
             {{-- Owned lists --}}
             <section>
                 <h3 class="text-lg font-semibold text-gray-200 mb-4">{{ __('My lists') }}</h3>
@@ -137,7 +186,7 @@
                                     <span>{{ $list->likes_count }} {{ __('likes') }}</span>
                                     <span>{{ $list->comments_count }} {{ __('comments') }}</span>
                                 </div>
-                                <div class="flex items-center gap-2 mt-2">
+                                <div class="flex flex-wrap items-center gap-2 mt-2">
                                     @if (!$isActive)
                                         <form method="POST" action="{{ route('observing-list.set-active', $list) }}">
                                             @csrf
@@ -155,6 +204,7 @@
                                        class="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded">
                                         {{ __('Edit') }}
                                     </a>
+                                    @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => in_array($list->id, $pinnedIds, true), 'compact' => true])
                                 </div>
                             </article>
                         @endforeach
@@ -196,7 +246,7 @@
                                     <span>{{ $list->items_count }} {{ __('objects') }}</span>
                                     <span>{{ $list->likes_count }} {{ __('likes') }}</span>
                                 </div>
-                                <div class="flex items-center gap-2 mt-2">
+                                <div class="flex flex-wrap items-center gap-2 mt-2">
                                     @if (!$isActive)
                                         <form method="POST" action="{{ route('observing-list.set-active', $list) }}">
                                             @csrf
@@ -210,6 +260,7 @@
                                        class="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded">
                                         {{ __('View') }}
                                     </a>
+                                    @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => in_array($list->id, $pinnedIds, true), 'compact' => true])
                                     <form method="POST" action="{{ route('observing-list.unsubscribe', $list) }}">
                                         @csrf
                                         <button type="submit"

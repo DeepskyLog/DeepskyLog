@@ -79,6 +79,13 @@
                             @endif
                             @endcan
 
+                            {{-- "Working on" (owner, or a subscriber of a public list) --}}
+                            @can('pin', $list)
+                                @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => $isPinned])
+                            @elseif ($isPinned)
+                                @include('observing-lists.partials.pin-toggle', ['list' => $list, 'pinned' => true])
+                            @endcan
+
                             {{-- At the eyepiece (AtTheEyepieceController), for a list with objects --}}
                             @if ($list->items()->exists())
                                 <a href="{{ route('observing-list.eyepiece', $list) }}"
