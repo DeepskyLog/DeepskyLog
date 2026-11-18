@@ -833,12 +833,7 @@ class SearchResultsTable extends PowerGridComponent
             Column::make(__('Name'), 'name_link', 'display_name')
                 ->searchable()
                 ->sortUsing(function ($query, $direction) {
-                    // Natural sort: group by non-numeric prefix, then numeric suffix.
-                    // Use REGEXP_REPLACE to remove digits for prefix and to extract digits for numeric ordering.
-                    // Fallback: empties become 0 so non-numeric names sort by prefix then full name.
-                    $prefix = "LOWER(REGEXP_REPLACE(COALESCE(search_index.display_name, ''), '[0-9]', ''))";
-                    $num = "(CASE WHEN REGEXP_REPLACE(COALESCE(search_index.display_name, ''), '[^0-9]', '') = '' THEN 0 ELSE CAST(REGEXP_REPLACE(COALESCE(search_index.display_name, ''), '[^0-9]', '') AS UNSIGNED) END)";
-                    $query->orderByRaw("{$prefix} {$direction}, {$num} {$direction}, search_index.display_name {$direction}");
+                    $query->orderByRaw(\App\Support\NaturalNameOrder::sql('search_index.display_name', $direction));
                 })
                 ->bodyAttribute('class', 'font-medium whitespace-normal')
                 ->bodyAttribute('style', 'white-space:normal; overflow:visible;')

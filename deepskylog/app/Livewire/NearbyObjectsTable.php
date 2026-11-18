@@ -605,7 +605,7 @@ class NearbyObjectsTable extends PowerGridComponent
      * - `size`: orders by the greatest of `objects.diam1`/`objects.diam2`;
      *   rows with size 0 are treated as missing and ordered after real values.
      * - `name`: performs a natural-like sort by extracting a non-numeric
-     *   prefix and a numeric suffix (via `REGEXP_SUBSTR`) so entries like
+     *   prefix and numbers (`App\Support\NaturalNameOrder`) so entries like
      *   `NGC1`, `NGC2`, `NGC10` sort in an expected human order.
      * - `best_mag`: prefers lens-specific metrics (`uom_lens`), then default
      *   metrics (`uom_default`/`uom`), then the inner placeholder
@@ -659,14 +659,7 @@ class NearbyObjectsTable extends PowerGridComponent
             }
 
             if ($sf === 'name') {
-                $prefixExpr = "LOWER(REGEXP_SUBSTR(objects.name, '^[^0-9]+'))";
-                $numExprAsc = "COALESCE(CAST(REGEXP_SUBSTR(objects.name, '[0-9]+') AS UNSIGNED), 4294967295)";
-                $numExprDesc = "COALESCE(CAST(REGEXP_SUBSTR(objects.name, '[0-9]+') AS SIGNED), -1)";
-                if ($sd === 'ASC') {
-                    $outer->orderByRaw("{$prefixExpr} ASC, {$numExprAsc} ASC, objects.name ASC");
-                } else {
-                    $outer->orderByRaw("{$prefixExpr} DESC, {$numExprDesc} DESC, objects.name DESC");
-                }
+                $outer->orderByRaw(\App\Support\NaturalNameOrder::sql('objects.name', $sd));
                 return;
             }
 

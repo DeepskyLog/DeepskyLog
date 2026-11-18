@@ -93,8 +93,7 @@ class CatalogsPage extends Component
             if (empty($slugs)) {
                 $objects = new \Illuminate\Pagination\LengthAwarePaginator([], 0, $this->perPage);
             } else {
-                $prefixExpr = "LOWER(REGEXP_SUBSTR(objects.name, '^[^0-9]+'))";
-                $numExprAsc = "COALESCE(CAST(REGEXP_SUBSTR(objects.name, '[0-9]+') AS UNSIGNED), 4294967295)";
+                $nameOrder = \App\Support\NaturalNameOrder::sql('objects.name');
                 // Prefer numeric `oname.catindex` when it starts with digits; otherwise fall back to numeric in objects.name
                 $catIndexNumExpr = "CASE WHEN oname.catindex REGEXP '^[0-9]+' THEN CAST(REGEXP_SUBSTR(oname.catindex, '[0-9]+') AS UNSIGNED) WHEN REGEXP_SUBSTR(objects.name, '[0-9]+') IS NOT NULL THEN CAST(REGEXP_SUBSTR(objects.name, '[0-9]+') AS UNSIGNED) ELSE 4294967295 END";
 
@@ -110,7 +109,7 @@ class CatalogsPage extends Component
                     ->select('objects.slug', 'objects.name', 'constellations.name as constellation', 'target_types.type as type_name', DB::raw('MIN(oname.catindex) as catindex'))
                     ->groupBy('objects.slug', 'objects.name', 'constellations.name', 'target_types.type')
                     // Order by numeric catindex when present, otherwise fall back to natural ordering on objects.name
-                    ->orderByRaw("{$catIndexNumExpr} ASC, {$prefixExpr} ASC, {$numExprAsc} ASC, objects.name ASC")
+                    ->orderByRaw("{$catIndexNumExpr} ASC, {$nameOrder}")
                     ->paginate($this->perPage);
             }
         }
