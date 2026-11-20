@@ -172,11 +172,13 @@ it to the eyepiece or export it.
 - "Change the description of 'Ultra Thin Galaxies' to: Edge-on galaxies
   thinner than 1:10, best in a 12-inch or larger."
 - "Make my list 'Friday night' public."
+- "Rename my list 'Friday night' to 'Autumn galaxies'."
 - "Make all my public lists with fewer than five objects private."
 
 Claude shows you what will change and asks before it changes a list
 *(update-observing-list)*. Only your own lists can be changed; an empty
-description removes it. Making a public list private ends the subscriptions
+description removes it. A new name may not be that of another of your lists;
+the link to the list stays the same. Making a public list private ends the subscriptions
 of other observers to it.
 
 ## 4. Questions that combine tools

@@ -12,8 +12,8 @@ use App\Mcp\Tools\ListMyGoals;
 use App\Mcp\Tools\ListMyInstrumentSets;
 use App\Mcp\Tools\ListMyObservations;
 use App\Mcp\Tools\ListMyObservingLists;
-use App\Mcp\Tools\UpdateObservingList;
 use App\Mcp\Tools\SearchObjects;
+use App\Mcp\Tools\UpdateObservingList;
 use App\Models\Observation;
 use App\Models\ObservingList;
 use App\Models\User;
@@ -384,4 +384,27 @@ it('changes the description and publicity of an own list with a token that may w
     DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $list->id])->assertHasErrors();
     DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $other->id, 'public' => false])->assertHasErrors();
     expect($other->fresh()->public)->toBeTrue();
+});
+
+it('renames an own list with a token that may write, keeping its link', function () {
+    mcpObject('M 65');
+    $user  = mcpObserver();
+    $list  = ObservingList::createWithObjects($user, 'Thin galaxies', ['M 65'], 'Edge-on', true);
+    $taken = ObservingList::createWithObjects($user, 'Friday night', ['M 65']);
+    $slug  = $list->slug;
+
+    Sanctum::actingAs($user, ['read']);
+    DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $list->id, 'name' => 'Flat galaxies'])->assertHasErrors();
+
+    Sanctum::actingAs($user, ['read', 'write']);
+    DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $list->id, 'name' => '  Flat <b>galaxies</b> '])
+        ->assertOk()
+        ->assertStructuredContent(fn ($json) => $json->where('name', 'Flat galaxies')->where('previous.name', 'Thin galaxies')->where('description', 'Edge-on')->where('public', true)->etc());
+    expect($list->fresh())->name->toBe('Flat galaxies')->slug->toBe($slug)->description->toBe('Edge-on');
+
+    DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $list->id, 'name' => 'friday night'])->assertHasErrors();
+    DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $list->id, 'name' => ' '])->assertHasErrors();
+    DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $list->id, 'name' => 'Flat galaxies'])->assertOk();
+    expect($list->fresh()->name)->toBe('Flat galaxies')
+        ->and($taken->fresh()->name)->toBe('Friday night');
 });
