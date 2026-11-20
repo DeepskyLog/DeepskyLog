@@ -12,6 +12,7 @@ use App\Mcp\Tools\GetObservation;
 use App\Mcp\Tools\GetObservingList;
 use App\Mcp\Tools\GetTonightsBest;
 use App\Mcp\Tools\ListMyGoals;
+use App\Mcp\Tools\ListMyInstrumentSets;
 use App\Mcp\Tools\ListMyObservations;
 use App\Mcp\Tools\ListMyObservingLists;
 use App\Mcp\Tools\SearchObjects;
@@ -42,6 +43,7 @@ class DeepskyLogServer extends Server
 {
     protected array $tools = [
         GetMyProfile::class,
+        ListMyInstrumentSets::class,
         SearchObjects::class,
         GetObject::class,
         ListMyObservations::class,

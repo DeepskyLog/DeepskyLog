@@ -15,7 +15,7 @@ use Laravel\Mcp\Server\Attributes\Description;
 use Laravel\Mcp\Server\Tool;
 use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
 
-#[Description('The observer who owns the access token: name, country, language, standard telescope and location, and all their locations, instruments, eyepieces, filters and lenses with their ids (the ids other tools take). Call this first.')]
+#[Description('The observer who owns the access token: name, country, language, standard telescope and location, and all their locations, instruments, eyepieces, filters and lenses with their ids (the ids other tools take), and the ids and names of their instrument sets (list-my-instrument-sets gives what is in them). Call this first.')]
 #[IsReadOnly]
 class GetMyProfile extends Tool
 {
@@ -40,6 +40,9 @@ class GetMyProfile extends Tool
         $lenses = $user->lenses()->where('active', true)->orderBy('name')->get()
             ->map(fn (Lens $lens) => ['id' => $lens->id, 'name' => McpData::plain($lens->fullName()), 'factor' => $lens->factor !== null ? (float) $lens->factor : null])->values();
 
+        $sets = $user->instrumentSets()->where('active', true)->orderBy('name')->get(['id', 'name'])
+            ->map(fn ($set) => ['id' => $set->id, 'name' => McpData::plain($set->name)])->values();
+
         return Response::structured([
             'username'               => $user->username,
             'name'                   => McpData::plain($user->name),
@@ -49,11 +52,13 @@ class GetMyProfile extends Tool
             'uses_inches'            => (bool) $user->showInches,
             'standard_location_id'   => $user->stdlocation ?: null,
             'standard_instrument_id' => $user->stdtelescope ?: null,
+            'standard_instrument_set_id' => $user->stdinstrumentset ?: null,
             'locations'              => $locations,
             'instruments'            => $instruments,
             'active_eyepieces'       => $eyepieces,
             'active_filters'         => $filters,
             'active_lenses'          => $lenses,
+            'instrument_sets'        => $sets,
         ]);
     }
 }

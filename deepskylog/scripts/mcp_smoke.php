@@ -38,6 +38,7 @@ $list        = App\Models\ObservingList::where('owner_user_id', $user->id)->late
 
 $calls = [
     ['get-my-profile', []],
+    ['list-my-instrument-sets', []],
     ['search-objects', ['query' => 'andromeda']],
     ['get-object', ['name' => $object]],
     ['get-object', ['name' => 'STF 2382']],

@@ -9,13 +9,17 @@ use App\Mcp\Tools\GetObject;
 use App\Mcp\Tools\GetObservation;
 use App\Mcp\Tools\GetObservingList;
 use App\Mcp\Tools\ListMyGoals;
+use App\Mcp\Tools\ListMyInstrumentSets;
 use App\Mcp\Tools\ListMyObservations;
 use App\Mcp\Tools\ListMyObservingLists;
 use App\Mcp\Tools\SearchObjects;
 use App\Models\Observation;
 use App\Models\ObservingList;
 use App\Models\User;
+use Database\Factories\EyepieceFactory;
 use Database\Factories\InstrumentFactory;
+use Database\Factories\InstrumentSetFactory;
+use Database\Factories\LensFactory;
 use Database\Factories\LocationFactory;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\Sanctum;
@@ -283,4 +287,47 @@ it('does not create a list with a token that only reads', function () {
     // not offered (tools/list), and refused when called anyway
     DeepskyLogServer::tool(CreateObservingList::class, ['name' => 'x', 'objects' => ['M 65']])->assertHasErrors();
     expect(ObservingList::query()->where('owner_user_id', $user->id)->exists())->toBeFalse();
+});
+
+it('lists the observer\'s own instrument sets with their magnifications', function () {
+    $user     = mcpObserver();
+    $eyepiece = EyepieceFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'name' => 'Wide', 'focal_length_mm' => 30, 'apparentFOV' => 68, 'field_stop_mm' => null, 'active' => true]);
+    $lens     = LensFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'name' => 'Barlow', 'factor' => 2, 'active' => true]);
+    $set      = InstrumentSetFactory::new()->create(['user_id' => $user->id, 'name' => 'Home kit']);
+    $set->instruments()->attach($user->stdtelescope);
+    $set->eyepieces()->attach($eyepiece->id);
+    $set->lenses()->attach($lens->id);
+    $user->forceFill(['stdinstrumentset' => $set->id])->save();
+    InstrumentSetFactory::new()->create(['name' => 'Somebody elses']);
+    InstrumentSetFactory::new()->create(['user_id' => $user->id, 'name' => 'Old kit', 'active' => false]);
+    Sanctum::actingAs($user->fresh(), ['read']);
+
+    DeepskyLogServer::tool(ListMyInstrumentSets::class)
+        ->assertOk()
+        ->assertStructuredContent(fn ($json) => $json->where('count', 1)
+            ->where('standard_instrument_set_id', $set->id)
+            ->where('instrument_sets.0.name', 'Home kit')
+            ->where('instrument_sets.0.standard', true)
+            ->where('instrument_sets.0.instruments.0.aperture_mm', 250)
+            ->where('instrument_sets.0.lenses.0.factor', 2)
+            ->missing('instrument_sets.0.magnifications')
+            ->etc());
+    DeepskyLogServer::tool(ListMyInstrumentSets::class, ['include_retired' => true])
+        ->assertStructuredContent(fn ($json) => $json->where('count', 2)->etc());
+    DeepskyLogServer::tool(ListMyInstrumentSets::class, ['id' => $set->id])
+        ->assertOk()
+        ->assertStructuredContent(fn ($json) => $json->has('magnifications.0.combinations', 2)
+            ->where('magnifications.0.combinations.0.magnification', 40)
+            ->where('magnifications.0.combinations.0.exit_pupil_mm', 6.3)
+            ->where('magnifications.0.combinations.0.true_field_deg', 1.7)
+            ->where('magnifications.0.combinations.1.magnification', 80)
+            ->where('magnifications.0.combinations.1.lens', fn ($name) => str_contains($name, 'Barlow'))
+            ->etc());
+});
+
+it('refuses an instrument set of another observer', function () {
+    $other = InstrumentSetFactory::new()->create();
+    Sanctum::actingAs(mcpObserver(), ['read']);
+
+    DeepskyLogServer::tool(ListMyInstrumentSets::class, ['id' => $other->id])->assertHasErrors();
 });

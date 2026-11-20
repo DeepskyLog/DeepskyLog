@@ -93,6 +93,10 @@ names in brackets are only for reference.
 - "Which telescopes and eyepieces do I have in DeepskyLog, and which one is my
   standard telescope?" *(get-my-profile)*
 - "What magnifications do I get with my 10-inch and my eyepieces?"
+- "What is in my travel kit, and which magnifications and fields does it
+  give?" *(list-my-instrument-sets: your instrument sets, and for one set
+  the magnification, exit pupil and true field of each telescope with each
+  eyepiece and lens of it)*
 - "Which of my locations has the darkest sky?"
 
 Claude usually starts with your profile. The other questions use your
