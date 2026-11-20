@@ -11,8 +11,8 @@ yourself. It sees your own observations, equipment, locations, lists and
 goals, and everything DeepskyLog shows publicly. It never sees other
 observers' private data, and it cannot change or delete anything. The
 exceptions are creating an observing list and changing the description of
-one of your own lists, and only with a token that has the `write`
-permission.
+one of your own lists or making it public or private, and only with a token
+that has the `write` permission.
 
 ## 1. Make an access token
 
@@ -20,7 +20,7 @@ permission.
    (`/user/api-tokens`).
 2. Give the token a name, for instance `Claude`.
 3. Leave **read** ticked. Also tick **write** if Claude may create observing
-   lists and change their descriptions for you.
+   lists and change their descriptions and publicity for you.
 4. Copy the token right away. DeepskyLog shows it only once.
 
 Treat the token like a password. If it leaks, delete it on the same page and
@@ -166,15 +166,18 @@ for a public one. Names DeepskyLog does not know are reported and left out.
 The answer has the link to the new list, where you can plan its times, take
 it to the eyepiece or export it.
 
-### Changing the description of a list (write token only)
+### Changing a list (write token only)
 
 - "Write a short description for each of my public lists that has none."
 - "Change the description of 'Ultra Thin Galaxies' to: Edge-on galaxies
   thinner than 1:10, best in a 12-inch or larger."
+- "Make my list 'Friday night' public."
+- "Make all my public lists with fewer than five objects private."
 
-Claude shows you the new text and asks before it changes a list
-*(update-observing-list-description)*. Only your own lists can be changed;
-an empty description removes it.
+Claude shows you what will change and asks before it changes a list
+*(update-observing-list)*. Only your own lists can be changed; an empty
+description removes it. Making a public list private ends the subscriptions
+of other observers to it.
 
 ## 4. Questions that combine tools
 

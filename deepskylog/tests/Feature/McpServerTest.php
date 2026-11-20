@@ -12,7 +12,7 @@ use App\Mcp\Tools\ListMyGoals;
 use App\Mcp\Tools\ListMyInstrumentSets;
 use App\Mcp\Tools\ListMyObservations;
 use App\Mcp\Tools\ListMyObservingLists;
-use App\Mcp\Tools\UpdateObservingListDescription;
+use App\Mcp\Tools\UpdateObservingList;
 use App\Mcp\Tools\SearchObjects;
 use App\Models\Observation;
 use App\Models\ObservingList;
@@ -352,26 +352,36 @@ it('filters the lists on public and description and gives the description', func
         ->assertStructuredContent(fn ($json) => $json->where('description', '')->where('has_description', false)->etc());
 });
 
-it('changes the description of an own list with a token that may write', function () {
+it('changes the description and publicity of an own list with a token that may write', function () {
     mcpObject('M 65');
     $user  = mcpObserver();
     $list  = ObservingList::createWithObjects($user, 'Thin galaxies', ['M 65'], null, true);
     $other = ObservingList::createWithObjects(User::factory()->create(), 'Not mine', ['M 65'], 'Theirs', true);
 
     Sanctum::actingAs($user, ['read']);
-    DeepskyLogServer::tool(UpdateObservingListDescription::class, ['id' => $list->id, 'description' => 'x'])->assertHasErrors();
+    DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $list->id, 'description' => 'x'])->assertHasErrors();
     expect($list->fresh()->description)->toBeNull();
 
     Sanctum::actingAs($user, ['read', 'write']);
-    DeepskyLogServer::tools()->assertRegistered(UpdateObservingListDescription::class);
-    DeepskyLogServer::tool(UpdateObservingListDescription::class, ['id' => $list->id, 'description' => "Edge-on galaxies\n<b>thin</b>"])
+    DeepskyLogServer::tools()->assertRegistered(UpdateObservingList::class);
+    DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $list->id, 'description' => "Edge-on galaxies\n<b>thin</b>"])
         ->assertOk()
-        ->assertStructuredContent(fn ($json) => $json->where('description', "Edge-on galaxies\nthin")->where('previous_description', '')->etc());
+        ->assertStructuredContent(fn ($json) => $json->where('description', "Edge-on galaxies\nthin")->where('previous.description', '')->where('public', true)->etc());
     expect($list->fresh()->description)->toBe("Edge-on galaxies\nthin");
 
-    DeepskyLogServer::tool(UpdateObservingListDescription::class, ['id' => $list->id, 'description' => ''])->assertOk();
-    expect($list->fresh()->description)->toBeNull();
+    // publicity alone keeps the description
+    $subscriber = User::factory()->create();
+    $list->subscriptions()->create(['user_id' => $subscriber->id]);
+    DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $list->id, 'public' => false])
+        ->assertOk()
+        ->assertStructuredContent(fn ($json) => $json->where('public', false)->where('previous.public', true)->where('subscriptions_ended', 1)->etc());
+    expect($list->fresh())->public->toBeFalse()->description->toBe("Edge-on galaxies\nthin")
+        ->and($list->subscriptions()->count())->toBe(0);
 
-    DeepskyLogServer::tool(UpdateObservingListDescription::class, ['id' => $other->id, 'description' => 'Mine now'])->assertHasErrors();
-    expect($other->fresh()->description)->toBe('Theirs');
+    DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $list->id, 'public' => true, 'description' => ''])->assertOk();
+    expect($list->fresh())->public->toBeTrue()->description->toBeNull();
+
+    DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $list->id])->assertHasErrors();
+    DeepskyLogServer::tool(UpdateObservingList::class, ['id' => $other->id, 'public' => false])->assertHasErrors();
+    expect($other->fresh()->public)->toBeTrue();
 });

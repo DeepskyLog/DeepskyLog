@@ -55,7 +55,7 @@ $calls = [
     ['list-my-goals', []],
     ['create-observing-list', ['name' => 'mcp_smoke', 'objects' => ['M 31', 'M 32', 'Nothing 1']]],
     // on the list the call above made
-    ['update-observing-list-description', fn () => ['id' => App\Models\ObservingList::where('owner_user_id', $user->id)->where('name', 'like', 'mcp_smoke%')->value('id'), 'description' => 'Made by mcp_smoke']],
+    ['update-observing-list', fn () => ['id' => App\Models\ObservingList::where('owner_user_id', $user->id)->where('name', 'like', 'mcp_smoke%')->value('id'), 'description' => 'Made by mcp_smoke', 'public' => true]],
 ];
 foreach ($calls as [$tool, $arguments]) {
     $arguments            = is_callable($arguments) ? $arguments() : $arguments;

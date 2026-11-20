@@ -16,7 +16,7 @@ use App\Mcp\Tools\ListMyInstrumentSets;
 use App\Mcp\Tools\ListMyObservations;
 use App\Mcp\Tools\ListMyObservingLists;
 use App\Mcp\Tools\SearchObjects;
-use App\Mcp\Tools\UpdateObservingListDescription;
+use App\Mcp\Tools\UpdateObservingList;
 use Laravel\Mcp\Server;
 use Laravel\Mcp\Server\Attributes\Instructions;
 use Laravel\Mcp\Server\Attributes\Name;
@@ -26,7 +26,7 @@ use Laravel\Mcp\Server\Attributes\Version;
  * The MCP server of DeepskyLog (/mcp, routes/ai.php): an AI assistant the
  * observer connects with a personal access token reads their own data and
  * DeepskyLog's calculations through these tools. The tools read; only
- * CreateObservingList and UpdateObservingListDescription write, and only
+ * CreateObservingList and UpdateObservingList write, and only
  * with a token that has the 'write' permission.
  */
 #[Name('DeepskyLog')]
@@ -57,7 +57,7 @@ class DeepskyLogServer extends Server
         GetCatalogProgress::class,
         ListMyGoals::class,
         CreateObservingList::class,
-        UpdateObservingListDescription::class,
+        UpdateObservingList::class,
     ];
 
     protected array $resources = [];
