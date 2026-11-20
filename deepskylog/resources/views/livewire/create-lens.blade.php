@@ -207,7 +207,7 @@
                             @error('photo') <span class="error">{{ $message }}</span> @enderror
 
                             @if ($update)
-                                @if($lens->picture)
+                                @if (\App\Support\UploadedPhoto::url($lens->picture))
                                     <img
                                         alt="{{ __('Picture of lens') }}"
                                         class="mt-2 h-40 w-40 object-cover"

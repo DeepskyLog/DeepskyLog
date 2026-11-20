@@ -343,7 +343,7 @@
                             @error('photo') <span class="error">{{ $message }}</span> @enderror
 
                             @if ($update)
-                                @if($instrument->picture)
+                                @if (\App\Support\UploadedPhoto::url($instrument->picture))
                                     <img
                                         alt="{{ __('Picture of instrument') }}"
                                         class="mt-2 h-40 w-40 object-cover"

@@ -223,7 +223,7 @@
                         @error('photo') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
 
                         @if ($update)
-                            @if($set->picture)
+                            @if (\App\Support\UploadedPhoto::url($set->picture))
                                 <img
                                     alt="{{ __('Picture of instrument set') }}"
                                     class="mt-2 h-40 w-40 object-cover"

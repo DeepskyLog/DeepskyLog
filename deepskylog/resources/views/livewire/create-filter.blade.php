@@ -236,7 +236,7 @@
                                     @error('photo') <span class="error">{{ $message }}</span> @enderror
 
                                     @if ($update)
-                                        @if($filter->picture)
+                                        @if (\App\Support\UploadedPhoto::url($filter->picture))
                                             <img
                                                 alt="{{ __('Picture of filter') }}"
                                                 class="mt-2 h-40 w-40 object-cover"

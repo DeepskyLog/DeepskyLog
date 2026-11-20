@@ -102,7 +102,7 @@
                                 @enderror
 
                                 @if ($update)
-                                    @if ($location->picture)
+                                    @if (\App\Support\UploadedPhoto::url($location->picture))
                                         <img alt="{{ __('Picture of location') }}" class="mt-2 h-40 w-40 object-cover"
                                             src="{{ \App\Support\UploadedPhoto::url($location->picture) }}">
                                     @endif

@@ -295,7 +295,7 @@
                             @error('photo') <span class="error">{{ $message }}</span> @enderror
 
                             @if ($update)
-                                @if($eyepiece->picture)
+                                @if (\App\Support\UploadedPhoto::url($eyepiece->picture))
                                     <img
                                         alt="{{ __('Picture of eyepiece') }}"
                                         class="mt-2 h-40 w-40 object-cover"

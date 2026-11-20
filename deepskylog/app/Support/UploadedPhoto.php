@@ -35,8 +35,9 @@ class UploadedPhoto
 
     /**
      * The URL of a picture stored on the public disk, or $default when there is
-     * none. Tolerates the forms older rows hold: a leading slash or "storage/",
-     * or a full URL.
+     * none or its file is missing (rows of old data name files that were never
+     * copied to the server). Tolerates the forms older rows hold: a leading
+     * slash or "storage/", or a full URL.
      */
     public static function url(?string $path, ?string $default = null): ?string
     {
@@ -50,6 +51,9 @@ class UploadedPhoto
         $path = ltrim($path, '/');
         if (str_starts_with($path, 'storage/')) {
             $path = substr($path, strlen('storage/'));
+        }
+        if (! Storage::disk('public')->exists($path)) {
+            return $default === null ? null : asset($default);
         }
 
         return asset('storage/'.$path);
