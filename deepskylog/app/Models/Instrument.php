@@ -9,6 +9,7 @@ use App\Models\Traits\HasObservationsDates;
 use App\Models\Traits\OwnedByUser;
 use App\Traits\ClearsResponseCache;
 use App\Traits\HasUniqueSlugPerUser;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
@@ -48,6 +49,19 @@ class Instrument extends Model
     ];
 
     protected $with = ['instrument_make', 'mount_type', 'instrument_type'];
+
+    /**
+     * The focal length, null when unknown. The old site stored 1 mm (and the
+     * form 0 mm) for binoculars, finders and the naked eye, which have a fixed
+     * magnification instead; it still writes them, so they are read as null
+     * too (the migration 2026_11_20_000010 cleared those already there).
+     */
+    protected function focalLengthMm(): Attribute
+    {
+        $known = fn ($value) => $value !== null && $value !== '' && (float) $value > 1 ? (float) $value : null;
+
+        return Attribute::make(get: $known, set: $known);
+    }
 
     /**
      * Apparent field, in degrees, assumed for the eyepiece of a finder or

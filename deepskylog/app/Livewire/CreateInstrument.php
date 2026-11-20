@@ -66,7 +66,7 @@ class CreateInstrument extends Component
 
             if (Auth::user()->showInches) {
                 $this->aperture_mm = round($this->instrument->aperture_mm / 25.4, 1);
-                $this->focal_length_mm = round($this->instrument->focal_length_mm / 25.4, 1);
+                $this->focal_length_mm = $this->instrument->focal_length_mm !== null ? round($this->instrument->focal_length_mm / 25.4, 1) : null;
             } else {
                 $this->aperture_mm = $this->instrument->aperture_mm;
                 $this->focal_length_mm = $this->instrument->focal_length_mm;
@@ -74,7 +74,7 @@ class CreateInstrument extends Component
             // Only calculate focal ratio if aperture is a positive number
             $ap = floatval($this->aperture_mm);
             $fl = floatval($this->focal_length_mm);
-            if ($ap > 0) {
+            if ($ap > 0 && $fl > 0) {
                 $this->f_d = round($fl / $ap, 1);
             } else {
                 $this->f_d = null;
@@ -194,12 +194,10 @@ class CreateInstrument extends Component
             $make = 1;
         }
 
-        if ($this->focal_length_mm == '') {
-            $this->focal_length_mm = 0;
-        }
         // An emptied field arrives as '', which a strict MySQL refuses for a
-        // numeric column ("Incorrect integer value: ''").
-        foreach (['fixedMagnification', 'obstruction_perc', 'field_of_view_deg', 'finder_id', 'lens_id'] as $field) {
+        // numeric column ("Incorrect integer value: ''"). An unknown focal
+        // length is null, not 0 (binoculars, finders, the naked eye).
+        foreach (['focal_length_mm', 'fixedMagnification', 'obstruction_perc', 'field_of_view_deg', 'finder_id', 'lens_id'] as $field) {
             if ($this->{$field} === '') {
                 $this->{$field} = null;
             }
@@ -236,7 +234,9 @@ class CreateInstrument extends Component
         // Check if aperture and focal length are set in inches
         if (Auth::user()->showInches) {
             $data['aperture_mm'] = (int) round($this->inchesToMm($data['aperture_mm'], $this->instrument?->aperture_mm));
-            $data['focal_length_mm'] = $this->inchesToMm($data['focal_length_mm'] ?? 0, $this->instrument?->focal_length_mm);
+            if (($data['focal_length_mm'] ?? null) !== null) {
+                $data['focal_length_mm'] = $this->inchesToMm($data['focal_length_mm'], $this->instrument?->focal_length_mm);
+            }
         }
 
         if ($this->flipped_image) {
