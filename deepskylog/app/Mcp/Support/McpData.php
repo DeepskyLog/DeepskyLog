@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Models\Observation;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Laravel\Mcp\Request;
 
 /**
  * What the tools of the MCP server (App\Mcp\Servers\DeepskyLogServer) share:
@@ -16,6 +17,24 @@ use Illuminate\Support\Facades\DB;
  */
 class McpData
 {
+    /**
+     * Whether the token may write (the 'write' permission): the tools that
+     * change something are only offered to such a token and check it again.
+     */
+    public static function canWrite(Request $request): bool
+    {
+        return (bool) $request->user()?->tokenCan('write');
+    }
+
+    /**
+     * The plain-text description of an observing list, keeping its lines
+     * (the list page prints it with nl2br); old lists may hold markup.
+     */
+    public static function listDescription(?string $description): string
+    {
+        return trim(html_entity_decode(strip_tags((string) $description), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    }
+
     /**
      * Plain text from a column the old site stored HTML-encoded.
      */

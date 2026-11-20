@@ -62,13 +62,16 @@ class GetObservingList extends Tool
             $rows = $rows->reject(fn (array $row) => $row['seen_by_me']);
         }
 
+        $description = McpData::listDescription($list->description);
+
         return Response::structured(array_filter([
             'id'               => $list->id,
             'name'             => $list->name_decoded,
             'url'              => route('observing-list.show', $list),
             'owner'            => $list->owner?->username,
             'public'           => (bool) $list->public,
-            'description'      => McpData::text($list->description) ?: null,
+            'description'      => $description,
+            'has_description'  => $description !== '',
             'objects_in_list'  => (int) $list->items_count,
             'seen_by_me'       => $items->filter(fn ($item) => $seen->has(mb_strtolower((string) $item->object_name)))->count(),
             'planned_night'    => $list->planned_night?->toDateString(),

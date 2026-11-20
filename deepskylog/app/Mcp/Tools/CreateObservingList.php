@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Tools;
 
+use App\Mcp\Support\McpData;
 use App\Models\ObservingList;
 use App\Services\ObservingListItemNameResolver;
 use App\Services\StruveSigmaNames;
@@ -13,7 +14,7 @@ use Laravel\Mcp\Server\Attributes\Description;
 use Laravel\Mcp\Server\Tool;
 
 /**
- * The only tool that writes: it needs a token with the 'write' permission
+ * A tool that writes: it needs a token with the 'write' permission
  * (only offered to such a token, and checked again when called).
  */
 #[Description('Save a new observing list for the observer with the given objects, in this order (for instance the result of get-tonights-best, or the unseen objects of get-catalog-progress). Names are resolved as search-objects does; names DeepskyLog does not know are reported and left out. The list is private unless public is true. Ask the observer before creating a list.')]
@@ -81,7 +82,7 @@ class CreateObservingList extends Tool
 
     private static function allowed(Request $request): bool
     {
-        return (bool) $request->user()?->tokenCan('write');
+        return McpData::canWrite($request);
     }
 
     public function schema(JsonSchema $schema): array

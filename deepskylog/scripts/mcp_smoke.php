@@ -48,13 +48,17 @@ $calls = [
     ['get-my-statistics', ['year' => (int) date('Y') - 1]],
     ['get-tonights-best', []],
     ['get-night-forecast', []],
+    ['list-my-observing-lists', ['own_only' => true, 'public' => true, 'has_description' => false]],
     ['list-my-observing-lists', []],
     ['get-observing-list', ['id' => $list]],
     ['get-catalog-progress', ['catalog' => 'H400', 'limit' => 20]],
     ['list-my-goals', []],
     ['create-observing-list', ['name' => 'mcp_smoke', 'objects' => ['M 31', 'M 32', 'Nothing 1']]],
+    // on the list the call above made
+    ['update-observing-list-description', fn () => ['id' => App\Models\ObservingList::where('owner_user_id', $user->id)->where('name', 'like', 'mcp_smoke%')->value('id'), 'description' => 'Made by mcp_smoke']],
 ];
 foreach ($calls as [$tool, $arguments]) {
+    $arguments            = is_callable($arguments) ? $arguments() : $arguments;
     [$status, $ms, $body] = $call('tools/call', ['name' => $tool, 'arguments' => $arguments]);
     $json                 = json_decode($body, true);
     $error                = $json['error']['message'] ?? (($json['result']['isError'] ?? false) ? ($json['result']['content'][0]['text'] ?? 'error') : null);

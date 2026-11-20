@@ -12,6 +12,7 @@ use App\Mcp\Tools\ListMyGoals;
 use App\Mcp\Tools\ListMyInstrumentSets;
 use App\Mcp\Tools\ListMyObservations;
 use App\Mcp\Tools\ListMyObservingLists;
+use App\Mcp\Tools\UpdateObservingListDescription;
 use App\Mcp\Tools\SearchObjects;
 use App\Models\Observation;
 use App\Models\ObservingList;
@@ -330,4 +331,47 @@ it('refuses an instrument set of another observer', function () {
     Sanctum::actingAs(mcpObserver(), ['read']);
 
     DeepskyLogServer::tool(ListMyInstrumentSets::class, ['id' => $other->id])->assertHasErrors();
+});
+
+it('filters the lists on public and description and gives the description', function () {
+    mcpObject('M 65');
+    $user  = mcpObserver();
+    $bare  = ObservingList::createWithObjects($user, 'Bare public', ['M 65'], null, true);
+    $blank = ObservingList::createWithObjects($user, 'Blank public', ['M 65'], '  ', true);
+    ObservingList::createWithObjects($user, 'Described public', ['M 65'], "Galaxies\nfor spring", true);
+    ObservingList::createWithObjects($user, 'Bare private', ['M 65']);
+    Sanctum::actingAs($user, ['read']);
+
+    DeepskyLogServer::tool(ListMyObservingLists::class, ['own_only' => true, 'public' => true, 'has_description' => false])
+        ->assertStructuredContent(fn ($json) => $json->where('returned', 2)
+            ->where('lists', fn ($lists) => collect($lists)->pluck('id')->sort()->values()->all() === [$bare->id, $blank->id])
+            ->where('lists.0.description', '')->etc());
+    DeepskyLogServer::tool(ListMyObservingLists::class, ['has_description' => true])
+        ->assertStructuredContent(fn ($json) => $json->where('returned', 1)->where('lists.0.description', 'Galaxies for spring')->etc());
+    DeepskyLogServer::tool(GetObservingList::class, ['id' => $bare->id])
+        ->assertStructuredContent(fn ($json) => $json->where('description', '')->where('has_description', false)->etc());
+});
+
+it('changes the description of an own list with a token that may write', function () {
+    mcpObject('M 65');
+    $user  = mcpObserver();
+    $list  = ObservingList::createWithObjects($user, 'Thin galaxies', ['M 65'], null, true);
+    $other = ObservingList::createWithObjects(User::factory()->create(), 'Not mine', ['M 65'], 'Theirs', true);
+
+    Sanctum::actingAs($user, ['read']);
+    DeepskyLogServer::tool(UpdateObservingListDescription::class, ['id' => $list->id, 'description' => 'x'])->assertHasErrors();
+    expect($list->fresh()->description)->toBeNull();
+
+    Sanctum::actingAs($user, ['read', 'write']);
+    DeepskyLogServer::tools()->assertRegistered(UpdateObservingListDescription::class);
+    DeepskyLogServer::tool(UpdateObservingListDescription::class, ['id' => $list->id, 'description' => "Edge-on galaxies\n<b>thin</b>"])
+        ->assertOk()
+        ->assertStructuredContent(fn ($json) => $json->where('description', "Edge-on galaxies\nthin")->where('previous_description', '')->etc());
+    expect($list->fresh()->description)->toBe("Edge-on galaxies\nthin");
+
+    DeepskyLogServer::tool(UpdateObservingListDescription::class, ['id' => $list->id, 'description' => ''])->assertOk();
+    expect($list->fresh()->description)->toBeNull();
+
+    DeepskyLogServer::tool(UpdateObservingListDescription::class, ['id' => $other->id, 'description' => 'Mine now'])->assertHasErrors();
+    expect($other->fresh()->description)->toBe('Theirs');
 });

@@ -9,9 +9,10 @@ calculations, not guesses.
 Claude acts as you, with the rights of a personal access token you make
 yourself. It sees your own observations, equipment, locations, lists and
 goals, and everything DeepskyLog shows publicly. It never sees other
-observers' private data, and it cannot change or delete anything. The one
-exception is creating an observing list, and only with a token that has the
-`write` permission.
+observers' private data, and it cannot change or delete anything. The
+exceptions are creating an observing list and changing the description of
+one of your own lists, and only with a token that has the `write`
+permission.
 
 ## 1. Make an access token
 
@@ -19,7 +20,7 @@ exception is creating an observing list, and only with a token that has the
    (`/user/api-tokens`).
 2. Give the token a name, for instance `Claude`.
 3. Leave **read** ticked. Also tick **write** if Claude may create observing
-   lists for you.
+   lists and change their descriptions for you.
 4. Copy the token right away. DeepskyLog shows it only once.
 
 Treat the token like a password. If it leaks, delete it on the same page and
@@ -147,6 +148,8 @@ Galaxy`, `Sigma 2816`, `NGC891`.
   *(get-catalog-progress)*
 - "Which Messier objects have I seen but never drawn?"
 - "Show my observing lists." *(list-my-observing-lists)*
+- "Only show my public lists which don't have a description."
+  *(list-my-observing-lists, with own_only, public and has_description)*
 - "Which objects on my list 'Autumn galaxies' haven't I seen yet?"
   *(get-observing-list)*
 - "How are my observing goals going? Will I make the Arp goal before the end
@@ -162,6 +165,16 @@ Claude asks before it creates a list. A new list is private unless you ask
 for a public one. Names DeepskyLog does not know are reported and left out.
 The answer has the link to the new list, where you can plan its times, take
 it to the eyepiece or export it.
+
+### Changing the description of a list (write token only)
+
+- "Write a short description for each of my public lists that has none."
+- "Change the description of 'Ultra Thin Galaxies' to: Edge-on galaxies
+  thinner than 1:10, best in a 12-inch or larger."
+
+Claude shows you the new text and asks before it changes a list
+*(update-observing-list-description)*. Only your own lists can be changed;
+an empty description removes it.
 
 ## 4. Questions that combine tools
 
