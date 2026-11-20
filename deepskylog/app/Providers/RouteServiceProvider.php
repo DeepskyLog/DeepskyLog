@@ -88,6 +88,15 @@ class RouteServiceProvider extends ServiceProvider
             return [Limit::perMinute(10)->by('minute:' . $key), Limit::perHour(100)->by('hour:' . $key)];
         });
 
+        // The MCP server (/mcp, routes/ai.php): an AI assistant can call tools
+        // in a loop, and some (Tonight's best, the object page's contrast
+        // reserve) calculate in the request.
+        RateLimiter::for('mcp', function (Request $request) {
+            $key = 'mcp:user:' . ($request->user()?->id ?: $request->ip());
+
+            return [Limit::perMinute(60)->by('minute:' . $key), Limit::perHour(600)->by('hour:' . $key)];
+        });
+
         // New accounts, per address (Fortify's POST /register).
         RateLimiter::for('registration', function (Request $request) {
             return [Limit::perMinute(3)->by('minute:' . $request->ip()), Limit::perDay(10)->by('day:' . $request->ip())];

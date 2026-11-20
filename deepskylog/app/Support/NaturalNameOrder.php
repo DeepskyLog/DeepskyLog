@@ -2,8 +2,6 @@
 
 namespace App\Support;
 
-use Illuminate\Support\Facades\DB;
-
 /**
  * ORDER BY fragment that sorts object names as people read them: catalog
  * first, then the number, then what follows it (NGC 317A, NGC 3690B,
@@ -13,7 +11,8 @@ use Illuminate\Support\Facades\DB;
  * text after it up to the next number, and that number; the full name breaks
  * the ties. Removing every digit to get the "prefix" (as the tables did) made
  * NGC 3690B's prefix "ngc b", which sorted it after every NGC without a
- * suffix whatever its number.
+ * suffix whatever its number. The SQLite test database gets REGEXP_REPLACE()
+ * and REGEXP_SUBSTR() from tests/TestCase.php.
  */
 class NaturalNameOrder
 {
@@ -25,11 +24,6 @@ class NaturalNameOrder
     {
         $dir = strtolower($direction) === 'desc' ? 'DESC' : 'ASC';
         $name = "COALESCE({$column}, '')";
-
-        // SQLite (the tests) has no REGEXP_SUBSTR/REGEXP_REPLACE.
-        if (DB::connection()->getDriverName() === 'sqlite') {
-            return "LOWER({$name}) {$dir}";
-        }
 
         $rest = "REGEXP_REPLACE({$name}, '^[^0-9]*[0-9]*', '')";
         $number = fn (string $text) => "CAST(COALESCE(NULLIF(REGEXP_SUBSTR({$text}, '[0-9]+'), ''), '0') AS UNSIGNED)";

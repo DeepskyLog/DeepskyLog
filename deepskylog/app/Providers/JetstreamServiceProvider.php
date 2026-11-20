@@ -41,10 +41,13 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     protected function configurePermissions(): void
     {
-        // The API only reads (/api/v1/me/...: the locations, equipment,
-        // observations, sessions and observing lists of the token's owner).
+        // 'read': the token API (/api/v1/me/...: the locations, equipment,
+        // observations, sessions and observing lists of the token's owner)
+        // and the reading tools of the MCP server (/mcp). 'write', chosen
+        // when making the token: the MCP tools that change something
+        // (App\Mcp\Tools\CreateObservingList).
         Jetstream::defaultApiTokenPermissions(['read']);
 
-        Jetstream::permissions(['read']);
+        Jetstream::permissions(['read', 'write']);
     }
 }

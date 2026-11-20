@@ -84,7 +84,6 @@ function importFixtureExpectations(): array
         'oal/warning-no-observations.xml' => ['oal/warning-no-observations.xml', 0, 0, [], ['No <observation> elements found']],
         'oal/invalid-not-well-formed.xml' => ['oal/invalid-not-well-formed.xml', 0, 0, [
             'OAL 2.1 schema validation error: line 19: Opening and ending tag mismatch',
-            'OAL 2.1 schema validation error: line 20: Premature end of data',
         ], []],
         'oal/invalid-schema-missing-target.xml' => ['oal/invalid-schema-missing-target.xml', 0, 0, [
             "OAL 2.1 schema validation error: line 14: Element 'begin': This element is not expected. Expected is one of ( session, target ).",

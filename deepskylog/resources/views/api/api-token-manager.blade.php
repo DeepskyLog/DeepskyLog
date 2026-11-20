@@ -23,7 +23,18 @@
                 <x-input-error for="name" class="mt-2" />
             </div>
 
-            {{-- No permission checkboxes: 'read' is the only permission and a token without it is useless, so every token gets it (Jetstream::defaultApiTokenPermissions()). --}}
+            {{-- Every token reads (Jetstream::defaultApiTokenPermissions()): a token without 'read' is useless. 'write' lets an AI assistant connected to /mcp create observing lists. --}}
+            <div class="col-span-6">
+                <label class="flex items-start gap-2 text-sm text-gray-300">
+                    <input
+                        type="checkbox"
+                        value="write"
+                        wire:model="createApiTokenForm.permissions"
+                        class="mt-1 rounded-sm border-gray-600 bg-gray-800"
+                    />
+                    <span>{{ __("Also allow writing: an AI assistant connected with this token may create observing lists") }}</span>
+                </label>
+            </div>
         </x-slot>
 
         <x-slot name="actions">
@@ -58,6 +69,9 @@
                             <div class="flex items-center justify-between">
                                 <div class="break-all">
                                     {{ $token->name }}
+                                    @if ($token->can("write"))
+                                        <span class="ml-2 text-xs text-gray-400">({{ __("read and write") }})</span>
+                                    @endif
                                 </div>
 
                                 <div class="ml-2 flex items-center">

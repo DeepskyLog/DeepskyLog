@@ -28,9 +28,11 @@ class OalSchemaValidator
         $errors = [];
 
         if (!$document->loadXML($xmlContent, LIBXML_NONET)) {
-            foreach (libxml_get_errors() as $error) {
-                $errors[] = $this->formatError($error);
-            }
+            // Only the first error of a file that is not well-formed: the
+            // rest follow from it, and libxml 2.15 stops at the first anyway
+            // (older versions also reported "Premature end of data").
+            $first = libxml_get_errors()[0] ?? null;
+            $errors[] = $first !== null ? $this->formatError($first) : 'The file is not well-formed XML.';
 
             libxml_clear_errors();
             libxml_use_internal_errors($previous);

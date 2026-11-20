@@ -33,8 +33,9 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * Give the SQLite test database the REGEXP_REPLACE() of MariaDB, which
-     * the natural sort on object names uses.
+     * Give the SQLite test database the REGEXP_REPLACE() and REGEXP_SUBSTR()
+     * of MariaDB, which the natural sort on object names uses
+     * (App\Support\NaturalNameOrder). REGEXP_SUBSTR() gives '' without a match.
      */
     protected function setUp(): void
     {
@@ -46,6 +47,11 @@ abstract class TestCase extends BaseTestCase
                 'REGEXP_REPLACE',
                 fn ($value, $pattern, $replacement) => preg_replace('/'.$pattern.'/u', $replacement, (string) $value),
                 3
+            );
+            $connection->getPdo()->sqliteCreateFunction(
+                'REGEXP_SUBSTR',
+                fn ($value, $pattern) => preg_match('/'.$pattern.'/u', (string) $value, $match) ? $match[0] : '',
+                2
             );
         }
     }

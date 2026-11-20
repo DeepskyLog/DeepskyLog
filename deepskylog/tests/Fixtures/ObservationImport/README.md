@@ -94,7 +94,7 @@ They have the `.xml` extension because the upload field only offers `.csv`,
 | `valid-new-targets.xml`                | 3        | 0       | No errors. `Example Nebula 123` is not in the database but the file defines it (deep-sky type and position), so it is added as an object (type BRTNB, diameters, magnitude, surface brightness, position angle) and both observations of it point to it; `Andromeda Galaxy` is found through its `<alias>M31</alias>`. |
 | `invalid-unknown-targets.xml`          | 0        | 5       | One error per observation of a target that is not in the database: no position; type `deepSkyNA`, which has no DeepskyLog type; a comet (only deep-sky objects are added from a file); a defined galaxy that is below the horizon (no object is added for it either); a position but no type. |
 | `warning-no-observations.xml`          | 0        | 0       | A warning: no `<observation>` elements.                                                |
-| `invalid-not-well-formed.xml`          | 0        | 0       | Two schema validation errors: a closing tag is missing. Nothing is imported.            |
+| `invalid-not-well-formed.xml`          | 0        | 0       | One schema validation error: a closing tag is missing. Nothing is imported.             |
 | `invalid-schema-missing-target.xml`    | 0        | 0       | A schema validation error: the observation has no `<target>`.                          |
 | `invalid-schema-date-only.xml`         | 0        | 0       | A schema validation error: `<begin>2026-09-12</begin>` has no time.                    |
 | `invalid-schema-unknown-reference.xml` | 0        | 0       | A schema validation error: `<scope>` refers to an id that is not in the file.          |
