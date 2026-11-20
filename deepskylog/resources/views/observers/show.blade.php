@@ -103,7 +103,7 @@
                             <tr>
                                 <td>{!! __('Default observing site') !!}</td>
                                 <td>
-                                    @if ($user->stdlocation && $user->stdlocation != null)
+                                    @if ($user->standardLocation)
                                         <a href="/location/{{ $user->slug }}/{{ $user->standardLocation->slug }}">
                                             {{ html_entity_decode($user->standardLocation->name) }}
                                         </a>
@@ -115,7 +115,7 @@
                             <tr>
                                 <td>{{ __('Default instrument') }}</td>
                                 <td>
-                                    @if ($user->stdtelescope)
+                                    @if ($user->standardInstrument)
                                         <a
                                             href="/instrument/{{ $user->slug }}/{{ $user->standardInstrument->slug }}">
                                             {{ html_entity_decode($user->standardInstrument->fullName()) }}

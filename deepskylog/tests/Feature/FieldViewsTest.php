@@ -522,3 +522,18 @@ it('says so when there is no route', function () {
     expect($result['star_hop'])->toHaveKey('message')
         ->and($result['star_hop'])->not->toHaveKey('svg');
 });
+
+it('stores an emptied fixed magnification and obstruction as null, not as an empty string', function () {
+    [$user, $telescope, $finder] = fieldViewObserver();
+
+    // A strict MySQL refuses '' for these numeric columns ("Incorrect integer value").
+    Livewire::actingAs($user)
+        ->test(CreateInstrument::class, ['instrument' => $finder])
+        ->set('fixedMagnification', '')
+        ->set('obstruction_perc', '')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($finder->fresh()->getRawOriginal('fixedMagnification'))->toBeNull()
+        ->and($finder->fresh()->getRawOriginal('obstruction_perc'))->toBeNull();
+});

@@ -197,14 +197,12 @@ class CreateInstrument extends Component
         if ($this->focal_length_mm == '') {
             $this->focal_length_mm = 0;
         }
-        if ($this->field_of_view_deg === '') {
-            $this->field_of_view_deg = null;
-        }
-        if ($this->finder_id === '') {
-            $this->finder_id = null;
-        }
-        if ($this->lens_id === '') {
-            $this->lens_id = null;
+        // An emptied field arrives as '', which a strict MySQL refuses for a
+        // numeric column ("Incorrect integer value: ''").
+        foreach (['fixedMagnification', 'obstruction_perc', 'field_of_view_deg', 'finder_id', 'lens_id'] as $field) {
+            if ($this->{$field} === '') {
+                $this->{$field} = null;
+            }
         }
 
         // The form values are validated; in inches they are converted afterwards,

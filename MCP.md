@@ -44,8 +44,19 @@ with a write token.
 
 Claude Desktop's own connectors need OAuth, which DeepskyLog does not offer
 yet. Connect through the small `mcp-remote` bridge instead, which needs
-Node.js. Add this to `claude_desktop_config.json`, which you open with
-**Settings → Developer → Edit config**:
+Node.js. Add the `mcpServers` part below to `claude_desktop_config.json`,
+next to whatever the file already holds. You can open the file in two ways:
+
+- In Claude Desktop, choose **Settings → Developer → Edit config**. The
+  Developer section only appears after you turn on developer mode in the
+  app menu (☰ at the top left): **Help → Enable Developer Mode**.
+- Or open the file directly in a text editor:
+  - Linux: `~/.config/Claude/claude_desktop_config.json`
+  - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+  - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+
+In an organization account (Team or Enterprise), the administrators can turn
+off local MCP servers. If DeepskyLog doesn't appear after a restart, ask them.
 
 ```json
 {
