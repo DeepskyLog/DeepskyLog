@@ -27,7 +27,7 @@ Here's what you can do to help:
 
 ## Code submission and pull request guidelines
 
-+ Your code will be checked for clean code using [php codesniffer](https://github.com/squizlabs/PHP_CodeSniffer).
++ Your code will be checked for clean code using [php codesniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer).
 + Test unit tests will also be executed automatically.
 + It is not mandatory but highly appreciated if you provide **test cases** and/or performance tests (we recommend
   using [phpunit](https://phpunit.de/)).
