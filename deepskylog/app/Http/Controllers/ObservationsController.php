@@ -383,6 +383,16 @@ class ObservationsController extends Controller
 
         $deepsky = ListingPagination::cap($query->deferredPaginate(20, 'deepsky'));
 
+        // A page past the end (marking the last page of ?new=1 as read
+        // empties it) goes to the last page that still has observations.
+        if ($deepsky->isEmpty() && $deepsky->currentPage() > 1) {
+            $params = ListingPagination::query();
+
+            return redirect($deepsky->lastPage() > 1
+                ? $deepsky->url($deepsky->lastPage())
+                : url('/observations') . ($params ? '?' . http_build_query($params) : ''));
+        }
+
         $this->preloadCards($deepsky);
 
         return view('observations.show', [

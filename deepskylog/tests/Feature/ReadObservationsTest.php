@@ -104,3 +104,26 @@ it('does not mark anything through a GET or for a guest', function () {
     $this->actingAs($user)->get('/observations?markAsRead=All&up_to=99999')->assertOk();
     expect(ReadObservations::unreadCount($user))->toBe(1);
 });
+
+it('goes to the previous page when marking the last page as read empties it', function () {
+    $user = User::factory()->create();
+    $other = User::factory()->create();
+    unreadTestObservation($other, 'M 1');
+    ReadObservations::mark($user);
+    $observations = collect(range(1, 25))->map(fn ($i) => unreadTestObservation($other, 'M '.($i + 1)));
+
+    // Page 2 (newest id first) holds the five oldest; marking its newest
+    // marks them all read and leaves page 2 empty.
+    $this->actingAs($user)
+        ->from('/observations?new=1&deepsky=2')
+        ->post(route('observations.mark-read'), ['up_to' => $observations[4]->id])
+        ->assertRedirect('/observations?new=1&deepsky=2');
+
+    $this->actingAs($user)->get('/observations?new=1&deepsky=2')
+        ->assertRedirect('/observations?new=1');
+
+    // Everything read: back to the first page, which says so
+    ReadObservations::markReadUpTo($user, $observations->last()->id);
+    $this->actingAs($user)->get('/observations?new=1&deepsky=2')
+        ->assertRedirect('/observations?new=1');
+});
