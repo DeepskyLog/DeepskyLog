@@ -1,13 +1,18 @@
 @props(['width' => '72', 'columns' => 1])
-{{-- A long menu gets columns (each $width wide) instead of a scroll bar; the panel is moved left or right to stay inside the window. --}}
-<div class="relative" x-data="{ open: false }" x-init="$watch('open', value => { if (value) { $nextTick(()=> {
+{{-- A long menu gets columns (each $width wide) instead of a scroll bar; the panel is moved left to stay inside the window.
+     The position is set before x-show shows the panel (the panel's width follows from the props): measured after showing,
+     the panel stuck out for a frame, which made a tablet's browser widen and scroll the page (a white strip on the right),
+     after which window.innerWidth was the widened width and the panel stayed outside the window. --}}
+@php $panelRem = $columns > 1 ? $width * $columns / 4 : $width / 4; @endphp
+<div class="relative" x-data="{ open: false }" x-init="$watch('open', value => { if (value) {
         const panel = $refs.panel;
-        panel.style.left = '';
+        const viewport = document.documentElement.clientWidth;
+        const width = Math.min({{ $panelRem }} * parseFloat(getComputedStyle(document.documentElement).fontSize), viewport - 16);
         const left = $el.getBoundingClientRect().left;
-        const overflow = left + panel.offsetWidth - (window.innerWidth - 8);
-        if (overflow > 0) panel.style.left = (-Math.min(overflow, left - 8)) + 'px';
-        const first = $el.querySelector('[data-first]'); if(first) first.focus();
-    }); } })" @keydown.escape.prevent="open = false; $refs.trigger.focus()" @keydown.tab="if (open) {
+        const overflow = left + width - (viewport - 8);
+        panel.style.left = overflow > 0 ? (-Math.max(0, Math.min(overflow, left - 8))) + 'px' : '';
+        $nextTick(() => { const first = $el.querySelector('[data-first]'); if (first) first.focus(); });
+    } })" @keydown.escape.prevent="open = false; $refs.trigger.focus()" @keydown.tab="if (open) {
     const focusable = $el.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex=\'-1\'])');
         if (focusable.length === 0) return;
         const first = focusable[0];
