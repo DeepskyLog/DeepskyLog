@@ -28,6 +28,18 @@
                     {{ __('Upload a CSV or OAL (OpenAstronomyLog) XML file to import your observations. Observations will be added to your account. Equipment (locations, instruments, eyepieces, filters, lenses) is matched by name. In a CSV file, it must already exist in your account; an OAL file creates the items that are not found. Every observation needs an instrument (use a naked-eye instrument for observations with the naked eye) and a description.') }}
                 </p>
 
+                <div class="mb-6 rounded-lg bg-gray-800 border border-gray-700 p-4 text-sm text-gray-300">
+                    {!!
+                        __(
+                            'Do you have a lot of observations to bring into DeepskyLog, in a file or still to be entered by hand? Contact the :linkDeepskyLog developers:close_link: we might be able to help, especially when your observations are in a format the importer does not recognise.',
+                            [
+                                'link' => '<a href="mailto:deepskylog@groups.io" class="text-indigo-400 hover:text-indigo-300 underline">',
+                                'close_link' => '</a>',
+                            ],
+                        )
+                    !!}
+                </div>
+
                 <form method="POST" action="{{ route('observation.import.process') }}" enctype="multipart/form-data">
                     @csrf
 
