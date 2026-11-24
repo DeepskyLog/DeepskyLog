@@ -8,7 +8,7 @@
             </h2>
             <br />
 
-            {!! __("Over the years, many magazines for deep-sky observers have been published. Most of them no longer appear, but their archives can be downloaded for free and are still full of observing reports, drawings, object descriptions and practical tips. If you know of other magazines, please let us know (") !!}
+            {!! __("Over the years, many magazines for deep-sky observers have been published. Most of them no longer appear, but most of their archives can be downloaded for free and are still full of observing reports, drawings, object descriptions and practical tips. If you know of other magazines, please let us know (") !!}
             <a href="mailto:deepskylog@groups.io">
                 {{ "deepskylog@groups.io" }}
             </a>
@@ -19,7 +19,7 @@
                 <div class="flex-justify-center flex">
                     <div class="px-5">
                         <a
-                            href="https://www.vvs.be/werkgroepen/werkgroep-deep-sky/alle-edities-van-distant-targets-online"
+                            href="https://www.vvs.be/werkgroepen/werkgroep-deepsky/nieuws/alle-edities-van-distant-targets-online"
                         >
                             <img
                                 src="/images/DT.jpg"
@@ -28,7 +28,7 @@
                         </a>
                     </div>
                     <div>
-                        {!! __("Distant Targets, the “practical forum for the deep-sky observer”, was the magazine of the Deep-sky working group of the Flemish astronomical association Vereniging Voor Sterrenkunde (VVS). 32 issues appeared in Dutch from 1996 to 2003, with observing reports, an object of the season, constellation tours, tips for hunting galaxies with small telescopes, astrophotos, book reviews and articles about amateur telescope making. Since 2022 all issues can be read or downloaded as PDFs on the website of the VVS.") !!}
+                        {!! __("Distant Targets, the “practical forum for the deep-sky observer”, was the magazine of the Deep-sky working group of the Flemish astronomical association Vereniging Voor Sterrenkunde (VVS). 32 issues appeared in Dutch from 1996 to 2003, with observing reports, an object of the season, constellation tours, tips for hunting galaxies with small telescopes, astrophotos, book reviews and articles about amateur telescope making. All issues are on the website of the VVS as PDFs, but only members of the VVS can read or download them.") !!}
                     </div>
                 </div>
             </x-card>
