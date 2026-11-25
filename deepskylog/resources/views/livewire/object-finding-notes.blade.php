@@ -52,7 +52,7 @@
                                             <span>{{ $note->likes_count }}</span>
                                         </span>
                                     @endif
-                                    <x-likers-button kind="finding-note" :id="$note->id" :count="$note->likes_count" class="!px-0.5 !py-0" />
+                                    <x-likers-button kind="finding-note" :target="$note->id" :count="$note->likes_count" class="!px-0.5 !py-0" />
                                     @if ($note->canBeEditedBy($user))
                                         <button type="button" wire:click="startEdit({{ $note->id }})" class="hover:text-blue-400" title="{{ __('Edit') }}">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

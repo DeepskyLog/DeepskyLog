@@ -4,12 +4,12 @@
     (the popover script is in layouts/app.blade.php). Hidden while there
     are no likes; the like toggle script shows it when the count rises.
 --}}
-@props(["kind", "id", "count" => 0])
+@props(["kind", "target", "count" => 0])
 
 @auth
     <button
         type="button"
-        data-likers-url="{{ route("likes.likers", ["kind" => $kind, "id" => $id]) }}"
+        data-likers-url="{{ route("likes.likers", ["kind" => $kind, "id" => $target]) }}"
         title="{{ __("Who liked this?") }}"
         aria-label="{{ __("Who liked this?") }}"
         aria-haspopup="dialog"

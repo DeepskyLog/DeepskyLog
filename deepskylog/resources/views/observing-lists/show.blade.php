@@ -182,7 +182,7 @@
                     <span>{{ $items->total() }} {{ __('objects') }}</span>
                     <span class="inline-flex items-center gap-1">
                         <span>{{ $list->likes_count }} {{ __('likes') }}</span>
-                        <x-likers-button kind="observing-list" :id="$list->id" :count="$list->likes_count" id="list-likers" class="!py-0" />
+                        <x-likers-button kind="observing-list" :target="$list->id" :count="$list->likes_count" data-list-likers class="!py-0" />
                     </span>
                     <span>{{ $list->comments_count }} {{ __('comments') }}</span>
                     @if ($list->public)
@@ -558,7 +558,7 @@
                         btn.dataset.liked = data.liked ? '1' : '0';
                         document.getElementById('like-label').textContent = data.liked ? '{{ __('Liked') }}' : '{{ __('Like') }}';
                         document.getElementById('like-count').textContent = data.likes_count;
-                        const likers = document.getElementById('list-likers');
+                        const likers = document.querySelector('[data-list-likers]');
                         if (likers) likers.hidden = Number(data.likes_count) === 0;
                         const svg = btn.querySelector('svg');
                         if (svg) svg.setAttribute('fill', data.liked ? 'currentColor' : 'none');

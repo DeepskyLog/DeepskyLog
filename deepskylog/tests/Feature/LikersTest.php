@@ -138,3 +138,14 @@ it('shows the likers button on the observation page to logged-in observers only'
     $this->get(route('observations.detail', $params))->assertOk()->assertDontSee($url, false);
     $this->actingAs($owner)->get(route('observations.detail', $params))->assertOk()->assertSee($url, false);
 });
+
+it('points the likers button of a list page at the list', function () {
+    $owner = User::factory()->create();
+    $list = ObservingList::create(['owner_user_id' => $owner->id, 'name' => 'Spring Edge-ons', 'public' => true]);
+    ObservingListLike::create(['observing_list_id' => $list->id, 'user_id' => User::factory()->create()->id]);
+    $list->forceFill(['likes_count' => 1])->save();
+
+    $this->actingAs($owner)->get(route('observing-list.show', $list))
+        ->assertOk()
+        ->assertSee('data-likers-url="'.route('likes.likers', ['kind' => 'observing-list', 'id' => $list->id]).'"', false);
+});

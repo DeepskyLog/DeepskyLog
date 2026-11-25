@@ -111,7 +111,7 @@
                         0
                 }}</span>
             </button>
-            <x-likers-button kind="session" :id="$session->id" :count="$session->likes_count ?? 0" />
+            <x-likers-button kind="session" :target="$session->id" :count="$session->likes_count ?? 0" />
             @if ($url)
                 <a href="{{ $url }}" class="text-blue-500 hover:underline">{{
                     __(

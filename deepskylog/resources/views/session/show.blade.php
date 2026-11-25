@@ -322,7 +322,7 @@
                             <span class="like-icon">{!! $sessionLiked ? '❤️' : '👍' !!}</span>
                             <span class="like-count">{{ $sessionLikes }}</span>
                         </button>
-                        <x-likers-button kind="session" :id="$session->id" :count="$sessionLikes" />
+                        <x-likers-button kind="session" :target="$session->id" :count="$sessionLikes" />
 
                         {{-- Message about session (link to internal messaging) --}}
                         @auth

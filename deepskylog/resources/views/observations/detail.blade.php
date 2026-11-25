@@ -385,7 +385,7 @@
                                     >{{ $likesCount }}</span
                                 >
                             </button>
-                            <x-likers-button kind="observation" :id="$socialId" :count="$likesCount" />
+                            <x-likers-button kind="observation" :target="$socialId" :count="$likesCount" />
                             <span class="text-sm text-gray-400">
                                 {{ $commentsCount }} {{
                                     \Illuminate\Support\Str::plural(

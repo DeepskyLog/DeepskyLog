@@ -255,7 +255,7 @@
             !!}</span>
             <span class="like-count">{{ $likesCount }}</span>
         </button>
-        <x-likers-button kind="observation" :id="$likeId" :count="$likesCount" />
+        <x-likers-button kind="observation" :target="$likeId" :count="$likesCount" />
 
         @php
             $messageSubject = __("About your sketch of :object", ["object" => $objectName]);
