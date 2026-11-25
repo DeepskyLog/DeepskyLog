@@ -4258,5 +4258,9 @@
     "{1} Show the magnification given with a Barlow lens or reducer|[2,*] Show the :count magnifications given with a Barlow lens or reducer": "{1} Visa förstoringen med en Barlowlins eller reducerare|[2,*] Visa de :count förstoringarna med en Barlowlins eller reducerare",
     "{1} The observation import of :observer added 1 object to the database. Please check it:|[2,*] The observation import of :observer added :count objects to the database. Please check them:": "{1} Importen av observationer från :observer lade till 1 objekt i databasen. Kontrollera det:|[2,*] Importen av observationer från :observer lade till :count objekt i databasen. Kontrollera dem:",
     "{1} This account recorded nothing within :months months after registration and was deleted after two warnings by e-mail:|[2,*] These accounts recorded nothing within :months months after registration and were deleted after two warnings by e-mail:": "{1} Det här kontot registrerade ingenting inom :months månader efter registreringen och raderades efter två varningar via e-post:|[2,*] Dessa konton registrerade ingenting inom :months månader efter registreringen och raderades efter två varningar via e-post:",
-    "{1} This observer registered since the last message:|[2,*] These :count observers registered since the last message:": "{1} Den här observatören har registrerat sig sedan förra meddelandet:|[2,*] Dessa :count observatörer har registrerat sig sedan förra meddelandet:"
+    "{1} This observer registered since the last message:|[2,*] These :count observers registered since the last message:": "{1} Den här observatören har registrerat sig sedan förra meddelandet:|[2,*] Dessa :count observatörer har registrerat sig sedan förra meddelandet:",
+    "Who liked this?": "Vem gillade detta?",
+    "Liked by": "Gillas av",
+    "Nobody has liked this yet.": "Ingen har gillat detta ännu.",
+    "The names could not be loaded.": "Namnen kunde inte laddas."
 }

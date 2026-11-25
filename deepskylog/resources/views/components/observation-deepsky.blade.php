@@ -441,6 +441,7 @@
                 !!}</span>
                 <span class="like-count">{{ $likesCount }}</span>
             </button>
+            <x-likers-button kind="observation" :id="$likeId" :count="$likesCount" />
         </div>
     </div>
 </div>

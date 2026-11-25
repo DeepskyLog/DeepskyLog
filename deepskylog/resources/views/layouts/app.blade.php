@@ -793,12 +793,130 @@
                     const iconEl = btn.querySelector('.like-icon');
                     if (countEl) countEl.textContent = data.count;
                     if (iconEl) iconEl.innerHTML = data.status === 'liked' ? '❤️' : '👍';
+                    const likers = btn.parentElement && btn.parentElement.querySelector('.likers-button');
+                    if (likers) likers.hidden = Number(data.count) === 0;
                 }
             }).catch(() => {
                 // noop
             });
         });
     </script>
+    @auth
+        <script>
+            // "Who liked this?": the names behind a like count (x-likers-button).
+            (function() {
+                const texts = {
+                    title: @json(__('Liked by')),
+                    none: @json(__('Nobody has liked this yet.')),
+                    more: @json(__('and :count more')),
+                    error: @json(__('The names could not be loaded.')),
+                    close: @json(__('Close')),
+                };
+                let pop = null;
+                let openFor = null;
+
+                function close() {
+                    if (pop) pop.remove();
+                    pop = null;
+                    openFor = null;
+                }
+
+                function place(btn) {
+                    const r = btn.getBoundingClientRect();
+                    const width = pop.offsetWidth;
+                    let left = r.left + window.scrollX;
+                    const maxLeft = window.scrollX + document.documentElement.clientWidth - width - 8;
+                    left = Math.max(window.scrollX + 8, Math.min(left, maxLeft));
+                    pop.style.left = left + 'px';
+                    pop.style.top = (r.bottom + window.scrollY + 4) + 'px';
+                }
+
+                function render(data) {
+                    pop.replaceChildren();
+                    const head = document.createElement('div');
+                    head.className = 'mb-1 flex items-center justify-between gap-4 text-xs font-semibold uppercase text-gray-400';
+                    head.textContent = texts.title;
+                    const x = document.createElement('button');
+                    x.type = 'button';
+                    x.textContent = '×';
+                    x.className = 'text-base leading-none text-gray-400 hover:text-white';
+                    x.setAttribute('aria-label', texts.close);
+                    x.addEventListener('click', close);
+                    head.appendChild(x);
+                    pop.appendChild(head);
+                    if (!data || !data.likers || data.likers.length === 0) {
+                        const p = document.createElement('p');
+                        p.className = 'text-gray-400';
+                        p.textContent = data ? texts.none : texts.error;
+                        pop.appendChild(p);
+                        return;
+                    }
+                    const ul = document.createElement('ul');
+                    ul.className = 'max-h-64 overflow-y-auto';
+                    data.likers.forEach(function(l) {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = l.url;
+                        a.textContent = l.name;
+                        a.className = 'block py-0.5 text-blue-400 hover:underline';
+                        li.appendChild(a);
+                        ul.appendChild(li);
+                    });
+                    pop.appendChild(ul);
+                    if (data.more > 0) {
+                        const p = document.createElement('p');
+                        p.className = 'mt-1 text-gray-400';
+                        p.textContent = texts.more.replace(':count', data.more);
+                        pop.appendChild(p);
+                    }
+                }
+
+                document.addEventListener('click', function(e) {
+                    const btn = e.target.closest('.likers-button');
+                    if (!btn) {
+                        if (pop && !pop.contains(e.target)) close();
+                        return;
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (openFor === btn) {
+                        close();
+                        return;
+                    }
+                    close();
+                    openFor = btn;
+                    pop = document.createElement('div');
+                    pop.setAttribute('role', 'dialog');
+                    pop.setAttribute('aria-label', texts.title);
+                    pop.className = 'absolute z-50 min-w-[12rem] max-w-xs rounded border border-gray-600 bg-gray-800 p-3 text-sm text-gray-200 shadow-lg';
+                    pop.textContent = '…';
+                    document.body.appendChild(pop);
+                    place(btn);
+                    const current = pop;
+                    fetch(btn.dataset.likersUrl, {
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(r => r.ok ? r.json() : null)
+                        .catch(() => null)
+                        .then(function(data) {
+                            if (pop !== current) return;
+                            render(data);
+                            place(btn);
+                        });
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && pop) {
+                        const btn = openFor;
+                        close();
+                        if (btn) btn.focus();
+                    }
+                });
+            })();
+        </script>
+    @endauth
 </body>
 
 </html>

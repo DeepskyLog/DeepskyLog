@@ -180,7 +180,10 @@
                 {{-- Stats row --}}
                 <div class="mt-4 flex items-center gap-6 text-sm text-gray-400">
                     <span>{{ $items->total() }} {{ __('objects') }}</span>
-                    <span>{{ $list->likes_count }} {{ __('likes') }}</span>
+                    <span class="inline-flex items-center gap-1">
+                        <span>{{ $list->likes_count }} {{ __('likes') }}</span>
+                        <x-likers-button kind="observing-list" :id="$list->id" :count="$list->likes_count" id="list-likers" class="!py-0" />
+                    </span>
                     <span>{{ $list->comments_count }} {{ __('comments') }}</span>
                     @if ($list->public)
                         <span>{{ $list->subscriptions()->count() }} {{ __('subscribers') }}</span>
@@ -555,6 +558,8 @@
                         btn.dataset.liked = data.liked ? '1' : '0';
                         document.getElementById('like-label').textContent = data.liked ? '{{ __('Liked') }}' : '{{ __('Like') }}';
                         document.getElementById('like-count').textContent = data.likes_count;
+                        const likers = document.getElementById('list-likers');
+                        if (likers) likers.hidden = Number(data.likes_count) === 0;
                         const svg = btn.querySelector('svg');
                         if (svg) svg.setAttribute('fill', data.liked ? 'currentColor' : 'none');
                         btn.classList.toggle('bg-pink-700', data.liked);

@@ -4261,5 +4261,9 @@
     "{1} Show the magnification given with a Barlow lens or reducer|[2,*] Show the :count magnifications given with a Barlow lens or reducer": "{1} Toon de vergroting met een Barlowlens of reducer|[2,*] Toon de :count vergrotingen met een Barlowlens of reducer",
     "{1} The observation import of :observer added 1 object to the database. Please check it:|[2,*] The observation import of :observer added :count objects to the database. Please check them:": "{1} De import van waarnemingen van :observer heeft 1 object aan de database toegevoegd. Kijk het na:|[2,*] De import van waarnemingen van :observer heeft :count objecten aan de database toegevoegd. Kijk ze na:",
     "{1} This account recorded nothing within :months months after registration and was deleted after two warnings by e-mail:|[2,*] These accounts recorded nothing within :months months after registration and were deleted after two warnings by e-mail:": "{1} Dit account registreerde niets binnen :months maanden na de registratie en werd verwijderd na twee waarschuwingen per e-mail:|[2,*] Deze accounts registreerden niets binnen :months maanden na de registratie en werden verwijderd na twee waarschuwingen per e-mail:",
-    "{1} This observer registered since the last message:|[2,*] These :count observers registered since the last message:": "{1} Deze waarnemer registreerde zich sinds het vorige bericht:|[2,*] Deze :count waarnemers registreerden zich sinds het vorige bericht:"
+    "{1} This observer registered since the last message:|[2,*] These :count observers registered since the last message:": "{1} Deze waarnemer registreerde zich sinds het vorige bericht:|[2,*] Deze :count waarnemers registreerden zich sinds het vorige bericht:",
+    "Who liked this?": "Wie vond dit leuk?",
+    "Liked by": "Leuk gevonden door",
+    "Nobody has liked this yet.": "Nog niemand vond dit leuk.",
+    "The names could not be loaded.": "De namen konden niet geladen worden."
 }

@@ -886,6 +886,11 @@ Route::get('/instrumentset/{user}/{instrumentset}/edit', 'App\Http\Controllers\I
 // Likes for observations (deepsky / comet)
 Route::post('/observation/like', [App\Http\Controllers\ObservationLikeController::class, 'toggle'])->name('observation.like')->middleware('auth');
 
+// Who liked an observation, session, observing list or finding note (logged-in observers only)
+Route::get('/likes/{kind}/{id}', [App\Http\Controllers\LikersController::class, 'show'])
+    ->whereIn('kind', App\Http\Controllers\LikersController::KINDS)->whereNumber('id')
+    ->name('likes.likers')->middleware(['auth', 'doNotCacheResponse', 'throttle:120,1']);
+
 // Comments for observations (deepsky / comet)
 Route::post('/observation/comments', [App\Http\Controllers\ObservationCommentController::class, 'store'])
     ->name('observation.comments.store')
