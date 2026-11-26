@@ -44,6 +44,11 @@ class EventTexts
                 'object' => $data['object']['name'] ?? '',
                 'date'   => $date,
             ]),
+            'star_conjunction' => __(':planet passes :object on :date', [
+                'planet' => self::body($data['bodies'][0] ?? ''),
+                'object' => $data['star']['name'] ?? '',
+                'date'   => $date,
+            ]),
             'lunar_occultation'   => __('The Moon covers :target on :date', ['target' => self::occultedTarget($data), 'date' => $date]),
             'opposition'          => __(':planet at opposition on :date', ['planet' => self::body($data['bodies'][0] ?? ''), 'date' => $date]),
             'greatest_elongation' => ($data['side'] ?? 'east') === 'east'
@@ -77,7 +82,7 @@ class EventTexts
                 'time'      => $item->event_at->format('H:i'),
                 'magnitude' => self::number($data['umbral_magnitude'] ?? 0, 3),
             ]),
-            'planet_conjunction', 'moon_conjunction', 'deepsky_conjunction', 'moon_deepsky_conjunction' => __('Smallest distance :distance° at :time UT.', [
+            'planet_conjunction', 'moon_conjunction', 'deepsky_conjunction', 'moon_deepsky_conjunction', 'star_conjunction' => __('Smallest distance :distance° at :time UT.', [
                 'distance' => self::number($data['separation'] ?? 0, 2),
                 'time'     => $item->event_at->format('H:i'),
             ]),

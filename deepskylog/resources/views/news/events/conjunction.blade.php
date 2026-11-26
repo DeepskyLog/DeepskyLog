@@ -1,5 +1,5 @@
 @php use App\Services\News\EventTexts; @endphp
-{{-- An automatic news item (#960): two planets, the Moon and a planet, a planet and a Messier object, or the Moon and a bright Messier object close together --}}
+{{-- An automatic news item (#960): two planets, the Moon and a planet, a planet and a Messier object, a planet and a bright star, or the Moon and a bright Messier object close together --}}
 @php
     $bodies = $data["bodies"] ?? [];
     $isMoon = in_array(
@@ -19,14 +19,24 @@
             '" class="text-blue-400 hover:underline">' .
             e(EventTexts::body($body)) .
             "</a>";
+    $isStar = $item->kind === "star_conjunction";
+    $starName = $data["star"]["name"] ?? "";
     $first = $link($bodies[0] ?? "");
-    $second = $hasObject
+    $second = $isStar
+        ? (!empty($data["star"]["slug"])
+            ? '<a href="' .
+                e(route("object.show", $data["star"]["slug"])) .
+                '" class="text-blue-400 hover:underline">' .
+                e($starName) .
+                "</a>"
+            : e($starName))
+        : ($hasObject
         ? '<a href="' .
             e(route("object.show", $data["object"]["slug"])) .
             '" class="text-blue-400 hover:underline">' .
             e($data["object"]["name"]) .
             "</a>"
-        : $link($bodies[1] ?? "");
+        : $link($bodies[1] ?? ""));
     $planet =
         $item->kind === "moon_conjunction" ? $bodies[1] ?? "" : $bodies[0] ?? "";
     // What the Moon passes in front of: the planet or the Messier object
@@ -104,6 +114,27 @@
                     "Seen from parts of the Earth the Moon covers :planet.",
                     ["planet" => $target],
                 )
+            }}
+        @endif
+    @endif
+    @if ($isStar)
+        @if (($data["star"]["designation"] ?? "") !== $starName)
+            {{
+                __(
+                    ":star (:designation) has magnitude :magnitude.",
+                    [
+                        "star" => $starName,
+                        "designation" => $data["star"]["designation"],
+                        "magnitude" => EventTexts::number($data["star"]["mag"] ?? 0, 1),
+                    ],
+                )
+            }}
+        @else
+            {{
+                __(":body has magnitude :magnitude.", [
+                    "body" => $starName,
+                    "magnitude" => EventTexts::number($data["star"]["mag"] ?? 0, 1),
+                ])
             }}
         @endif
     @endif

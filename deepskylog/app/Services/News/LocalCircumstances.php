@@ -61,7 +61,7 @@ class LocalCircumstances
      */
     public static function compute(string $kind, int $at, array $data, float $latitude, float $longitude, float $height = 0.0): ?array
     {
-        if (in_array($kind, ['planet_conjunction', 'moon_conjunction', 'deepsky_conjunction', 'moon_deepsky_conjunction'], true)) {
+        if (in_array($kind, ['planet_conjunction', 'moon_conjunction', 'deepsky_conjunction', 'moon_deepsky_conjunction', 'star_conjunction'], true)) {
             return self::conjunction($kind, $at, $data, $latitude, $longitude, $height);
         }
 
@@ -271,7 +271,7 @@ class LocalCircumstances
             // The object's J2000 position moved to the equinox of the date, as the planets'.
             $ecliptical  = SkyPositions::eclipticalOfDate((float) $data['object']['ra'], (float) $data['object']['decl'], $t);
             $positions[] = SkyPositions::toEquatorial($ecliptical['lon'], $ecliptical['lat'], $t);
-        } elseif ($kind === 'lunar_occultation' && ($data['target'] ?? 'star') === 'star') {
+        } elseif ($kind === 'star_conjunction' || ($kind === 'lunar_occultation' && ($data['target'] ?? 'star') === 'star')) {
             $ecliptical  = SkyPositions::eclipticalOfDate((float) $data['star']['ra'], (float) $data['star']['decl'], $t);
             $positions[] = SkyPositions::toEquatorial($ecliptical['lon'], $ecliptical['lat'], $t);
         }

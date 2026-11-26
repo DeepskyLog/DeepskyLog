@@ -184,6 +184,36 @@ it('finds the lunar occultations of planets and of bright stars', function () {
         ->and($local['occultation']['reappears']['limb'])->toBe('bright');
 });
 
+it('finds a planet passing a bright star', function () {
+    DB::table('stars')->insert([
+        ['source_key' => 'regulus', 'source_table' => 'stars8', 'constellation_code' => 'Leo', 'bayer' => 'Alp', 'flamsteed' => '32', 'name' => 'SOA98967', 'ra_degrees' => 152.09296, 'decl_degrees' => 11.96721, 'vmag' => 1.35],
+        // Too faint
+        ['source_key' => 'rho-leo', 'source_table' => 'stars8', 'constellation_code' => 'Leo', 'bayer' => 'Rho', 'flamsteed' => '47', 'name' => 'SOA118355', 'ra_degrees' => 158.20279, 'decl_degrees' => 9.30659, 'vmag' => 3.85],
+    ]);
+
+    // Mars 1.7 degrees from Regulus on 2026 November 26, in the morning sky
+    $events = newsEvents('2026-11-20', '2026-12-01', 'star_conjunction');
+    expect($events)->toHaveCount(1)
+        ->and($events[0]['key'])->toBe('star_conjunction:mars:alp-leo:2026-11-26')
+        ->and($events[0]['data']['star']['name'])->toBe('Regulus')
+        ->and($events[0]['data']['star'])->not->toHaveKey('lat')
+        ->and($events[0]['data']['separation'])->toBeGreaterThan(1.6)->toBeLessThan(1.9)
+        ->and($events[0]['data']['elongation'])->toBeLessThan(0);
+
+    // Seen from Brussels before dawn
+    $local = LocalCircumstances::compute('star_conjunction', $events[0]['at'], $events[0]['data'], 50.85, 4.35);
+    expect($local['best'])->not->toBeNull();
+
+    $item = NewsItem::create([
+        'kind'         => 'star_conjunction',
+        'event_key'    => $events[0]['key'],
+        'event_at'     => Carbon::createFromTimestamp($events[0]['at'], 'UTC'),
+        'published_at' => now()->subDay(),
+        'data'         => $events[0]['data'],
+    ]);
+    $this->get('/news')->assertOk()->assertSee('Mars passes Regulus on')->assertSee('Regulus (α Leo) has magnitude 1.4.', false);
+});
+
 it('shows a lunar occultation with the local times of the reader', function () {
     $item = NewsItem::create([
         'kind'         => 'lunar_occultation',

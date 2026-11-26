@@ -11,7 +11,8 @@ use Illuminate\Support\Str;
 /**
  * The astronomical events the news announces (#960): eclipses (Eclipses),
  * close conjunctions of two planets, of the Moon and a planet and of a
- * planet and a Messier object, of the Moon and a bright Messier object,
+ * planet and a Messier object, of a planet and a star brighter than
+ * OCCULTATION_STAR_MAGNITUDE, of the Moon and a bright Messier object,
  * lunar occultations of the planets and of the stars brighter than
  * OCCULTATION_STAR_MAGNITUDE, oppositions of the outer planets, greatest
  * elongations of Mercury and Venus, the peaks of the major meteor showers, bright comets
@@ -38,6 +39,12 @@ class AstronomicalEvents
 
     /** Degrees: the largest distance of a planet and a Messier object. */
     public const DEEPSKY_DISTANCE = 1.0;
+
+    /**
+     * Degrees: the largest distance of a bright planet and a star brighter
+     * than OCCULTATION_STAR_MAGNITUDE (Mars 1.7 degrees from Regulus).
+     */
+    public const STAR_DISTANCE = 2.0;
 
     /**
      * The faintest Messier object the Moon is announced near: MOON_DEEPSKY_NEW
@@ -95,6 +102,9 @@ class AstronomicalEvents
     /** @var array<string, list<array{lon: float, lat: float}>> */
     private array $positions = [];
 
+    /** @var list<array<string, mixed>>|null */
+    private ?array $brightStars = null;
+
     /**
      * The events between two moments (timestamps, UT), sorted by date. The
      * key of an event names it, so the news item made from it is found again
@@ -121,6 +131,7 @@ class AstronomicalEvents
             ...$this->planetConjunctions(),
             ...$this->moonConjunctions(),
             ...$this->deepskyConjunctions(),
+            ...$this->starConjunctions(),
             ...$this->moonDeepskyConjunctions(),
             ...$this->lunarOccultations(),
             ...$this->oppositions(),
@@ -244,11 +255,12 @@ class AstronomicalEvents
         foreach (array_keys(SkyPositions::PLANETS) as $planet) {
             $targets[] = ['key' => $planet, 'positions' => $this->positions[$planet], 'data' => ['target' => $planet, 'bodies' => ['moon', $planet]]];
         }
-        foreach ($this->occultableStars() as $star) {
+        // The Moon stays within 5.3 degrees of the ecliptic, and covers what is within its reach of it.
+        foreach ($this->brightStars(5.3 + 1.3) as $star) {
             $targets[] = [
                 'key'       => $star['key'],
-                'positions' => array_map(fn (int $t) => SkyPositions::eclipticalOfDate($star['ra'], $star['decl'], $t), $this->times),
-                'data'      => ['target' => 'star', 'bodies' => ['moon'], 'star' => array_diff_key($star, ['key' => true])],
+                'positions' => $this->starPositions($star),
+                'data'      => ['target' => 'star', 'bodies' => ['moon'], 'star' => self::starData($star)],
             ];
         }
 
@@ -285,14 +297,87 @@ class AstronomicalEvents
     }
 
     /**
+     * A bright planet within STAR_DISTANCE of a star brighter than
+     * OCCULTATION_STAR_MAGNITUDE.
+     *
+     * @return list<array{key: string, kind: string, at: int, data: array<string, mixed>}>
+     */
+    private function starConjunctions(): array
+    {
+        $events = [];
+        // The planets stay within 9 degrees of the ecliptic.
+        foreach ($this->brightStars(9.0 + self::STAR_DISTANCE) as $star) {
+            $fixed = $this->starPositions($star);
+            foreach (self::BRIGHT_PLANETS as $planet) {
+                $distances = $this->distances($this->positions[$planet], $fixed);
+                foreach ($this->minima($distances, self::STAR_DISTANCE) as [$at, $separation]) {
+                    $elongation = $this->elongation($planet, $at);
+                    if (abs($elongation) < self::MIN_ELONGATION) {
+                        continue;
+                    }
+                    $events[] = [
+                        'key'  => 'star_conjunction:' . $planet . ':' . $star['key'] . ':' . gmdate('Y-m-d', $at),
+                        'kind' => 'star_conjunction',
+                        'at'   => $at,
+                        'data' => [
+                            'bodies'     => [$planet],
+                            'star'       => self::starData($star),
+                            'separation' => round($separation, 2),
+                            'elongation' => round($elongation, 1),
+                            'magnitudes' => [$planet => SkyPositions::planetMagnitude($planet, $at)],
+                        ],
+                    ];
+                }
+            }
+        }
+
+        return $events;
+    }
+
+    /**
+     * The ecliptical positions of a star at the sampled moments.
+     *
+     * @param  array<string, mixed>  $star
+     * @return list<array{lon: float, lat: float}>
+     */
+    private function starPositions(array $star): array
+    {
+        return array_map(fn (int $t) => SkyPositions::eclipticalOfDate($star['ra'], $star['decl'], $t), $this->times);
+    }
+
+    /**
+     * What a news item keeps of a star of brightStars().
+     *
+     * @param  array<string, mixed>  $star
+     * @return array<string, mixed>
+     */
+    private static function starData(array $star): array
+    {
+        return array_diff_key($star, ['key' => true, 'lat' => true]);
+    }
+
+    /**
+     * The stars of allBrightStars() within $maxLatitude degrees of the ecliptic.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function brightStars(float $maxLatitude): array
+    {
+        $this->brightStars ??= $this->allBrightStars();
+
+        return array_values(array_filter($this->brightStars, fn (array $star) => abs($star['lat']) <= $maxLatitude));
+    }
+
+    /**
      * The stars with a Bayer or Flamsteed designation brighter than
-     * OCCULTATION_STAR_MAGNITUDE near enough to the ecliptic for the Moon to
-     * cover them (5.3 degrees of the Moon's orbit plus its reach), with the
+     * OCCULTATION_STAR_MAGNITUDE near enough to the ecliptic for a planet to
+     * pass them (9 degrees plus STAR_DISTANCE; the Moon needs 5.3 degrees of
+     * its orbit plus its reach), with their ecliptical latitude and the
      * object page of the star when DeepskyLog has one.
      *
-     * @return list<array{key: string, name: string, designation: string, slug: ?string, ra: float, decl: float, mag: float}>
+     * @return list<array{key: string, name: string, designation: string, slug: ?string, ra: float, decl: float, mag: float, lat: float}>
      */
-    private function occultableStars(): array
+    private function allBrightStars(): array
     {
         $rows = DB::table('stars')
             ->whereNotNull('constellation_code')
@@ -306,7 +391,7 @@ class AstronomicalEvents
         $names = [];
         foreach ($rows as $row) {
             $position = SkyPositions::eclipticalOfDate((float) $row->ra_degrees, (float) $row->decl_degrees, $this->times[0]);
-            if (abs($position['lat']) > 5.3 + 1.3) {
+            if (abs($position['lat']) > max(9.0 + self::STAR_DISTANCE, 5.3 + 1.3)) {
                 continue;
             }
             $bayer = $row->bayer === null ? null : ucfirst(strtolower((string) $row->bayer));
@@ -336,6 +421,7 @@ class AstronomicalEvents
                 'ra'          => round((float) $row->ra_degrees, 5),
                 'decl'        => round((float) $row->decl_degrees, 5),
                 'mag'         => round((float) $row->vmag, 1),
+                'lat'         => $position['lat'],
             ];
         }
 
